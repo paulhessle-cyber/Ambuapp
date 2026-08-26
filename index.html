@@ -90,6 +90,7 @@ html[data-theme="dark"] .lcd .digits{text-shadow:0 0 14px rgba(87,232,58,.55)}
 .key.red{--k1:var(--red-1);--k2:var(--red-2);--kEdge:#6f1310}
 .key.teal{--k1:var(--teal-1);--k2:var(--teal-2);--kEdge:#084b47}
 .key.amber{--k1:var(--amber-1);--k2:var(--amber-2);--kEdge:#71440a}
+.key.rose{--k1:#d4628c;--k2:#8e2f52;--kEdge:#5d1c35}
 .key.violet{--k1:var(--violet-1);--k2:var(--violet-2);--kEdge:#3a2764}
 .key.spare{--k1:var(--key-1);--k2:var(--key-2);--kEdge:var(--shade);color:var(--key-glyph);font-weight:700}
 .key.spare .ic{opacity:.55}
@@ -183,6 +184,41 @@ input::placeholder{color:var(--ink-dim);font-weight:500;font-size:16px}
   background:linear-gradient(180deg,var(--key-1),var(--key-2));color:var(--key-ink);
   box-shadow:0 4px 0 var(--shade), inset 0 1px 0 var(--shine);transition:transform var(--tap) ease, box-shadow var(--tap) ease}
 .mini:active{transform:translateY(3px);box-shadow:0 1px 0 var(--shade)}
+.grouphead{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:800;margin:18px 2px 8px}
+.grouphead:first-child{margin-top:0}
+.link{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);
+  border-left:5px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;
+  box-shadow:0 3px 0 var(--shade);transition:transform var(--tap) ease, box-shadow var(--tap) ease}
+.link:active{transform:translateY(2px);box-shadow:0 1px 0 var(--shade)}
+.link.hot{border-left-color:var(--red-1)}
+.link .lt{display:block;font-weight:800;font-size:17px}
+.link .lt::after{content:" ↗";color:var(--ink-dim);font-weight:600}
+.link .lm{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);margin:3px 0 6px}
+.link .lr{display:block;font-size:14px;color:var(--ink-dim);line-height:1.45;margin-top:7px}
+.link .lr b{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);opacity:.75}
+.checks{display:grid;gap:8px;margin-top:10px}
+.chk{display:flex;gap:11px;align-items:flex-start;text-align:left;border:1px solid var(--field-line);background:var(--field);
+  color:var(--ink);border-radius:12px;padding:13px;font:inherit;font-size:15px;line-height:1.4;cursor:pointer;
+  transition:transform var(--tap) ease, border-color var(--tap) ease}
+.chk:active{transform:scale(.99)}
+.chk .box{flex:0 0 24px;height:24px;border-radius:7px;border:2px solid var(--field-line);margin-top:1px;position:relative}
+.chk[aria-pressed="true"]{border-color:var(--red-1);background:rgba(224,88,79,.10)}
+.chk[aria-pressed="true"] .box{background:var(--red-1);border-color:var(--red-1)}
+.chk[aria-pressed="true"] .box::after{content:"";position:absolute;left:7px;top:2px;width:6px;height:12px;
+  border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(42deg)}
+.verdict a{color:inherit}
+input[type="search"]{width:100%;background:var(--field);color:var(--ink);border:1px solid var(--field-line);
+  border-radius:12px;padding:14px;font:inherit;font-size:17px;-webkit-appearance:none}
+.bl{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:8px}
+.bl .bt{display:block;font-weight:800;font-size:16px}
+.bl .br{display:block;font-weight:700;font-size:15px;color:var(--blue-1);margin-top:2px;font-variant-numeric:tabular-nums}
+html[data-theme="dark"] .bl .br{color:#7fa8ff}
+.bl .br small{font-weight:600;color:var(--ink-dim);font-size:13px}
+.bl .bn{display:block;font-size:13.5px;color:var(--ink-dim);line-height:1.45;margin-top:6px}
+.bl .tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-dim);border:1px solid var(--line);border-radius:6px;padding:2px 6px;margin-bottom:6px}
+.bl.flagcard{border-color:rgba(224,88,79,.5);background:rgba(224,88,79,.07)}
+.bl.flagcard .tag{color:var(--red-1);border-color:rgba(224,88,79,.5)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -212,9 +248,18 @@ input::placeholder{color:var(--ink-dim);font-weight:500;font-size:16px}
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="2.5" width="7" height="5" rx="1.2"/><rect x="2.5" y="16.5" width="7" height="5" rx="1.2"/><rect x="14.5" y="16.5" width="7" height="5" rx="1.2"/><path d="M12 7.5v4M6 16.5v-3h12v3"/></svg>
         Flowcharts
       </button>
-      <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
-      <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
-      <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
+      <button class="key violet" data-go="cthead">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5c-4.7 0-7.5 3.2-7.5 7.2 0 2.1.6 3.3.6 5.1 0 1.1-.6 1.7-.6 2.5 0 .9.8 1.4 2 1.4h1.2v1.4c0 .8.6 1.4 1.4 1.4h5.4"/><circle cx="9.5" cy="9.5" r="1.3" fill="currentColor" stroke="none"/><path d="M14 8.5c1.6 0 2.8 1.2 2.8 2.8S15.6 14 14 14"/></svg>
+        Imaging
+      </button>
+      <button class="key amber" data-go="bloods">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5s6 7.2 6 11.2a6 6 0 0 1-12 0c0-4 6-11.2 6-11.2z"/><path d="M9.2 13.8a2.8 2.8 0 0 0 2.8 2.8"/></svg>
+        Bloods
+      </button>
+      <button class="key rose" data-go="paeds">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M9.6 7.2h.01M14.4 7.2h.01M9.8 10.2c.6.7 1.4 1 2.2 1s1.6-.3 2.2-1"/><path d="M6.5 21c.6-3 2.8-4.8 5.5-4.8s4.9 1.8 5.5 4.8"/></svg>
+        Under 2s
+      </button>
       <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
       <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
     </div>
@@ -384,11 +429,50 @@ input::placeholder{color:var(--ink-dim);font-weight:500;font-size:16px}
   <section id="nice" class="screen">
     <div class="topbar">
       <button class="back" data-go="home">‹ Back</button>
-      <div><h1>Flowcharts</h1><p class="sub">Step-through pathways</p></div>
+      <div><h1>NICE guidance</h1><p class="sub">What hospital will actually do</p></div>
     </div>
-    <div class="list" id="flowlist"></div>
-    <div id="flowrun" style="display:none"></div>
-    <p class="note">Flowcharts are defined in the <code>FLOWCHARTS</code> object at the bottom of this file — add pathways there and they appear in this list automatically.</p>
+    <div id="nicelist"></div>
+    <p class="note">The "at hospital / convey / alternative" lines are orientation, not a discharge pathway — non-conveyance sits with JRCALC, your local pathways and your scope of practice. Each card opens the live page on nice.org.uk so you always get the current version; nothing is copied into this app.</p>
+  </section>
+
+  <!-- ============ CT HEAD ============ -->
+  <section id="cthead" class="screen">
+    <div class="topbar">
+      <button class="back" data-go="home">‹ Back</button>
+      <div><h1>Head injury imaging</h1><p class="sub">NICE NG232 — CT head and cervical spine</p></div>
+    </div>
+    <div id="ct-body"></div>
+    <div class="actions">
+      <button id="ct-back">Step back</button>
+      <button id="ct-restart">Start again</button>
+    </div>
+    <p class="note">Criteria from the NICE NG232 imaging algorithm (2023), reproduced for clinical use with attribution — <a href="https://www.nice.org.uk/guidance/ng232/resources" target="_blank" rel="noopener">source PDF</a>. These are the criteria the emergency department applies, so use them to anticipate what hospital will do, not as a discharge pathway. Two items need a hospital clock — GCS at 2 hours, and 4 hours of observation in children — so if you cannot exclude them on scene, that is a convey.</p>
+  </section>
+
+  <!-- ============ BLOODS ============ -->
+  <section id="bloods" class="screen">
+    <div class="topbar">
+      <button class="back" data-go="home">‹ Back</button>
+      <div><h1>Blood results</h1><p class="sub">Typical adult reference ranges</p></div>
+    </div>
+    <div class="card" style="padding:10px">
+      <input type="search" id="bl-find" placeholder="Search — potassium, lactate, INR…" autocomplete="off">
+    </div>
+    <div id="bl-list"></div>
+    <p class="note">Typical UK adult ranges in SI units. Reference ranges are set by the reporting laboratory and vary between them — the range printed on the report always wins over this list. Children, pregnancy and some chronic conditions have different ranges entirely, and a result inside the range never rules out illness.</p>
+  </section>
+
+  <!-- ============ PAEDS ============ -->
+  <section id="paeds" class="screen">
+    <div class="topbar">
+      <button class="back" data-go="home">‹ Back</button>
+      <div><h1>Under 2s</h1><p class="sub">What is normal, and when</p></div>
+    </div>
+    <div class="card" style="padding:10px">
+      <input type="search" id="pd-find" placeholder="Search — solids, teeth, walking, MMRV…" autocomplete="off">
+    </div>
+    <div id="pd-list"></div>
+    <p class="note">Milestones are a normal range, not a deadline — most have months of spread either side and premature babies are assessed on corrected age. The immunisation schedule is the UK routine schedule current from 1 January 2026; what a child was actually offered depends on their date of birth, so the red book beats this list.</p>
   </section>
 
   <!-- ============ SPARE ============ -->
@@ -432,7 +516,6 @@ tick(); setInterval(tick, 200);
 function go(id){
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id));
   window.scrollTo(0,0);
-  if (id === 'nice') showFlowList();
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-go]');
@@ -605,47 +688,421 @@ function rvCalc(){
 }
 ['rv-thr','rv-str','rv-num'].forEach(id => document.getElementById(id).addEventListener('input', rvCalc));
 
-/* ---------- flowcharts ----------
-   Add pathways here. Each node: { q:'question', opts:[{t:'label', to:'nodeId'}] }
-   or an endpoint: { end:'action text' }                                        */
-const FLOWCHARTS = {
-  example: {
-    title: 'Example pathway',
-    sub: 'Placeholder — replace with real NICE content',
-    start: 'n1',
-    nodes: {
-      n1: { q:'Is this a worked example?', opts:[{t:'Yes', to:'n2'},{t:'No', to:'n3'}] },
-      n2: { end:'Replace this node set with the real pathway steps.' },
-      n3: { end:'Same — this is scaffolding only.' }
-    }
-  }
+/* ---------- NICE library ---------- */
+const NICE = [
+  { group:'Time-critical — hospital changes the outcome' },
+  { t:'Suspected sepsis — 16 and over', ref:'NG253', kind:'Guideline', hot:true,
+    ed:'Lactate, blood cultures, IV antibiotics and fluids, usually within the first hour.',
+    go:'Consecutive NEWS2 of 5 or more, or significant clinical concern — time-critical transfer and pre-alert.',
+    alt:'Little. A low-risk score with an obvious treatable source may fit urgent community response or a same-day GP review.',
+    u:'https://www.nice.org.uk/guidance/ng253' },
+  { t:'Stroke and TIA', ref:'NG128', kind:'Guideline', hot:true,
+    ed:'Immediate CT head to separate infarct from bleed and decide on thrombolysis or thrombectomy.',
+    go:'Any ongoing deficit. The scan is the whole point and the window is short.',
+    alt:'For a fully resolved TIA the requirement is specialist assessment within 24 hours — in many areas that is a TIA clinic referral rather than an ED trolley. Check your local pathway.',
+    u:'https://www.nice.org.uk/guidance/ng128' },
+  { t:'Acute coronary syndromes', ref:'NG185', kind:'3 visual summaries (PDF)', hot:true,
+    ed:'Serial troponin plus repeat ECG. That is the test you cannot do on scene.',
+    go:'Anything you cannot exclude. A normal prehospital ECG does not rule out ACS.',
+    alt:'None for suspected ACS. Confirmed STEMI bypasses ED for the PPCI centre.',
+    u:'https://www.nice.org.uk/guidance/ng185/resources' },
+  { t:'Suspected PE', ref:'NG158', kind:'Visual summary (PDF)', hot:true,
+    ed:'Wells score, then D-dimer or straight to CTPA. Interim anticoagulation while waiting.',
+    go:'Any realistic suspicion. Diagnosis needs imaging.',
+    alt:'None prehospital, though PERC may rule it out at low probability in ED.',
+    u:'https://www.nice.org.uk/guidance/ng158/resources/visual-summary-pdf-11193380893' },
+  { group:'Where the answer is often no' },
+  { t:'Head injury — CT imaging', ref:'NG232', kind:'Imaging algorithm (PDF)', hot:false,
+    ed:'CT head within 1 hour or within 8 hours, depending on which criteria are met. If none are met, no scan — just observation and advice.',
+    go:'Any criterion on the algorithm, or anticoagulation, or you cannot rule the criteria out.',
+    alt:'This is the biggest one for you. No criteria met, a sensible adult at home and no other concern, and hospital adds observation you may be able to replace with head injury advice.',
+    u:'https://www.nice.org.uk/guidance/ng232/resources' },
+  { t:'Suspected DVT', ref:'NG158', kind:'Visual summary (PDF)', hot:false,
+    ed:'Wells score, D-dimer, then proximal leg vein ultrasound with the result inside 24 hours.',
+    go:'Signs of PE, a badly swollen or threatened limb, or no route into the local pathway.',
+    alt:'The classic ambulatory referral. Most areas run a DVT clinic or SDEC taking direct referrals, so an isolated swollen calf rarely needs an ED cubicle.',
+    u:'https://www.nice.org.uk/guidance/ng158/resources/visual-summary-pdf-11193380893' },
+  { group:'Sepsis — the other two' },
+  { t:'Suspected sepsis — under 16', ref:'NG254', kind:'Guideline', hot:true,
+    ed:'Paediatric risk stratification and early treatment.', go:'', alt:'Split out from the old NG51 in November 2025.',
+    u:'https://www.nice.org.uk/guidance/ng254' },
+  { t:'Suspected sepsis — pregnant or recently pregnant', ref:'NG255', kind:'Guideline', hot:true,
+    ed:'Obstetric risk stratification and early treatment.', go:'', alt:'Split out from the old NG51 in November 2025.',
+    u:'https://www.nice.org.uk/guidance/ng255' },
+  { group:'Reference only' },
+  { t:'Asthma', ref:'NG245', kind:'Guideline', hot:false,
+    ed:'Diagnosis and chronic management only.', go:'',
+    alt:'Deliberately excludes acute attacks. On scene use JRCALC or BTS/SIGN, not this.',
+    u:'https://www.nice.org.uk/guidance/ng245' },
+  { t:'Asthma pathway', ref:'NG244', kind:'Supplement', hot:false,
+    ed:'Companion to NG245.', go:'',
+    alt:'Holds what NG245 left out, including the BTS/SIGN acute attack material.',
+    u:'https://www.nice.org.uk/guidance/ng244' }
+];
+
+const row = (k, v) => v ? '<span class="lr"><b>' + k + '</b>' + v + '</span>' : '';
+document.getElementById('nicelist').innerHTML = NICE.map(x => x.group
+  ? '<h2 class="grouphead">' + x.group + '</h2>'
+  : '<a class="link' + (x.hot ? ' hot' : '') + '" href="' + x.u + '" target="_blank" rel="noopener">' +
+    '<span class="lt">' + x.t + '</span>' +
+    '<span class="lm">' + x.ref + ' · ' + x.kind + '</span>' +
+    row('At hospital', x.ed) + row('Convey if', x.go) + row('Alternative', x.alt) +
+    '</a>').join('');
+/* ---------- CT head — NICE NG232 imaging algorithm (2023) ---------- */
+const OUT = {
+  ct1h:   { lvl:'hot',  t:'CT head within 1 hour',
+            d:'Within 1 hour of the risk factor being identified, with a provisional written radiology report within 1 hour of the scan.',
+            c:'Convey. This is a time-limited scan.' },
+  ct8h:   { lvl:'warn', t:'CT head within 8 hours',
+            d:'Within 8 hours of the injury — or within 1 hour if they are presenting more than 8 hours after it.',
+            c:'Convey. Hospital has a scan to do.' },
+  cons8h: { lvl:'warn', t:'Consider CT head within 8 hours',
+            d:'On anticoagulants or antiplatelets with no other indication. Within 8 hours of injury, or within 1 hour if presenting more than 8 hours after.',
+            c:'A considered scan, not a mandated one — but it is still a scan you cannot do on scene.' },
+  obs:    { lvl:'warn', t:'Observe for at least 4 hours',
+            d:'One risk factor present. Observation for at least 4 hours from the injury, then CT within 1 hour if GCS drops below 15, further vomiting, or further abnormal drowsiness. If none of those appear and they are on anticoagulants or antiplatelets, consider CT within 8 hours.',
+            c:'Convey. The 4-hour clock needs a hospital.' },
+  none:   { lvl:'ok',   t:'No CT head scan needed',
+            d:'No imaging indication identified on the algorithm.',
+            c:'Hospital would observe and give head injury advice rather than scan. Non-conveyance is your call under JRCALC, your local pathway and your scope — safeguarding, intoxication, a responsible adult at home and safe discharge advice all still apply.' },
+  csct1h: { lvl:'hot',  t:'CT cervical spine within 1 hour',
+            d:'Within 1 hour of the risk factor being identified, with a provisional written radiology report within 1 hour of the scan.',
+            c:'Convey. Time-limited imaging.' },
+  csxr:   { lvl:'warn', t:'3-view cervical spine X-rays within 1 hour',
+            d:'X-ray first line in under-16s, within 1 hour of a risk factor being identified.',
+            c:'Convey — but imaging here starts with plain films, not a CT.' },
+  csnone: { lvl:'ok',   t:'No imaging or no further imaging needed',
+            d:'No indication for cervical spine imaging on the algorithm.',
+            c:'Hospital would not image the neck. This is an emergency department imaging decision, not a prehospital clearance tool — immobilisation and packaging on scene stay with JRCALC.' },
+  nonecj: { lvl:'ok',   t:'No CT head scan needed',
+            d:'No risk factors present. NICE says to use clinical judgement to decide when further observation is needed.',
+            c:'Same as above — the scan is off the table, the rest of the decision is yours.' }
 };
 
-const flowlist = document.getElementById('flowlist'), flowrun = document.getElementById('flowrun');
-function showFlowList(){
-  flowrun.style.display = 'none'; flowlist.style.display = 'grid';
-  flowlist.innerHTML = Object.entries(FLOWCHARTS).map(([k,f]) =>
-    `<button data-flow="${k}">${f.title}<small>${f.sub||''}</small></button>`).join('');
+const CT = {
+  adult: { name:'16 and over', start:'a1', nodes:{
+    a1:{ kind:'any', q:'Any of these present?', items:[
+      'GCS 12 or less on initial assessment in the emergency department',
+      'GCS less than 15 at 2 hours after the injury',
+      'Suspected open or depressed skull fracture',
+      "Any sign of basal skull fracture — haemotympanum, 'panda' eyes, CSF leak from ear or nose, Battle's sign",
+      'Post-traumatic seizure',
+      'Focal neurological deficit',
+      'More than 1 episode of vomiting'
+    ], yes:'ct1h', no:'a2' },
+    a2:{ kind:'yn', q:'Loss of consciousness or amnesia since the head injury?', yes:'a3', no:'a4' },
+    a3:{ kind:'any', q:'Any of these present?', items:[
+      'Age 65 or over',
+      'Any bleeding or clotting disorder — liver failure, haemophilia, taking anticoagulants or antiplatelets',
+      'Dangerous mechanism — pedestrian or cyclist struck by a motor vehicle, occupant ejected from a vehicle, or a fall from more than 1 m or 5 stairs',
+      'More than 30 minutes of retrograde amnesia of events immediately before the injury'
+    ], yes:'ct8h', no:'none' },
+    a4:{ kind:'yn', q:'Taking anticoagulants or antiplatelets?',
+         hint:'Includes vitamin K antagonists, DOACs, heparin and LMWHs. Excludes aspirin monotherapy.',
+         yes:'cons8h', no:'none' }
+  }},
+  child: { name:'Under 16', start:'c1', nodes:{
+    c1:{ kind:'any', q:'Any of these present?', items:[
+      'Suspicion of non-accidental injury',
+      'Post-traumatic seizure with no history of epilepsy',
+      'GCS less than 14 on initial assessment — or, under 1 year, paediatric GCS less than 15',
+      'GCS less than 15 at 2 hours after the injury',
+      'Suspected open or depressed skull fracture, or tense fontanelle',
+      "Any sign of basal skull fracture — haemotympanum, 'panda' eyes, CSF leak from ear or nose, Battle's sign",
+      'Focal neurological deficit',
+      'Under 1 year — bruise, swelling or laceration of more than 5 cm on the head'
+    ], yes:'ct1h', no:'c2' },
+    c2:{ kind:'count', q:'How many of these are present?', items:[
+      'Witnessed loss of consciousness lasting more than 5 minutes',
+      'Any bleeding or clotting disorder — liver failure, haemophilia, taking anticoagulants or antiplatelets',
+      'Abnormal drowsiness',
+      '3 or more discrete episodes of vomiting',
+      'Dangerous mechanism — high-speed RTC as pedestrian, cyclist or vehicle occupant, fall from more than 3 m, or high-speed injury from a projectile or other object',
+      'Amnesia, antegrade or retrograde, lasting more than 5 minutes',
+    ], hint:'Amnesia cannot be assessed in preverbal children and is unlikely to be assessable under 5.',
+      zero:'nonecj', one:'obs', many:'ct1h' }
+  }},
+  cadult: { name:'16 and over', grp:'Cervical spine', start:'s1', nodes:{
+    s1:{ kind:'any', q:'Any of these high-risk factors present?', items:[
+      'GCS 12 or less on initial assessment',
+      'Intubation',
+      'A definitive diagnosis of cervical spine injury is needed urgently — for example, if the neck needs manipulating during surgery or anaesthesia',
+      'Clinical suspicion of cervical spine injury and other body areas are being scanned for head injury or multiregion trauma',
+      'Alert and stable, suspicion of cervical spine injury, and any of: age 65 or over; dangerous mechanism (fall from more than 1 m or 5 stairs, axial load such as diving, high-speed or rollover collision, ejection from a vehicle, motorised recreational vehicle accident, bicycle collision); focal peripheral neurological deficit; paraesthesia in the upper or lower limbs'
+    ], yes:'csct1h', no:'s2' },
+    s2:{ kind:'yn', q:'Suspicion of cervical spine injury — neck pain or tenderness?', yes:'s3', no:'csnone' },
+    s3:{ kind:'yn', q:'A condition predisposing them to higher risk of cervical spine injury?',
+         hint:'For example axial spondyloarthritis.', yes:'csct1h', no:'s4' },
+    s4:{ kind:'any', q:'Any of these low-risk factors present?',
+         hint:'These indicate it is safe to assess range of movement of the neck.', items:[
+      'Involved in a simple rear-end motor vehicle collision',
+      'Comfortable in a sitting position',
+      'Has been ambulatory at any time since the injury',
+      'Absence of midline cervical tenderness',
+      'Delayed onset of neck pain'
+    ], yes:'s5', no:'csct1h' },
+    s5:{ kind:'yn', q:'On safe assessment, can they actively rotate their neck 45 degrees left and right?',
+         yes:'csnone', no:'csct1h' }
+  }},
+  cchild: { name:'Under 16', grp:'Cervical spine', start:'p1', nodes:{
+    p1:{ kind:'any', q:'Any of these high-risk factors present?', items:[
+      'GCS 12 or less on initial assessment',
+      'Intubation',
+      'A definitive diagnosis of cervical spine injury is needed urgently — for example, if the neck needs manipulating during surgery or anaesthesia',
+      'Clinical suspicion of cervical spine injury and other body areas are being scanned for head injury or multiregion trauma',
+      'Focal peripheral neurological signs',
+      'Paraesthesia in the upper or lower limbs'
+    ], yes:'csct1h', no:'p2' },
+    p2:{ kind:'yn', q:'Suspicion of cervical spine injury — neck pain or tenderness?', yes:'p3', no:'csnone' },
+    p3:{ kind:'any', q:'Any of these further risk factors present?', items:[
+      'Dangerous mechanism — fall from more than 1 m or 5 stairs, axial load such as diving, high-speed or rollover collision, ejection from a vehicle, bicycle collision',
+      'A condition predisposing them to higher risk of cervical spine injury — for example collagen or bone disease, or axial spondyloarthritis'
+    ], yes:'p4', no:'p6' },
+    p4:{ kind:'info', out:'csxr', next:'p5' },
+    p5:{ kind:'yn', q:'Strong clinical suspicion of injury despite normal X-rays, X-rays technically difficult or inadequate, or a significant bony injury identified?',
+         yes:'csct1h', no:'csnone' },
+    p6:{ kind:'any', q:'Any of these low-risk factors present?',
+         hint:'These indicate it is safe to assess range of movement of the neck.', items:[
+      'Involved in a simple rear-end motor vehicle collision',
+      'Comfortable in a sitting position',
+      'Has been ambulatory at any time since the injury',
+      'Absence of midline cervical tenderness',
+      'Delayed onset of neck pain'
+    ], yes:'p7', no:'p4' },
+    p7:{ kind:'yn', q:'On safe assessment, can they actively rotate their neck 45 degrees left and right?',
+         yes:'csnone', no:'p4' }
+  }}
+};
+
+let ctAlgo = null, ctNode = null, ctTrail = [], ctPicked = new Set();
+const ctBody = document.getElementById('ct-body');
+
+function ctRender(){
+  ctPicked = new Set();
+  if (!ctAlgo){
+    let out = '';
+    ['CT head','Cervical spine'].forEach(g => {
+      out += '<div class="card"><h2>' + g + '</h2><div class="list">' +
+        Object.entries(CT).filter(([k,v]) => (v.grp || 'CT head') === g).map(([k,v]) =>
+          '<button data-algo="' + k + '">' + v.name + '<small>Selecting people for imaging</small></button>').join('') +
+        '</div></div>';
+    });
+    ctBody.innerHTML = out;
+    return;
+  }
+  if (OUT[ctNode]){
+    const o = OUT[ctNode];
+    ctBody.innerHTML = '<div class="card"><div class="verdict ' + (o.lvl === 'ok' ? 'ok' : 'hot') + '">' + o.t + '</div>' +
+      '<p class="sub" style="margin:12px 2px 0">' + o.d + '</p>' +
+      '<p class="sub" style="margin:10px 2px 0"><b>What it means for you.</b> ' + o.c + '</p></div>';
+    return;
+  }
+  const n = CT[ctAlgo].nodes[ctNode];
+  if (n.kind === 'info'){
+    const o = OUT[n.out];
+    ctBody.innerHTML = '<div class="card"><div class="verdict hot">' + o.t + '</div>' +
+      '<p class="sub" style="margin:12px 2px 0">' + o.d + '</p>' +
+      '<p class="sub" style="margin:10px 2px 0"><b>What it means for you.</b> ' + o.c + '</p>' +
+      '<button class="mini" id="ct-cont">Then what?</button></div>';
+    return;
+  }
+  let html = '<div class="card"><h2>' + CT[ctAlgo].name + '</h2><div class="row"><span class="lab">' + n.q +
+    (n.hint ? '<span class="hint">' + n.hint + '</span>' : '') + '</span></div>';
+  if (n.kind === 'yn'){
+    html += '<div class="seg" style="margin-top:10px"><button data-yn="no">No</button><button data-yn="yes">Yes</button></div>';
+  } else {
+    html += '<div class="checks">' + n.items.map((it,i) =>
+      '<button class="chk" data-i="' + i + '" aria-pressed="false"><span class="box"></span><span>' + it + '</span></button>').join('') +
+      '</div><button class="mini" id="ct-next">Continue</button>';
+  }
+  ctBody.innerHTML = html + '</div>';
 }
-flowlist.addEventListener('click', e => {
-  const b = e.target.closest('[data-flow]'); if(!b) return;
-  runFlow(b.dataset.flow, FLOWCHARTS[b.dataset.flow].start, []);
+
+function ctGo(next){ ctTrail.push(ctNode); ctNode = next; ctRender(); }
+
+ctBody.addEventListener('click', e => {
+  const algo = e.target.closest('[data-algo]');
+  if (algo){ ctAlgo = algo.dataset.algo; ctNode = CT[ctAlgo].start; ctTrail = []; ctRender(); return; }
+  const yn = e.target.closest('[data-yn]');
+  if (yn){ ctGo(CT[ctAlgo].nodes[ctNode][yn.dataset.yn]); return; }
+  const chk = e.target.closest('.chk');
+  if (chk){
+    const i = chk.dataset.i, on = chk.getAttribute('aria-pressed') === 'true';
+    chk.setAttribute('aria-pressed', String(!on));
+    on ? ctPicked.delete(i) : ctPicked.add(i);
+    return;
+  }
+  if (e.target.id === 'ct-cont'){ ctGo(CT[ctAlgo].nodes[ctNode].next); return; }
+  if (e.target.id === 'ct-next'){
+    const n = CT[ctAlgo].nodes[ctNode], c = ctPicked.size;
+    ctGo(n.kind === 'count' ? (c === 0 ? n.zero : c === 1 ? n.one : n.many) : (c ? n.yes : n.no));
+  }
 });
-function runFlow(key, nodeId, trail){
-  const f = FLOWCHARTS[key], n = f.nodes[nodeId];
-  flowlist.style.display = 'none'; flowrun.style.display = 'block';
-  const crumbs = trail.length ? `<p class="note" style="margin-top:0">${trail.join(' › ')}</p>` : '';
-  flowrun.innerHTML = n.end
-    ? `<div class="card"><div class="row"><span class="lab">${n.end}</span></div></div>${crumbs}
-       <div class="actions"><button id="fr">Start again</button><button id="fl">All pathways</button></div>`
-    : `<div class="card"><div class="row"><span class="lab">${n.q}</span></div></div>${crumbs}
-       <div class="list">${n.opts.map((o,i)=>`<button data-opt="${i}">${o.t}</button>`).join('')}</div>
-       <div class="actions"><button id="fl">All pathways</button></div>`;
-  flowrun.querySelectorAll('[data-opt]').forEach((b,i) => b.addEventListener('click', () =>
-    runFlow(key, n.opts[i].to, trail.concat(n.opts[i].t))));
-  const fr = flowrun.querySelector('#fr'); if (fr) fr.addEventListener('click', () => runFlow(key, f.start, []));
-  flowrun.querySelector('#fl').addEventListener('click', showFlowList);
+document.getElementById('ct-back').addEventListener('click', () => {
+  if (!ctTrail.length){ ctAlgo = null; ctNode = null; ctRender(); return; }
+  ctNode = ctTrail.pop(); ctRender();
+});
+document.getElementById('ct-restart').addEventListener('click', () => { ctAlgo = null; ctNode = null; ctTrail = []; ctRender(); });
+ctRender();
+
+/* ---------- blood reference ranges ---------- */
+const BLOODS = [
+  { g:'Full blood count' },
+  { t:'Haemoglobin', r:'Men 130–170 · Women 120–150', u:'g/L', n:'Below 70 is the usual transfusion trigger in a stable patient; higher if bleeding or cardiac disease.' },
+  { t:'White cell count', r:'4.0–11.0', u:'×10⁹/L', n:'Can be normal or low in sepsis — a normal WCC does not reassure.' },
+  { t:'Neutrophils', r:'2.0–7.5', u:'×10⁹/L', n:'Below 1.0 is neutropenia. Neutropenic sepsis is a time-critical emergency.' },
+  { t:'Lymphocytes', r:'1.0–4.0', u:'×10⁹/L' },
+  { t:'Platelets', r:'150–400', u:'×10⁹/L', n:'Below 50 carries real bleeding risk; below 20 is spontaneous bleeding territory.' },
+  { t:'MCV', r:'80–100', u:'fL', n:'Low points to iron deficiency, high to B12/folate or alcohol.' },
+  { g:'Urea and electrolytes' },
+  { t:'Sodium', r:'133–146', u:'mmol/L', n:'Below 125 causes confusion and seizures. Correcting too fast is dangerous in itself.' },
+  { t:'Potassium', r:'3.5–5.3', u:'mmol/L', n:'The one to look at first. Above 6.5, or any level with ECG changes, is a medical emergency.' },
+  { t:'Urea', r:'2.5–7.8', u:'mmol/L', n:'Raised out of proportion to creatinine suggests dehydration or an upper GI bleed.' },
+  { t:'Creatinine', r:'Men 60–110 · Women 45–90', u:'µmol/L', n:'A rise of 26 µmol/L in 48 hours meets the AKI definition.' },
+  { t:'eGFR', r:'Above 90', u:'mL/min/1.73m²', n:'Below 60 for 3 months is chronic kidney disease. Affects drug dosing.' },
+  { g:'Liver and bone' },
+  { t:'Bilirubin', r:'Below 21', u:'µmol/L' },
+  { t:'ALT', r:'10–45', u:'U/L', n:'Hundreds suggests hepatitis; thousands suggests ischaemia, paracetamol or toxins.' },
+  { t:'ALP', r:'30–130', u:'U/L', n:'Raised with GGT points to biliary; raised alone points to bone.' },
+  { t:'Albumin', r:'35–50', u:'g/L', n:'Low in chronic illness, sepsis and liver disease. Needed to adjust calcium.' },
+  { t:'Adjusted calcium', r:'2.20–2.60', u:'mmol/L', n:'Above 3.0 causes confusion and dehydration; low causes tetany and long QT.' },
+  { t:'Magnesium', r:'0.7–1.0', u:'mmol/L', n:'Low magnesium makes low potassium impossible to correct.' },
+  { t:'Phosphate', r:'0.8–1.5', u:'mmol/L' },
+  { g:'Inflammation and clotting' },
+  { t:'CRP', r:'Below 5', u:'mg/L', n:'Lags 12–24 hours behind the illness — a normal CRP early means little.' },
+  { t:'INR', r:'0.8–1.2 untreated', u:'', n:'Target 2–3 on warfarin for most indications. Above 5 is high bleeding risk.' },
+  { t:'APTT', r:'25–35', u:'seconds' },
+  { t:'Fibrinogen', r:'1.5–4.0', u:'g/L', n:'Falls early in major haemorrhage and DIC.' },
+  { t:'D-dimer', r:'Below 500', u:'ng/mL', n:'Age-adjusted threshold over 50 is age × 10. Only useful to rule out at low clinical probability — raised by infection, surgery, pregnancy and age.' },
+  { g:'Cardiac and metabolic' },
+  { t:'Troponin', r:'Assay-specific', u:'', n:'No universal number — use the local threshold and the change between samples. One normal troponin does not exclude ACS.' },
+  { t:'NT-proBNP', r:'Below 400', u:'ng/L', n:'NICE NG106: 400–2000 means specialist assessment within 6 weeks; above 2000 within 2 weeks.' },
+  { t:'Lactate', r:'Below 2.0', u:'mmol/L', n:'Above 2 needs explaining. Above 4 with infection is a red flag for septic shock.' },
+  { t:'Glucose', r:'Fasting 3.9–5.5 · Random below 7.8', u:'mmol/L', n:'Below 4 is hypoglycaemia and treated on the spot.' },
+  { t:'Ketones (blood)', r:'Below 0.6', u:'mmol/L', n:'3.0 or above with hyperglycaemia and acidosis is DKA.' },
+  { t:'HbA1c', r:'Below 42', u:'mmol/mol', n:'48 or above is diabetes. Reflects the last 3 months, not today.' },
+  { t:'TSH', r:'0.4–4.0', u:'mU/L' },
+  { t:'CK', r:'Men 40–320 · Women 25–200', u:'U/L', n:'Thousands means rhabdomyolysis — think long lie, seizures, crush.' },
+  { g:'Blood gas' },
+  { t:'pH', r:'7.35–7.45', u:'', n:'Below 7.2 is severe acidosis whatever the cause.' },
+  { t:'PaCO₂', r:'4.7–6.0', u:'kPa', n:'High with low pH is type 2 respiratory failure — the reason for SpO₂ Scale 2 on NEWS2.' },
+  { t:'PaO₂', r:'10–13 on air', u:'kPa', n:'Below 8 defines respiratory failure.' },
+  { t:'Bicarbonate', r:'22–26', u:'mmol/L', n:'Low suggests a metabolic acidosis; chronically high suggests CO₂ retention.' },
+  { t:'Base excess', r:'−2 to +2', u:'mmol/L' },
+  { g:'Numbers that mean act now' },
+  { t:'Potassium above 6.5', r:'Get an ECG', u:'', n:'Or any potassium with peaked T waves, wide QRS or arrhythmia.' },
+  { t:'Sodium below 120', r:'Seizure risk', u:'' },
+  { t:'Glucose below 4', r:'Treat now', u:'' },
+  { t:'Lactate above 4', r:'Shock until proven otherwise', u:'' },
+  { t:'Platelets below 20', r:'Spontaneous bleeding risk', u:'' },
+  { t:'pH below 7.2', r:'Severe acidosis', u:'' }
+];
+
+const blList = document.getElementById('bl-list'), blFind = document.getElementById('bl-find');
+function blRender(){
+  const q = blFind.value.trim().toLowerCase();
+  let html = '', group = '', shown = 0;
+  BLOODS.forEach(x => {
+    if (x.g){ group = x.g; return; }
+    if (q && !(x.t + ' ' + (x.n||'') + ' ' + group).toLowerCase().includes(q)) return;
+    if (group){ html += '<h2 class="grouphead">' + group + '</h2>'; group = ''; }
+    shown++;
+    html += '<div class="bl"><span class="bt">' + x.t + '</span>' +
+      '<span class="br">' + x.r + (x.u ? ' <small>' + x.u + '</small>' : '') + '</span>' +
+      (x.n ? '<span class="bn">' + x.n + '</span>' : '') + '</div>';
+  });
+  blList.innerHTML = shown ? html : '<div class="empty"><b>Nothing found</b>Try the test name on its own.</div>';
 }
+blFind.addEventListener('input', blRender);
+blRender();
+
+/* ---------- under 2s — milestones and schedule ---------- */
+const PAEDS = [
+  { g:'First few weeks' },
+  { c:'Body', t:'Weight', r:'Back to birth weight by 2–3 weeks', n:'Up to 10% loss in the first days is normal. Doubles by around 5 months, triples by a year.' },
+  { c:'Body', t:'Posterior fontanelle closes', r:'By about 2 months' },
+  { c:'Feeding', t:'Milk only', r:'Birth to around 6 months', n:'8–12 feeds a day early on. Vitamin D drops from birth if breastfed.' },
+  { c:'Movement', t:'Primitive reflexes', r:'Moro, rooting, grasp', n:'Moro fades by 3–4 months. Persisting beyond 6 months is abnormal.' },
+  { g:'6–8 weeks' },
+  { c:'Social', t:'Social smile', r:'By 8 weeks', n:'A responsive smile at a face. One of the earliest useful red flags if absent.' },
+  { c:'Vision', t:'Fixes and follows', r:'By 6–8 weeks' },
+  { c:'Jabs', t:'First immunisations', r:'8 weeks', n:'6-in-1, MenB, rotavirus by mouth. Injections into the thigh.' },
+  { g:'3–4 months' },
+  { c:'Movement', t:'Head control', r:'Steady by 4 months', n:'No head control by 4 months warrants referral.' },
+  { c:'Movement', t:'Hands open, reaches for objects', r:'3–4 months' },
+  { c:'Speech', t:'Cooing and vowel sounds', r:'From 6–8 weeks' },
+  { c:'Jabs', t:'Second and third immunisations', r:'12 and 16 weeks', n:'12 weeks: 6-in-1, MenB, rotavirus. 16 weeks: 6-in-1 and pneumococcal (PCV).' },
+  { c:'Jabs', t:'Rotavirus cut-off', r:'1st by 15 weeks, 2nd by 24 weeks', n:'Hard age limits — it cannot be given late because of intussusception risk.' },
+  { g:'5–6 months' },
+  { c:'Movement', t:'Rolling', r:'Front to back around 5 months, back to front around 6' },
+  { c:'Movement', t:'Sits with support', r:'Around 6 months' },
+  { c:'Feeding', t:'Starting solids', r:'Around 6 months', n:'Not before 17 weeks under any circumstances. Baby rice, purées or soft finger food.' },
+  { c:'Teeth', t:'First tooth', r:'Usually 6 months, normal range 4–10', n:'Lower central incisors first. Drooling, gum rubbing and mild irritability — teething does not cause fever.' },
+  { c:'Speech', t:'Babbling', r:'From around 6 months', n:'Repeated consonants — baba, dada — without meaning yet.' },
+  { g:'7–9 months' },
+  { c:'Movement', t:'Sits unsupported', r:'By 9 months', n:'Not sitting unsupported at 9 months needs referral.' },
+  { c:'Movement', t:'Crawling or bottom shuffling', r:'8–10 months', n:'Some children skip crawling entirely and go straight to walking.' },
+  { c:'Movement', t:'Transfers objects hand to hand', r:'Around 7 months' },
+  { c:'Social', t:'Stranger anxiety', r:'From 7–9 months', n:'Normal and expected. Can make your assessment considerably harder.' },
+  { g:'10–12 months' },
+  { c:'Movement', t:'Pincer grip', r:'10–12 months', n:'Thumb and forefinger. Also the age choking risk climbs.' },
+  { c:'Movement', t:'Pulls to stand and cruises furniture', r:'9–12 months' },
+  { c:'Speech', t:'First word with meaning', r:'Around 12 months, range 10–15' },
+  { c:'Social', t:'Waves bye, points at things', r:'9–12 months', n:'Pointing to share interest is a strong social communication marker.' },
+  { c:'Feeding', t:'Cow\u2019s milk as a main drink', r:'From 12 months', n:'Fine in cooking from 6 months. No honey at all before 12 months — botulism risk.' },
+  { c:'Teeth', t:'Around 6–8 teeth', r:'By 12 months' },
+  { c:'Jabs', t:'One year immunisations', r:'On or after the first birthday', n:'PCV booster, MenB booster and first MMRV. MMRV replaced MMR from January 2026 and adds chickenpox.' },
+  { g:'12–18 months' },
+  { c:'Movement', t:'Walks unaided', r:'Usually 12–18 months', n:'Not walking by 18 months needs referral.' },
+  { c:'Movement', t:'Drinks from a cup, scribbles, tower of 3 bricks', r:'15–18 months' },
+  { c:'Speech', t:'6–20 words', r:'By 18 months', n:'Understands far more than they can say.' },
+  { c:'Social', t:'Feeds self with a spoon', r:'15–18 months' },
+  { c:'Body', t:'Anterior fontanelle closes', r:'9–18 months, occasionally up to 2 years', n:'Bulging or sunken is a red flag while it is still open.' },
+  { c:'Jabs', t:'18 month appointment', r:'New since 2025', n:'4th 6-in-1 and 2nd MMRV — but only for children born on or after 1 July 2024. Born before that, there is no 18 month appointment.' },
+  { g:'2 years' },
+  { c:'Movement', t:'Runs, kicks a ball, stairs two feet to a step', r:'Around 2 years' },
+  { c:'Speech', t:'Two-word phrases, 50+ words', r:'By 2 years', n:'Around half of what they say should be understandable to a stranger.' },
+  { c:'Social', t:'Tower of 6 bricks, pretend play, temper tantrums', r:'2 years' },
+  { c:'Teeth', t:'16 teeth, full set of 20 by around 2½–3', r:'2 years' },
+  { c:'Jabs', t:'Children\u2019s flu vaccine', r:'Annually from 2 years', n:'Nasal spray rather than an injection.' },
+  { g:'Immunisation schedule at a glance' },
+  { c:'Schedule', t:'8 weeks', r:'6-in-1 · MenB · rotavirus (oral)' },
+  { c:'Schedule', t:'12 weeks', r:'6-in-1 · MenB · rotavirus (oral)' },
+  { c:'Schedule', t:'16 weeks', r:'6-in-1 · PCV' },
+  { c:'Schedule', t:'1 year', r:'PCV · MenB · MMRV' },
+  { c:'Schedule', t:'18 months', r:'6-in-1 · MMRV', n:'Born on or after 1 July 2024 only.' },
+  { c:'Schedule', t:'2 years and over', r:'Flu, yearly' },
+  { c:'Schedule', t:'3 years 4 months', r:'4-in-1 pre-school booster · MMRV if not already had 2 doses' },
+  { g:'When it is not normal' },
+  { c:'Red flag', t:'Loss of skills they already had', r:'Any age', n:'Regression is the single most important red flag on this page.' },
+  { c:'Red flag', t:'No social smile', r:'By 10 weeks' },
+  { c:'Red flag', t:'No head control', r:'By 4 months' },
+  { c:'Red flag', t:'Hand preference', r:'Before 12 months', n:'Early handedness can mean a hemiplegia on the other side.' },
+  { c:'Red flag', t:'Not sitting unsupported', r:'By 9 months' },
+  { c:'Red flag', t:'Not walking', r:'By 18 months' },
+  { c:'Red flag', t:'No words', r:'By 18 months' },
+  { c:'Red flag', t:'No two-word phrases', r:'By 2 years' },
+  { c:'Red flag', t:'Milestones that do not match the story', r:'Any age', n:'A developmental picture that does not fit what you are being told is a safeguarding consideration as much as a medical one.' }
+];
+
+const pdList = document.getElementById('pd-list'), pdFind = document.getElementById('pd-find');
+function pdRender(){
+  const q = pdFind.value.trim().toLowerCase();
+  let html = '', group = '', shown = 0;
+  PAEDS.forEach(x => {
+    if (x.g){ group = x.g; return; }
+    if (q && !(x.t + ' ' + x.r + ' ' + (x.n||'') + ' ' + x.c + ' ' + group).toLowerCase().includes(q)) return;
+    if (group){ html += '<h2 class="grouphead">' + group + '</h2>'; group = ''; }
+    shown++;
+    html += '<div class="bl' + (x.c === 'Red flag' ? ' flagcard' : '') + '"><span class="tag">' + x.c + '</span>' +
+      '<span class="bt">' + x.t + '</span><span class="br">' + x.r + '</span>' +
+      (x.n ? '<span class="bn">' + x.n + '</span>' : '') + '</div>';
+  });
+  pdList.innerHTML = shown ? html : '<div class="empty"><b>Nothing found</b>Try a single word — teeth, solids, MenB.</div>';
+}
+pdFind.addEventListener('input', pdRender);
+pdRender();
+
 </script>
 </body>
 </html>
