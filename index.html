@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d10">
+<title>Crew Toolkit</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230b0d10'/><text x='50' y='68' font-size='58' text-anchor='middle' fill='%234ade3a' font-family='monospace'>%2B</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+/* ---------- tokens ---------- */
+:root{
+  --lcd-plate:#0a0c08; --lcd-on:#57e83a; --lcd-off:rgba(87,232,58,.10);
+  --blue-1:#3f6fe8; --blue-2:#1b3fae;
+  --red-1:#e04a44; --red-2:#a51f1b;
+  --teal-1:#1fa8a0; --teal-2:#0d6b66;
+  --amber-1:#e8a13f; --amber-2:#a86610;
+  --violet-1:#8a63d2; --violet-2:#553a90;
+  --s0:#9ad06a; --s1:#e3c95a; --s2:#e79a45; --s3:#e0584f;
+  --radius:16px;
+  --tap:.06s;
+}
+html[data-theme="dark"]{
+  --bg:#0b0d10; --bg-2:#13161b; --ink:#f2f4f7; --ink-dim:#9aa3af;
+  --card:#171b21; --line:#262c34;
+  --key-1:#454c56; --key-2:#22262d; --key-ink:#e8ecf1; --key-glyph:#8d97a4;
+  --shine:rgba(255,255,255,.16); --shade:rgba(0,0,0,.55);
+  --field:#0e1116; --field-line:#333b45;
+}
+html[data-theme="light"]{
+  --bg:#e7eaef; --bg-2:#f6f8fa; --ink:#12161c; --ink-dim:#5c6672;
+  --card:#ffffff; --line:#d3d9e0;
+  --key-1:#ffffff; --key-2:#c6ccd5; --key-ink:#1a1f26; --key-glyph:#7d8794;
+  --shine:rgba(255,255,255,.95); --shade:rgba(20,30,45,.30);
+  --field:#ffffff; --field-line:#c2c9d2;
+  --lcd-plate:#b9c9a4; --lcd-on:#12210c; --lcd-off:rgba(18,33,12,.10);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif;
+  font-size:17px; line-height:1.45;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  overscroll-behavior-y:none;
+}
+.wrap{max-width:560px;margin:0 auto;padding:14px 14px 40px}
+
+/* ---------- clock ---------- */
+.clockbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.lcd{
+  flex:1; background:var(--lcd-plate); border-radius:var(--radius);
+  padding:14px 10px 12px; text-align:center; position:relative; overflow:hidden;
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.6), 0 1px 0 var(--shine);
+  border:1px solid var(--line);
+}
+.lcd .digits{
+  position:relative; font-family:"DSEG7","Courier New",ui-monospace,monospace;
+  font-size:clamp(34px,12.5vw,58px); font-weight:700; letter-spacing:.06em;
+  color:var(--lcd-on); line-height:1;
+}
+html[data-theme="dark"] .lcd .digits{text-shadow:0 0 14px rgba(87,232,58,.55)}
+.lcd .ghost{position:absolute;inset:0;color:var(--lcd-off);pointer-events:none}
+.lcd .date{margin-top:6px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--lcd-on);opacity:.65;font-weight:700}
+.themebtn{
+  width:58px;height:58px;flex:0 0 58px;border:0;border-radius:var(--radius);cursor:pointer;
+  background:linear-gradient(180deg,var(--key-1),var(--key-2)); color:var(--key-ink); font-size:24px;
+  box-shadow:0 5px 0 var(--shade), inset 0 1px 0 var(--shine);
+  transition:transform var(--tap) ease, box-shadow var(--tap) ease;
+}
+.themebtn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--shade), inset 0 1px 0 var(--shine)}
+
+/* ---------- key grid ---------- */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.key{
+  position:relative;border:0;cursor:pointer;color:#fff;
+  border-radius:20px;padding:18px 8px 16px;min-height:118px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  font:inherit;font-weight:800;font-size:19px;letter-spacing:.01em;
+  background:linear-gradient(180deg,var(--k1),var(--k2));
+  box-shadow:0 7px 0 var(--kEdge), 0 10px 18px var(--shade), inset 0 2px 0 rgba(255,255,255,.30), inset 0 -3px 10px rgba(0,0,0,.35);
+  transition:transform var(--tap) ease, box-shadow var(--tap) ease, filter var(--tap) ease;
+}
+.key::after{content:"";position:absolute;left:8px;right:8px;top:6px;height:38%;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,0));pointer-events:none}
+.key:active,.key.press{transform:translateY(6px);filter:brightness(.94);
+  box-shadow:0 1px 0 var(--kEdge), 0 2px 6px var(--shade), inset 0 2px 0 rgba(255,255,255,.18), inset 0 -2px 8px rgba(0,0,0,.4)}
+.key:focus-visible,.themebtn:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #6ea8ff;outline-offset:3px}
+.key .ic{width:40px;height:40px;display:block}
+.key.blue{--k1:var(--blue-1);--k2:var(--blue-2);--kEdge:#12297a}
+.key.red{--k1:var(--red-1);--k2:var(--red-2);--kEdge:#6f1310}
+.key.teal{--k1:var(--teal-1);--k2:var(--teal-2);--kEdge:#084b47}
+.key.amber{--k1:var(--amber-1);--k2:var(--amber-2);--kEdge:#71440a}
+.key.violet{--k1:var(--violet-1);--k2:var(--violet-2);--kEdge:#3a2764}
+.key.spare{--k1:var(--key-1);--k2:var(--key-2);--kEdge:var(--shade);color:var(--key-glyph);font-weight:700}
+.key.spare .ic{opacity:.55}
+
+/* ---------- screens ---------- */
+.screen{display:none}
+.screen.on{display:block;animation:in .18s ease both}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.topbar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.back{
+  border:0;border-radius:14px;padding:12px 16px;font:inherit;font-weight:700;cursor:pointer;
+  background:linear-gradient(180deg,var(--key-1),var(--key-2));color:var(--key-ink);
+  box-shadow:0 4px 0 var(--shade), inset 0 1px 0 var(--shine);
+  transition:transform var(--tap) ease, box-shadow var(--tap) ease;
+}
+.back:active{transform:translateY(3px);box-shadow:0 1px 0 var(--shade), inset 0 1px 0 var(--shine)}
+h1{font-size:20px;margin:0;letter-spacing:-.01em}
+.sub{color:var(--ink-dim);font-size:13px;margin:2px 0 0}
+
+/* ---------- news2 rows ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px;margin-bottom:10px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.row .lab{flex:1 1 100%;font-weight:700;font-size:15px}
+.row .hint{color:var(--ink-dim);font-weight:500;font-size:12.5px;display:block;margin-top:1px}
+input[type="number"]{
+  flex:1 1 120px;min-width:0;background:var(--field);color:var(--ink);
+  border:1px solid var(--field-line);border-radius:12px;padding:14px 12px;
+  font:inherit;font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;
+  -moz-appearance:textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,input[type="number"]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input::placeholder{color:var(--ink-dim);font-weight:500;font-size:16px}
+.seg{display:flex;gap:6px;flex:1 1 100%;flex-wrap:wrap}
+.seg button{
+  flex:1 1 0;min-width:64px;border:1px solid var(--field-line);background:var(--field);color:var(--ink);
+  border-radius:12px;padding:13px 6px;font:inherit;font-weight:700;font-size:15px;cursor:pointer;
+  transition:transform var(--tap) ease, background var(--tap) ease;
+}
+.seg button:active{transform:scale(.97)}
+.seg button[aria-pressed="true"]{background:var(--blue-1);border-color:var(--blue-1);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.chip{
+  flex:0 0 46px;height:46px;display:grid;place-items:center;border-radius:12px;
+  font-weight:800;font-size:20px;font-variant-numeric:tabular-nums;
+  background:var(--bg-2);color:var(--ink-dim);border:1px solid var(--line);
+}
+.chip[data-s="0"]{background:var(--s0);color:#10230a;border-color:transparent}
+.chip[data-s="1"]{background:var(--s1);color:#2a2103;border-color:transparent}
+.chip[data-s="2"]{background:var(--s2);color:#2e1904;border-color:transparent}
+.chip[data-s="3"]{background:var(--s3);color:#fff;border-color:transparent}
+
+/* ---------- total ---------- */
+.total{position:sticky;bottom:0;margin-top:14px;border-radius:var(--radius);overflow:hidden;
+  box-shadow:0 -8px 24px var(--shade);border:1px solid var(--line)}
+.total .head{display:flex;align-items:center;gap:14px;padding:14px;background:var(--card)}
+.total .num{font-size:44px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;min-width:60px;text-align:center}
+.total .band{font-weight:800;font-size:16px}
+.total .resp{color:var(--ink-dim);font-size:13.5px;margin-top:2px}
+.total .strip{height:8px;background:var(--line)}
+.total[data-band="0"] .strip{background:var(--s0)} .total[data-band="0"] .num{color:var(--s0)}
+.total[data-band="1"] .strip{background:var(--s1)} .total[data-band="1"] .num{color:var(--s1)}
+.total[data-band="2"] .strip{background:var(--s2)} .total[data-band="2"] .num{color:var(--s2)}
+.total[data-band="3"] .strip{background:var(--s3)} .total[data-band="3"] .num{color:var(--s3)}
+.flag{margin:8px 0 0;padding:10px 12px;border-radius:12px;background:rgba(224,88,79,.14);
+  border:1px solid rgba(224,88,79,.45);font-size:13.5px;font-weight:600}
+.actions{display:flex;gap:10px;margin:12px 0 6px}
+.actions button{flex:1;border:0;border-radius:14px;padding:15px;font:inherit;font-weight:700;cursor:pointer;
+  background:linear-gradient(180deg,var(--key-1),var(--key-2));color:var(--key-ink);
+  box-shadow:0 4px 0 var(--shade), inset 0 1px 0 var(--shine);transition:transform var(--tap) ease, box-shadow var(--tap) ease}
+.actions button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--shade)}
+.note{color:var(--ink-dim);font-size:12px;margin:14px 2px 0;line-height:1.5}
+.empty{padding:26px 16px;text-align:center;color:var(--ink-dim);background:var(--card);border:1px dashed var(--line);border-radius:var(--radius)}
+.empty b{display:block;color:var(--ink);font-size:16px;margin-bottom:6px}
+.list{display:grid;gap:10px}
+.list button{text-align:left;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  border-radius:14px;padding:16px;font:inherit;font-weight:700;cursor:pointer;
+  box-shadow:0 3px 0 var(--shade);transition:transform var(--tap) ease, box-shadow var(--tap) ease}
+.list button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--shade)}
+.list small{display:block;color:var(--ink-dim);font-weight:500;margin-top:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ HOME ============ -->
+  <section id="home" class="screen on">
+    <div class="clockbar">
+      <div class="lcd">
+        <div class="digits"><span class="ghost">88:88:88</span><span id="clock">00:00:00</span></div>
+        <div class="date" id="date">—</div>
+      </div>
+      <button class="themebtn" id="theme" aria-label="Switch light or dark mode">◐</button>
+    </div>
+
+    <div class="grid" id="keys">
+      <button class="key blue" data-go="news2">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l2.5-6 4 13L15.5 12H22"/></svg>
+        NEWS2
+      </button>
+      <button class="key red" data-go="overdose">
+        <svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.9 2 4.6 5 4.6 8.7c0 2.2 1.2 4.1 3 5.3v2c0 .6.5 1 1 1h6.8c.6 0 1-.4 1-1v-2c1.8-1.2 3-3.1 3-5.3C19.4 5 16.1 2 12 2zM9.2 10.6a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4zm5.6 0a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4zM12 14.4l-1.1-2.2h2.2L12 14.4z"/><path d="M8.2 18.6l7.6 2.2.5-1.7-7.6-2.2zM15.8 18.6l-7.6 2.2-.5-1.7 7.6-2.2z"/></svg>
+        Overdose
+      </button>
+      <button class="key teal" data-go="nice">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="2.5" width="7" height="5" rx="1.2"/><rect x="2.5" y="16.5" width="7" height="5" rx="1.2"/><rect x="14.5" y="16.5" width="7" height="5" rx="1.2"/><path d="M12 7.5v4M6 16.5v-3h12v3"/></svg>
+        Flowcharts
+      </button>
+      <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
+      <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
+      <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
+      <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
+      <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
+    </div>
+    <p class="note">Decision-support aid only. Scores and guidance do not replace clinical judgement or your service's own protocols.</p>
+  </section>
+
+  <!-- ============ NEWS2 ============ -->
+  <section id="news2" class="screen">
+    <div class="topbar">
+      <button class="back" data-go="home">‹ Back</button>
+      <div><h1>NEWS2</h1><p class="sub">Royal College of Physicians, 2017</p></div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span class="lab">Respiration rate <span class="hint">breaths per minute</span></span>
+        <input type="number" id="rr" inputmode="numeric" min="0" max="80" step="1" placeholder="—">
+        <span class="chip" id="c-rr">–</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span class="lab">SpO₂ scale <span class="hint">Scale 2 only if a target of 88–92% is prescribed (e.g. hypercapnic respiratory failure)</span></span>
+        <div class="seg" data-seg="scale">
+          <button data-v="1" aria-pressed="true">Scale 1</button>
+          <button data-v="2" aria-pressed="false">Scale 2</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span class="lab">SpO₂ <span class="hint">%</span></span>
+        <input type="number" id="spo2" inputmode="numeric" min="50" max="100" step="1" placeholder="—">
+        <span class="chip" id="c-spo2">–</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span class="lab">Air or oxygen</span>
+        <div class="seg" data-seg="o2">
+          <button data-v="air" aria-pressed="false">Air</button>
+          <button data-v="o2" aria-pressed="false">Oxygen</button>
+        </div>
+        <span class="chip" id="c-o2" style="margin-top:8px">–</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span class="lab">Systolic BP <span class="hint">mmHg</span></span>
+        <input type="number" id="sbp" inputmode="numeric" min="40" max="300" step="1" placeholder="—">
+        <span class="chip" id="c-sbp">–</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span class="lab">Pulse <span class="hint">beats per minute</span></span>
+        <input type="number" id="hr" inputmode="numeric" min="10" max="260" step="1" placeholder="—">
+        <span class="chip" id="c-hr">–</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span class="lab">Consciousness <span class="hint">ACVPU — any new confusion scores 3</span></span>
+        <div class="seg" data-seg="acvpu">
+          <button data-v="A" aria-pressed="false">Alert</button>
+          <button data-v="C" aria-pressed="false">Confusion</button>
+          <button data-v="V" aria-pressed="false">Voice</button>
+          <button data-v="P" aria-pressed="false">Pain</button>
+          <button data-v="U" aria-pressed="false">Unresp.</button>
+        </div>
+        <span class="chip" id="c-acvpu" style="margin-top:8px">–</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <span class="lab">Temperature <span class="hint">°C</span></span>
+        <input type="number" id="temp" inputmode="decimal" min="25" max="45" step="0.1" placeholder="—">
+        <span class="chip" id="c-temp">–</span>
+      </div>
+    </div>
+
+    <div class="total" id="total" data-band="0">
+      <div class="strip"></div>
+      <div class="head">
+        <div class="num" id="t-num">0</div>
+        <div>
+          <div class="band" id="t-band">Enter observations</div>
+          <div class="resp" id="t-resp">0 of 7 parameters recorded</div>
+        </div>
+      </div>
+    </div>
+    <div id="t-flag"></div>
+
+    <div class="actions">
+      <button id="reset">Clear all</button>
+      <button id="copy">Copy for handover</button>
+    </div>
+    <p class="note">Aggregate score, risk band and clinical response follow the RCP NEWS2 standard. Escalation and pre-alert thresholds vary — follow JRCALC and your local trust policy.</p>
+  </section>
+
+  <!-- ============ OVERDOSE ============ -->
+  <section id="overdose" class="screen">
+    <div class="topbar">
+      <button class="back" data-go="home">‹ Back</button>
+      <div><h1>Overdose</h1><p class="sub">Awaiting content</p></div>
+    </div>
+    <div class="empty">
+      <b>Nothing here yet</b>
+      Send me the substances, doses and actions you want on this screen and I'll build it into the same layout.
+    </div>
+  </section>
+
+  <!-- ============ NICE FLOWCHARTS ============ -->
+  <section id="nice" class="screen">
+    <div class="topbar">
+      <button class="back" data-go="home">‹ Back</button>
+      <div><h1>Flowcharts</h1><p class="sub">Step-through pathways</p></div>
+    </div>
+    <div class="list" id="flowlist"></div>
+    <div id="flowrun" style="display:none"></div>
+    <p class="note">Flowcharts are defined in the <code>FLOWCHARTS</code> object at the bottom of this file — add pathways there and they appear in this list automatically.</p>
+  </section>
+
+  <!-- ============ SPARE ============ -->
+  <section id="spare" class="screen">
+    <div class="topbar">
+      <button class="back" data-go="home">‹ Back</button>
+      <div><h1>Spare</h1><p class="sub">Unassigned button</p></div>
+    </div>
+    <div class="empty"><b>Free slot</b>Tell me what you want here and I'll wire it up.</div>
+  </section>
+
+</div>
+
+<script>
+/* ---------- theme ---------- */
+const store = {
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+};
+const root = document.documentElement;
+const saved = store.get('theme');
+if (saved) root.dataset.theme = saved;
+else if (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) root.dataset.theme = 'light';
+document.getElementById('theme').addEventListener('click', () => {
+  const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+  root.dataset.theme = next; store.set('theme', next);
+  document.querySelector('meta[name=theme-color]').content = next === 'dark' ? '#0b0d10' : '#e7eaef';
+});
+
+/* ---------- clock ---------- */
+const p2 = n => String(n).padStart(2,'0');
+const clockEl = document.getElementById('clock'), dateEl = document.getElementById('date');
+function tick(){
+  const d = new Date();
+  clockEl.textContent = p2(d.getHours())+':'+p2(d.getMinutes())+':'+p2(d.getSeconds());
+  dateEl.textContent = d.toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'});
+}
+tick(); setInterval(tick, 200);
+
+/* ---------- navigation ---------- */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id));
+  window.scrollTo(0,0);
+  if (id === 'nice') showFlowList();
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-go]');
+  if (!b) return;
+  b.classList.add('press');
+  setTimeout(() => b.classList.remove('press'), 90);
+  setTimeout(() => go(b.dataset.go), 70);
+});
+
+/* ---------- NEWS2 state ---------- */
+const S = { scale:1, o2:null, acvpu:null };
+
+document.querySelectorAll('.seg').forEach(seg => {
+  seg.addEventListener('click', e => {
+    const b = e.target.closest('button'); if(!b) return;
+    seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    S[seg.dataset.seg] = seg.dataset.seg === 'scale' ? Number(b.dataset.v) : b.dataset.v;
+    calc();
+  });
+});
+['rr','spo2','sbp','hr','temp'].forEach(id => document.getElementById(id).addEventListener('input', calc));
+
+const num = id => { const v = document.getElementById(id).value; return v === '' ? null : Number(v); };
+
+function sRR(v){ if(v==null||isNaN(v)) return null; if(v<=8) return 3; if(v<=11) return 1; if(v<=20) return 0; if(v<=24) return 2; return 3; }
+function sSpO2(v, scale, o2){
+  if(v==null||isNaN(v)) return null;
+  if(scale === 1){ if(v<=91) return 3; if(v<=93) return 2; if(v<=95) return 1; return 0; }
+  if(o2 == null) return null;                       // scale 2 needs air/oxygen first
+  if(v<=83) return 3; if(v<=85) return 2; if(v<=87) return 1;
+  if(o2 === 'air') return 0;                        // 88–92 = 0 and ≥93 on air = 0
+  if(v<=92) return 0; if(v<=94) return 1; if(v<=96) return 2; return 3;
+}
+function sO2(v){ return v == null ? null : (v === 'o2' ? 2 : 0); }
+function sSBP(v){ if(v==null||isNaN(v)) return null; if(v<=90) return 3; if(v<=100) return 2; if(v<=110) return 1; if(v<=219) return 0; return 3; }
+function sHR(v){ if(v==null||isNaN(v)) return null; if(v<=40) return 3; if(v<=50) return 1; if(v<=90) return 0; if(v<=110) return 1; if(v<=130) return 2; return 3; }
+function sACVPU(v){ return v == null ? null : (v === 'A' ? 0 : 3); }
+function sTemp(v){ if(v==null||isNaN(v)) return null; if(v<=35.0) return 3; if(v<=36.0) return 1; if(v<=38.0) return 0; if(v<=39.0) return 1; return 2; }
+
+function chip(id, s){
+  const el = document.getElementById(id);
+  if (s == null){ el.textContent = '–'; el.removeAttribute('data-s'); }
+  else { el.textContent = s; el.dataset.s = s; }
+}
+
+const BANDS = [
+  { band:0, name:'Low risk — score 0',        resp:'Routine monitoring, minimum 12-hourly.' },
+  { band:1, name:'Low risk — score 1–4',      resp:'Assessment by a competent registered practitioner. Minimum 4–6-hourly observations.' },
+  { band:2, name:'Low–medium risk — a 3 in one parameter', resp:'Urgent review by a clinician competent in acute illness. Minimum 1-hourly observations.' },
+  { band:2, name:'Medium risk — score 5–6',   resp:'Key threshold for urgent response. Urgent review by an acute-team clinician. Minimum 1-hourly observations.' },
+  { band:3, name:'High risk — score 7 or more', resp:'Emergency response. Continuous monitoring. Critical care / senior clinical involvement.' }
+];
+
+function calc(){
+  const rr = sRR(num('rr'));
+  const sp = sSpO2(num('spo2'), S.scale, S.o2);
+  const ox = sO2(S.o2);
+  const bp = sSBP(num('sbp'));
+  const hr = sHR(num('hr'));
+  const av = sACVPU(S.acvpu);
+  const tp = sTemp(num('temp'));
+
+  chip('c-rr',rr); chip('c-spo2',sp); chip('c-o2',ox); chip('c-sbp',bp); chip('c-hr',hr); chip('c-acvpu',av); chip('c-temp',tp);
+
+  const all = [rr,sp,ox,bp,hr,av,tp];
+  const done = all.filter(x => x != null);
+  const total = done.reduce((a,b) => a+b, 0);
+  const complete = done.length === 7;
+  const anyThree = all.some(x => x === 3);
+
+  let r;
+  if (!complete) r = { band: total >= 7 ? 3 : (total >= 5 || anyThree ? 2 : (total ? 1 : 0)), name:'Running total', resp: done.length+' of 7 parameters recorded' };
+  else if (total >= 7) r = BANDS[4];
+  else if (total >= 5) r = BANDS[3];
+  else if (anyThree)   r = BANDS[2];
+  else if (total >= 1) r = BANDS[1];
+  else                 r = BANDS[0];
+
+  const t = document.getElementById('total');
+  t.dataset.band = r.band;
+  document.getElementById('t-num').textContent = total;
+  document.getElementById('t-band').textContent = r.name;
+  document.getElementById('t-resp').textContent = r.resp;
+
+  document.getElementById('t-flag').innerHTML =
+    (complete && anyThree && total < 5) ? '<div class="flag">A single parameter scoring 3 triggers urgent review even when the aggregate is low.</div>'
+    : (S.scale === 2 && S.o2 == null && num('spo2') != null) ? '<div class="flag">Select air or oxygen to score SpO₂ on Scale 2.</div>'
+    : '';
+}
+
+document.getElementById('reset').addEventListener('click', () => {
+  ['rr','spo2','sbp','hr','temp'].forEach(id => document.getElementById(id).value = '');
+  S.o2 = null; S.acvpu = null; S.scale = 1;
+  document.querySelectorAll('.seg').forEach(seg => seg.querySelectorAll('button').forEach((b,i) =>
+    b.setAttribute('aria-pressed', String(seg.dataset.seg === 'scale' && i === 0))));
+  calc();
+});
+
+document.getElementById('copy').addEventListener('click', async e => {
+  const g = id => document.getElementById(id).value || '—';
+  const txt = `NEWS2 ${document.getElementById('t-num').textContent} — ${document.getElementById('t-band').textContent}
+RR ${g('rr')} | SpO2 ${g('spo2')}% (Scale ${S.scale}, ${S.o2==='o2'?'oxygen':S.o2==='air'?'air':'—'}) | BP ${g('sbp')} sys | HR ${g('hr')} | ${S.acvpu||'—'} | Temp ${g('temp')}C
+${new Date().toLocaleString('en-GB')}`;
+  try { await navigator.clipboard.writeText(txt); e.target.textContent = 'Copied'; }
+  catch(err){ e.target.textContent = 'Copy failed'; }
+  setTimeout(() => e.target.textContent = 'Copy for handover', 1400);
+});
+
+calc();
+
+/* ---------- flowcharts ----------
+   Add pathways here. Each node: { q:'question', opts:[{t:'label', to:'nodeId'}] }
+   or an endpoint: { end:'action text' }                                        */
+const FLOWCHARTS = {
+  example: {
+    title: 'Example pathway',
+    sub: 'Placeholder — replace with real NICE content',
+    start: 'n1',
+    nodes: {
+      n1: { q:'Is this a worked example?', opts:[{t:'Yes', to:'n2'},{t:'No', to:'n3'}] },
+      n2: { end:'Replace this node set with the real pathway steps.' },
+      n3: { end:'Same — this is scaffolding only.' }
+    }
+  }
+};
+
+const flowlist = document.getElementById('flowlist'), flowrun = document.getElementById('flowrun');
+function showFlowList(){
+  flowrun.style.display = 'none'; flowlist.style.display = 'grid';
+  flowlist.innerHTML = Object.entries(FLOWCHARTS).map(([k,f]) =>
+    `<button data-flow="${k}">${f.title}<small>${f.sub||''}</small></button>`).join('');
+}
+flowlist.addEventListener('click', e => {
+  const b = e.target.closest('[data-flow]'); if(!b) return;
+  runFlow(b.dataset.flow, FLOWCHARTS[b.dataset.flow].start, []);
+});
+function runFlow(key, nodeId, trail){
+  const f = FLOWCHARTS[key], n = f.nodes[nodeId];
+  flowlist.style.display = 'none'; flowrun.style.display = 'block';
+  const crumbs = trail.length ? `<p class="note" style="margin-top:0">${trail.join(' › ')}</p>` : '';
+  flowrun.innerHTML = n.end
+    ? `<div class="card"><div class="row"><span class="lab">${n.end}</span></div></div>${crumbs}
+       <div class="actions"><button id="fr">Start again</button><button id="fl">All pathways</button></div>`
+    : `<div class="card"><div class="row"><span class="lab">${n.q}</span></div></div>${crumbs}
+       <div class="list">${n.opts.map((o,i)=>`<button data-opt="${i}">${o.t}</button>`).join('')}</div>
+       <div class="actions"><button id="fl">All pathways</button></div>`;
+  flowrun.querySelectorAll('[data-opt]').forEach((b,i) => b.addEventListener('click', () =>
+    runFlow(key, n.opts[i].to, trail.concat(n.opts[i].t))));
+  const fr = flowrun.querySelector('#fr'); if (fr) fr.addEventListener('click', () => runFlow(key, f.start, []));
+  flowrun.querySelector('#fl').addEventListener('click', showFlowList);
+}
+</script>
+</body>
+</html>
