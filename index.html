@@ -168,6 +168,21 @@ input::placeholder{color:var(--ink-dim);font-weight:500;font-size:16px}
   box-shadow:0 3px 0 var(--shade);transition:transform var(--tap) ease, box-shadow var(--tap) ease}
 .list button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--shade)}
 .list small{display:block;color:var(--ink-dim);font-weight:500;margin-top:3px}
+.card h2{font-size:12.5px;margin:0 0 10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);font-weight:800}
+.row.stack .lab{flex:1 1 100%} .row.stack input{flex:1 1 100%}
+.res{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:11px 0;border-top:1px dashed var(--line)}
+.res:first-child{border-top:0;padding-top:2px}
+.res .k{color:var(--ink-dim);font-size:14px;font-weight:600}
+.res .v{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;text-align:right}
+.res .v small{font-size:14px;font-weight:600;color:var(--ink-dim);margin-left:3px}
+.verdict{margin-top:12px;padding:13px;border-radius:12px;font-weight:700;font-size:15px;text-align:center;line-height:1.35}
+.verdict.ok{background:rgba(154,208,106,.16);border:1px solid rgba(154,208,106,.55)}
+.verdict.hot{background:rgba(224,88,79,.16);border:1px solid rgba(224,88,79,.6)}
+.verdict.idle{background:var(--bg-2);border:1px solid var(--line);color:var(--ink-dim);font-weight:600}
+.mini{border:0;border-radius:12px;padding:13px;font:inherit;font-weight:700;cursor:pointer;width:100%;margin-top:10px;
+  background:linear-gradient(180deg,var(--key-1),var(--key-2));color:var(--key-ink);
+  box-shadow:0 4px 0 var(--shade), inset 0 1px 0 var(--shine);transition:transform var(--tap) ease, box-shadow var(--tap) ease}
+.mini:active{transform:translateY(3px);box-shadow:0 1px 0 var(--shade)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -311,12 +326,58 @@ input::placeholder{color:var(--ink-dim);font-weight:500;font-size:16px}
   <section id="overdose" class="screen">
     <div class="topbar">
       <button class="back" data-go="home">‹ Back</button>
-      <div><h1>Overdose</h1><p class="sub">Awaiting content</p></div>
+      <div><h1>Overdose</h1><p class="sub">Dose per kg calculators</p></div>
     </div>
-    <div class="empty">
-      <b>Nothing here yet</b>
-      Send me the substances, doses and actions you want on this screen and I'll build it into the same layout.
+
+    <div class="card">
+      <h2>Dose taken</h2>
+      <div class="row stack"><span class="lab">Patient weight <span class="hint">kg</span></span>
+        <input type="number" id="od-wt" inputmode="decimal" step="0.1" min="1" placeholder="—"></div>
+      <div class="row stack"><span class="lab">Tablet strength <span class="hint">mg per tablet</span></span>
+        <input type="number" id="od-str" inputmode="decimal" step="1" min="0" placeholder="—"></div>
+      <div class="row stack"><span class="lab">Number taken <span class="hint">tablets</span></span>
+        <input type="number" id="od-num" inputmode="decimal" step="0.5" min="0" placeholder="—"></div>
+      <div class="row stack"><span class="lab">Toxic threshold <span class="hint">mg/kg — optional, from TOXBASE</span></span>
+        <input type="number" id="od-thr" inputmode="decimal" step="0.1" min="0" placeholder="—"></div>
     </div>
+
+    <div class="card">
+      <div class="res"><span class="k">Total dose taken</span><span class="v" id="od-total">—<small>mg</small></span></div>
+      <div class="res"><span class="k">Dose per kg</span><span class="v" id="od-perkg">—<small>mg/kg</small></span></div>
+      <div class="verdict idle" id="od-verdict">Enter weight, strength and number taken.</div>
+    </div>
+
+    <div class="card">
+      <h2>Weight converter</h2>
+      <div class="row">
+        <span class="lab">Stone and pounds</span>
+        <input type="number" id="wc-st" inputmode="numeric" step="1" min="0" placeholder="st">
+        <input type="number" id="wc-lb" inputmode="numeric" step="1" min="0" max="13" placeholder="lb">
+      </div>
+      <div class="row stack" style="margin-top:8px"><span class="lab">Kilograms</span>
+        <input type="number" id="wc-kg" inputmode="decimal" step="0.1" min="0" placeholder="kg"></div>
+      <button class="mini" id="wc-use">Use as patient weight</button>
+    </div>
+
+    <div class="card">
+      <h2>Weight threshold</h2>
+      <p class="sub" style="margin:-4px 0 10px">When the patient doesn't know their weight — works out the weight at which this quantity becomes toxic.</p>
+      <div class="row stack"><span class="lab">Toxic dose <span class="hint">mg/kg — from TOXBASE</span></span>
+        <input type="number" id="rv-thr" inputmode="decimal" step="0.1" min="0" placeholder="—"></div>
+      <div class="row stack"><span class="lab">Tablet strength <span class="hint">mg per tablet</span></span>
+        <input type="number" id="rv-str" inputmode="decimal" step="1" min="0" placeholder="—"></div>
+      <div class="row stack"><span class="lab">Number taken <span class="hint">tablets</span></span>
+        <input type="number" id="rv-num" inputmode="decimal" step="0.5" min="0" placeholder="—"></div>
+    </div>
+
+    <div class="card">
+      <div class="res"><span class="k">Total dose taken</span><span class="v" id="rv-total">—<small>mg</small></span></div>
+      <div class="res"><span class="k">Toxic at or below</span><span class="v" id="rv-kg">—<small>kg</small></span></div>
+      <div class="res"><span class="k">In stone and pounds</span><span class="v" id="rv-stlb">—</span></div>
+      <div class="verdict idle" id="rv-verdict">Enter a toxic dose, strength and number taken.</div>
+    </div>
+
+    <p class="note">Arithmetic aid only. Toxic thresholds come from TOXBASE or Poisons Information — this app doesn't hold any. Timing, staggered ingestion, co-ingestants, alcohol, modified-release preparations and pre-existing illness all change the picture, and a sub-threshold calculation never rules out toxicity.</p>
   </section>
 
   <!-- ============ NICE FLOWCHARTS ============ -->
@@ -481,6 +542,68 @@ ${new Date().toLocaleString('en-GB')}`;
 });
 
 calc();
+
+/* ---------- overdose calculators ---------- */
+const KG_PER_ST = 6.35029318, KG_PER_LB = 0.45359237;
+const val = id => { const v = document.getElementById(id).value; return v === '' ? null : Number(v); };
+const set = (id, html) => document.getElementById(id).innerHTML = html;
+const fmt = n => n >= 100 ? Math.round(n).toLocaleString('en-GB') : n.toFixed(n >= 10 ? 1 : 2).replace(/\.?0+$/,'');
+function kgToStLb(kg){ const lbTotal = kg / KG_PER_LB; let st = Math.floor(lbTotal / 14), lb = Math.round(lbTotal - st*14); if (lb === 14){ st++; lb = 0; } return st + ' st ' + lb + ' lb'; }
+
+function odCalc(){
+  const wt = val('od-wt'), str = val('od-str'), num = val('od-num'), thr = val('od-thr');
+  const v = document.getElementById('od-verdict');
+  const total = (str != null && num != null) ? str * num : null;
+  set('od-total', total == null ? '—<small>mg</small>' : fmt(total) + '<small>mg</small>');
+  const perKg = (total != null && wt) ? total / wt : null;
+  set('od-perkg', perKg == null ? '—<small>mg/kg</small>' : fmt(perKg) + '<small>mg/kg</small>');
+
+  if (perKg == null){ v.className = 'verdict idle'; v.textContent = 'Enter weight, strength and number taken.'; return; }
+  if (thr == null || thr <= 0){ v.className = 'verdict idle'; v.textContent = fmt(total) + ' mg in a ' + fmt(wt) + ' kg patient. Add a toxic threshold to compare.'; return; }
+  const pct = Math.round(perKg / thr * 100);
+  if (perKg >= thr){ v.className = 'verdict hot'; v.textContent = 'At or above threshold — ' + fmt(perKg) + ' mg/kg vs ' + fmt(thr) + ' mg/kg (' + pct + '% of threshold).'; }
+  else { v.className = 'verdict ok'; v.textContent = 'Below threshold — ' + fmt(perKg) + ' mg/kg vs ' + fmt(thr) + ' mg/kg (' + pct + '% of threshold).'; }
+}
+['od-wt','od-str','od-num','od-thr'].forEach(id => document.getElementById(id).addEventListener('input', odCalc));
+
+function wcFromImperial(){
+  const st = val('wc-st') || 0, lb = val('wc-lb') || 0;
+  if (val('wc-st') == null && val('wc-lb') == null){ document.getElementById('wc-kg').value = ''; return; }
+  document.getElementById('wc-kg').value = (st * KG_PER_ST + lb * KG_PER_LB).toFixed(1);
+}
+function wcFromKg(){
+  const kg = val('wc-kg');
+  if (kg == null){ document.getElementById('wc-st').value = ''; document.getElementById('wc-lb').value = ''; return; }
+  const lbTotal = kg / KG_PER_LB; let st = Math.floor(lbTotal / 14), lb = Math.round(lbTotal - st*14);
+  if (lb === 14){ st++; lb = 0; }
+  document.getElementById('wc-st').value = st; document.getElementById('wc-lb').value = lb;
+}
+document.getElementById('wc-st').addEventListener('input', wcFromImperial);
+document.getElementById('wc-lb').addEventListener('input', wcFromImperial);
+document.getElementById('wc-kg').addEventListener('input', wcFromKg);
+document.getElementById('wc-use').addEventListener('click', e => {
+  const kg = val('wc-kg'); if (kg == null) return;
+  document.getElementById('od-wt').value = kg; odCalc();
+  e.target.textContent = 'Copied to patient weight';
+  setTimeout(() => e.target.textContent = 'Use as patient weight', 1400);
+});
+
+function rvCalc(){
+  const thr = val('rv-thr'), str = val('rv-str'), num = val('rv-num');
+  const v = document.getElementById('rv-verdict');
+  const total = (str != null && num != null) ? str * num : null;
+  set('rv-total', total == null ? '—<small>mg</small>' : fmt(total) + '<small>mg</small>');
+  if (total == null || thr == null || thr <= 0){
+    set('rv-kg','—<small>kg</small>'); set('rv-stlb','—');
+    v.className = 'verdict idle'; v.textContent = 'Enter a toxic dose, strength and number taken.'; return;
+  }
+  const cut = total / thr;
+  set('rv-kg', cut.toFixed(1) + '<small>kg</small>');
+  set('rv-stlb', kgToStLb(cut));
+  v.className = 'verdict hot';
+  v.innerHTML = 'Anyone weighing <b>' + cut.toFixed(1) + ' kg (' + kgToStLb(cut) + ') or less</b> reaches ' + fmt(thr) + ' mg/kg from this quantity. Heavier than that and the dose falls below threshold.';
+}
+['rv-thr','rv-str','rv-num'].forEach(id => document.getElementById(id).addEventListener('input', rvCalc));
 
 /* ---------- flowcharts ----------
    Add pathways here. Each node: { q:'question', opts:[{t:'label', to:'nodeId'}] }
