@@ -429,10 +429,10 @@ html[data-theme="dark"] .bl .br{color:#7fa8ff}
   <section id="nice" class="screen">
     <div class="topbar">
       <button class="back" data-go="home">‹ Back</button>
-      <div><h1>NICE guidance</h1><p class="sub">What hospital will actually do</p></div>
+      <div><h1>Guidance</h1><p class="sub">What hospital will actually do</p></div>
     </div>
     <div id="nicelist"></div>
-    <p class="note">The "at hospital / convey / alternative" lines are orientation, not a discharge pathway — non-conveyance sits with JRCALC, your local pathways and your scope of practice. Each card opens the live page on nice.org.uk so you always get the current version; nothing is copied into this app.</p>
+    <p class="note">The "at hospital / convey / alternative" lines are orientation, not a discharge pathway — non-conveyance sits with JRCALC, your local pathways and your scope of practice. Each card opens the live source page so you always get the current version; nothing is copied into this app. Two cards are marked "not NICE" — NICE publishes no DKA algorithm, so those point at the JBDS and BSPED guidelines that UK hospitals actually work to.</p>
   </section>
 
   <!-- ============ CT HEAD ============ -->
@@ -711,6 +711,16 @@ const NICE = [
     go:'Any realistic suspicion. Diagnosis needs imaging.',
     alt:'None prehospital, though PERC may rule it out at low probability in ED.',
     u:'https://www.nice.org.uk/guidance/ng158/resources/visual-summary-pdf-11193380893' },
+  { t:'DKA — adults', ref:'JBDS', kind:'Not NICE — see note', hot:true,
+    ed:'Weight-based fixed-rate insulin infusion, fluid and potassium replacement, and serial venous pH, ketones and potassium.',
+    go:'Always. Every part of the treatment is IV and every decision runs off blood results.',
+    alt:'None. NICE has no DKA algorithm — the UK standard is the Joint British Diabetes Societies guideline, hosted by ABCD.',
+    u:'https://abcd.care/resource/management-diabetic-ketoacidosis-dka-adults' },
+  { t:'DKA — children and young people', ref:'BSPED', kind:'Not NICE — see note', hot:true,
+    ed:'Paediatric fluid and insulin protocol with cerebral oedema monitoring — the risk that drives the whole guideline.',
+    go:'Always. Fluid rates are calculated by weight and deviation is dangerous.',
+    alt:'None. BSPED aligns with NICE NG18 but the working document is the BSPED one. A 16 to 18 year old follows whichever team holds them — paediatric goes BSPED, adult goes JBDS.',
+    u:'https://www.bsped.org.uk/clinical-resources/bsped-dka-guidelines/' },
   { group:'Where the answer is often no' },
   { t:'Head injury — CT imaging', ref:'NG232', kind:'Imaging algorithm (PDF)', hot:false,
     ed:'CT head within 1 hour or within 8 hours, depending on which criteria are met. If none are met, no scan — just observation and advice.',
@@ -722,6 +732,11 @@ const NICE = [
     go:'Signs of PE, a badly swollen or threatened limb, or no route into the local pathway.',
     alt:'The classic ambulatory referral. Most areas run a DVT clinic or SDEC taking direct referrals, so an isolated swollen calf rarely needs an ED cubicle.',
     u:'https://www.nice.org.uk/guidance/ng158/resources/visual-summary-pdf-11193380893' },
+  { t:'Low back pain and sciatica', ref:'NG59', kind:'Guideline', hot:false,
+    ed:'For non-traumatic back pain, often nothing. NICE says not to routinely image in a non-specialist setting, and to image in specialist settings only if the result would change management.',
+    go:'Cauda equina signs — bilateral sciatica, saddle anaesthesia, new bladder or bowel dysfunction, retention or incontinence. Also progressive neurological deficit, or suspected cancer, infection or fracture.',
+    alt:'Strongest case on this page. Without red flags the pathway is analgesia, staying active, self-management advice and GP or physio follow-up — none of which needs an ED.',
+    u:'https://www.nice.org.uk/guidance/ng59' },
   { group:'Sepsis — the other two' },
   { t:'Suspected sepsis — under 16', ref:'NG254', kind:'Guideline', hot:true,
     ed:'Paediatric risk stratification and early treatment.', go:'', alt:'Split out from the old NG51 in November 2025.',
