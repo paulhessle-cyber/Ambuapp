@@ -245,7 +245,7 @@ html[data-theme="dark"] .bl .br{color:#7fa8ff}
         Overdose
       </button>
       <button class="key teal" data-go="nice">
-        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="2.5" width="7" height="5" rx="1.2"/><rect x="2.5" y="16.5" width="7" height="5" rx="1.2"/><rect x="14.5" y="16.5" width="7" height="5" rx="1.2"/><path d="M12 7.5v4M6 16.5v-3h12v3"/></svg>
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H18a1 1 0 0 1 1 1v13H5.5A1.5 1.5 0 0 0 4 18.5z"/><path d="M4 18.5A1.5 1.5 0 0 0 5.5 20H19"/><path d="M8 7.5h7M8 11h5"/></svg>
         Guidance
       </button>
       <button class="key violet" data-go="cthead">
@@ -737,6 +737,11 @@ const NICE = [
     go:'Cauda equina signs — bilateral sciatica, saddle anaesthesia, new bladder or bowel dysfunction, retention or incontinence. Also progressive neurological deficit, or suspected cancer, infection or fracture.',
     alt:'Strongest case on this page. Without red flags the pathway is analgesia, staying active, self-management advice and GP or physio follow-up — none of which needs an ED.',
     u:'https://www.nice.org.uk/guidance/ng59' },
+  { t:'Nosebleeds (epistaxis)', ref:'NICE CKS', kind:'Clinical Knowledge Summary', hot:false,
+    ed:'If first aid has failed: cautery for a visible anterior bleeding point, or nasal packing. Bloods and possible ENT admission if packed or bleeding heavily.',
+    go:'Still bleeding after sustained first aid, haemodynamically compromised, a suspected posterior bleed (heavy, both nostrils, running down the throat), or significant trauma.',
+    alt:'Most anterior bleeds stop with first aid — lean forward, firm pressure on the soft part of the nose for 10 to 15 minutes without releasing. Stopped and stable, the usual route is advice and GP follow-up. Anticoagulated patients rebleed more and lower the threshold.',
+    u:'https://cks.nice.org.uk/topics/epistaxis-nosebleeds/' },
   { group:'Sepsis — the other two' },
   { t:'Suspected sepsis — under 16', ref:'NG254', kind:'Guideline', hot:true,
     ed:'Paediatric risk stratification and early treatment.', go:'', alt:'Split out from the old NG51 in November 2025.',
