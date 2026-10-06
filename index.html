@@ -91,6 +91,7 @@ html[data-theme="dark"] .lcd .digits{text-shadow:0 0 14px rgba(87,232,58,.55)}
 .key.teal{--k1:var(--teal-1);--k2:var(--teal-2);--kEdge:#084b47}
 .key.amber{--k1:var(--amber-1);--k2:var(--amber-2);--kEdge:#71440a}
 .key.rose{--k1:#d4628c;--k2:#8e2f52;--kEdge:#5d1c35}
+.key.green{--k1:#3fa35a;--k2:#1f6b35;--kEdge:#124722}
 .key.violet{--k1:var(--violet-1);--k2:var(--violet-2);--kEdge:#3a2764}
 .key.spare{--k1:var(--key-1);--k2:var(--key-2);--kEdge:var(--shade);color:var(--key-glyph);font-weight:700}
 .key.spare .ic{opacity:.55}
@@ -219,6 +220,19 @@ html[data-theme="dark"] .bl .br{color:#7fa8ff}
   color:var(--ink-dim);border:1px solid var(--line);border-radius:6px;padding:2px 6px;margin-bottom:6px}
 .bl.flagcard{border-color:rgba(224,88,79,.5);background:rgba(224,88,79,.07)}
 .bl.flagcard .tag{color:var(--red-1);border-color:rgba(224,88,79,.5)}
+.mapcard{display:flex;gap:14px;align-items:center;text-decoration:none;color:inherit;background:var(--card);
+  border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 3px 0 var(--shade);
+  transition:transform var(--tap) ease, box-shadow var(--tap) ease}
+.mapcard:active{transform:translateY(2px);box-shadow:0 1px 0 var(--shade)}
+.mcode{flex:0 0 64px;height:64px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#3fa35a,#1f6b35);color:#fff;font-weight:800;font-size:26px;line-height:1;
+  font-variant-numeric:tabular-nums;box-shadow:inset 0 1px 0 rgba(255,255,255,.3)}
+.mcode small{font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;margin-bottom:3px}
+.mbody{flex:1;min-width:0}
+.mapcard .lt{display:block;font-weight:800;font-size:17px}
+.mapcard .lt::after{content:" ↗";color:var(--ink-dim);font-weight:600}
+.mapcard .lm{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);margin:3px 0 2px}
+.mapcard .ld{display:block;font-size:13.5px;color:var(--ink-dim)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -260,7 +274,10 @@ html[data-theme="dark"] .bl .br{color:#7fa8ff}
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M9.6 7.2h.01M14.4 7.2h.01M9.8 10.2c.6.7 1.4 1 2.2 1s1.6-.3 2.2-1"/><path d="M6.5 21c.6-3 2.8-4.8 5.5-4.8s4.9 1.8 5.5 4.8"/></svg>
         Under 2s
       </button>
-      <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
+      <button class="key green" data-go="maps">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5 3.5 5.6v15l5.5-2.1 6 2.1 5.5-2.1v-15L15 5.6z"/><path d="M9 3.5v15M15 5.6v15"/></svg>
+        Maps
+      </button>
       <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
     </div>
     <p class="note">Decision-support aid only. Scores and guidance do not replace clinical judgement or your service's own protocols.</p>
@@ -473,6 +490,16 @@ html[data-theme="dark"] .bl .br{color:#7fa8ff}
     </div>
     <div id="pd-list"></div>
     <p class="note">Milestones are a normal range, not a deadline — most have months of spread either side and premature babies are assessed on corrected age. The immunisation schedule is the UK routine schedule current from 1 January 2026; what a child was actually offered depends on their date of birth, so the red book beats this list.</p>
+  </section>
+
+  <!-- ============ MAPS ============ -->
+  <section id="maps" class="screen">
+    <div class="topbar">
+      <button class="back" data-go="home">‹ Back</button>
+      <div><h1>Maps</h1><p class="sub">Hospital floor plans and site maps</p></div>
+    </div>
+    <div id="map-list"></div>
+    <p class="note">Maps open from the source website, so they need signal and will break if the owner moves the file. Send me any PDF and it can live in the app instead.</p>
   </section>
 
   <!-- ============ SPARE ============ -->
@@ -1122,6 +1149,32 @@ function pdRender(){
 }
 pdFind.addEventListener('input', pdRender);
 pdRender();
+
+/* ---------- maps ----------
+   Hospitals: add { name, code, place, u }. Other maps: add { name, place, u }. */
+const MAPS = {
+  hospitals: [
+    { name:'Scunthorpe General Hospital', code:'59', place:'Northern Lincolnshire and Goole NHS Trust',
+      kind:'Site floor plan (PDF)',
+      u:'https://www.nlg.nhs.uk/wp-content/uploads/2023/03/SCUNTHORPE-2d-NOVEMBER-2022.pdf' }
+  ],
+  other: [
+  ]
+};
+
+function mapCard(m, hosp){
+  return '<a class="mapcard" href="' + m.u + '" target="_blank" rel="noopener">' +
+    (hosp ? '<span class="mcode"><small>Code</small>' + m.code + '</span>' : '') +
+    '<span class="mbody"><span class="lt">' + m.name + '</span>' +
+    '<span class="lm">' + (m.kind || 'Map') + '</span>' +
+    (m.place ? '<span class="ld">' + m.place + '</span>' : '') + '</span></a>';
+}
+document.getElementById('map-list').innerHTML =
+  '<h2 class="grouphead">Hospitals</h2>' +
+  (MAPS.hospitals.length ? MAPS.hospitals.map(m => mapCard(m, true)).join('') : '<div class="empty"><b>No hospitals yet</b></div>') +
+  '<h2 class="grouphead">Other maps</h2>' +
+  (MAPS.other.length ? MAPS.other.map(m => mapCard(m, false)).join('')
+    : '<div class="empty"><b>Nothing here yet</b>Caravan parks, industrial estates and other sites go here.</div>');
 
 </script>
 </body>
