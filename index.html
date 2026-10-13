@@ -231,6 +231,8 @@ html[data-theme="dark"] .bl .br{color:#7fa8ff}
 .mcode small{font-size:10px;letter-spacing:.12em;text-transform:uppercase;opacity:.85;margin-bottom:3px}
 .mbody{flex:1;min-width:0}
 .mapcard .lt{display:block;font-weight:800;font-size:17px}
+.mapcard.nolink{box-shadow:none}
+.mapcard.nolink .lt::after{content:""}
 .mapcard .lt::after{content:" ↗";color:var(--ink-dim);font-weight:600}
 .mapcard .lm{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);margin:3px 0 2px}
 .mapcard .ld{display:block;font-size:13.5px;color:var(--ink-dim)}
@@ -1161,6 +1163,8 @@ const MAPS = {
     { name:'Grimsby - Diana, Princess of Wales', code:'', place:'Northern Lincolnshire and Goole',
       kind:'Internal floor plan, 2025 (PDF)',
       u:'https://www.nlg.nhs.uk/wp-content/uploads/2023/03/Diana-Princess-of-Wales-Hospital-internal-2D-2025.pdf' },
+    { name:'Dove House Hospice', code:'220', place:'Chamberlain Road, Hull',
+      kind:'No map yet', u:'' },
     { name:'Goole and District Hospital', code:'', place:'Goole · Northern Lincolnshire and Goole',
       kind:'Site floor plan (PDF)',
       u:'https://www.nlg.nhs.uk/wp-content/uploads/2023/03/Goole-2d-NOVEMBER-2022.pdf' },
@@ -1176,11 +1180,13 @@ const MAPS = {
 };
 
 function mapCard(m, hosp){
-  return '<a class="mapcard" href="' + m.u + '" target="_blank" rel="noopener">' +
+  const tag = m.u ? 'a' : 'div';
+  return '<' + tag + ' class="mapcard' + (m.u ? '' : ' nolink') + '"' +
+    (m.u ? ' href="' + m.u + '" target="_blank" rel="noopener"' : '') + '>' +
     (hosp ? '<span class="mcode' + (m.code ? '' : ' nocode') + '"><small>Code</small>' + (m.code || '—') + '</span>' : '') +
     '<span class="mbody"><span class="lt">' + m.name + '</span>' +
     '<span class="lm">' + (m.kind || 'Map') + '</span>' +
-    (m.place ? '<span class="ld">' + m.place + '</span>' : '') + '</span></a>';
+    (m.place ? '<span class="ld">' + m.place + '</span>' : '') + '</span></' + tag + '>';
 }
 const byName = (a, b) => a.name.localeCompare(b.name, 'en-GB');
 MAPS.hospitals.sort(byName); MAPS.other.sort(byName);
