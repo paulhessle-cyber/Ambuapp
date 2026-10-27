@@ -237,8 +237,8 @@ html[data-theme="dark"] .bl .br{color:#7fa8ff}
 .mapcard .lm{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);margin:3px 0 2px}
 .mapcard .ld{display:block;font-size:13.5px;color:var(--ink-dim)}
 /* ---------- ECG ---------- */
-html[data-theme="dark"]{--ecg-paper:#0b110c;--ecg-minor:rgba(87,232,58,.075);--ecg-major:rgba(87,232,58,.2);--ecg-trace:#7dff5c;--ecg-label:rgba(214,255,200,.85);--ecg-up:rgba(255,92,80,.2);--ecg-down:rgba(90,140,255,.22);--heart-glow:rgba(120,140,255,.10)}
-html[data-theme="light"]{--ecg-paper:#fff7f5;--ecg-minor:rgba(232,95,85,.2);--ecg-major:rgba(220,64,52,.45);--ecg-trace:#141414;--ecg-label:#7a1f17;--ecg-up:rgba(224,70,60,.16);--ecg-down:rgba(60,110,240,.16);--heart-glow:rgba(60,80,160,.08)}
+html[data-theme="dark"]{--sk-paper:#1d2126;--sk-art:#ff7d6e;--sk-terr:#9b91ff;--sk-dead:#80858d;--sk-hot:#ff6b5e;--sk-cond:#ffd25c;--sk-peri:#ffad4d}
+html[data-theme="light"]{--sk-paper:#fbf7ee;--sk-art:#c0392b;--sk-terr:#4a3fcf;--sk-dead:#8f8f8f;--sk-hot:#d4372c;--sk-cond:#c48f00;--sk-peri:#e07b16}
 .key.ecg{--k1:#323a44;--k2:#12161b;--kEdge:#05070a}
 .key.ecg .ic{color:#5cff3d;filter:drop-shadow(0 0 4px rgba(92,255,61,.55))}
 body.lock{overflow:hidden}
@@ -255,26 +255,27 @@ body.lock{overflow:hidden}
 html[data-theme="light"] .ecg-hint b.up{color:#d8392d}html[data-theme="light"] .ecg-hint b.down{color:#2f62d8}
 .ecg-clear{flex:0 0 auto;border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:8px 12px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
 
-.ecg-sheet12{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(6,auto);grid-auto-flow:column;gap:2px;
-  background:var(--line);border:2px solid var(--line);border-radius:14px;overflow:hidden}
-.ecg-lead{position:relative;display:block;width:100%;padding:0;border:0;margin:0;background:var(--ecg-paper);font:inherit;color:inherit;
-  -webkit-user-select:none;user-select:none;cursor:default}
-.ecg-lead.tap{cursor:pointer}
-.ecg-lead canvas{display:block;width:100%;height:100%}
-.ecg-ln{position:absolute;left:4px;top:3px;font-size:12px;font-weight:800;color:var(--ecg-label);pointer-events:none;background:var(--ecg-paper);padding:0 4px;border-radius:4px;line-height:1.35}
-.ecg-badge{position:absolute;right:5px;top:4px;font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:2px 6px;border-radius:6px;pointer-events:none;display:none;color:#fff}
-.ecg-lead.up::after,.ecg-lead.down::after{content:"";position:absolute;inset:0;pointer-events:none;border:2px solid}
-.ecg-lead.up::after{background:var(--ecg-up);border-color:#ff5a4e}
-.ecg-lead.down::after{background:var(--ecg-down);border-color:#5b8cff}
-.ecg-lead.up .ecg-badge{display:block;background:#e0463b}
-.ecg-lead.down .ecg-badge{display:block;background:#3a6ff0}
-.ecg-lead:focus-visible{outline:3px solid #6ea8ff;outline-offset:-3px;z-index:1}
-.ecg-lead.flash{animation:leadflash .22s ease}
+.ecg-tools[hidden]{display:none}
+.ecg-tools{display:flex;align-items:center;gap:10px;margin:0 2px 8px;min-height:34px}
+.ecg-tools span{flex:1;font-size:13px;color:var(--ink-dim);line-height:1.3}
+.ecg-zoom{flex:0 0 auto;border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:7px 12px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer}
+.ecg-zoom[hidden]{display:none}
+.ecg-print{--pw:min(1080px,calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right)));width:var(--pw);margin-left:calc((100% - var(--pw)) / 2);
+  border-radius:8px;overflow:hidden;border:1px solid var(--line);box-shadow:0 8px 22px var(--shade)}
+.ecg-scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.ecg-paper{position:relative}
+.ecg-paper canvas{display:block}
+.ecg-hits{position:absolute;inset:0;pointer-events:none}
+.ecg-hits.live{pointer-events:auto}
+.ecg-hit{position:absolute;margin:0;padding:0;border:0;background:transparent;cursor:pointer;-webkit-user-select:none;user-select:none;color:inherit;font:inherit}
+.ecg-hit.up{background:rgba(224,70,59,.15);box-shadow:inset 0 0 0 2px #e0463b}
+.ecg-hit.down{background:rgba(58,111,240,.15);box-shadow:inset 0 0 0 2px #3a6ff0}
+.ecg-badge{position:absolute;right:4px;top:4px;font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:2px 6px;border-radius:6px;pointer-events:none;display:none;color:#fff}
+.ecg-hit.up .ecg-badge{display:block;background:#e0463b}
+.ecg-hit.down .ecg-badge{display:block;background:#3a6ff0}
+.ecg-hit:focus-visible{outline:3px solid #6ea8ff;outline-offset:-3px;z-index:1}
+.ecg-hit.flash{animation:leadflash .22s ease}
 @keyframes leadflash{from{filter:brightness(1.6)}to{filter:none}}
-.ecg-strip{position:relative;margin-top:8px;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:var(--ecg-paper)}
-.ecg-strip canvas{display:block;width:100%}
-.ecg-strip .ecg-ln{left:8px}
-.ecg-scale{position:absolute;right:8px;bottom:4px;font-size:10.5px;font-weight:700;color:var(--ecg-label);opacity:.75;pointer-events:none}
 
 .ecg-info{margin-top:12px;border-left:5px solid var(--line)}
 .ecg-info[data-tone="hot"]{border-left-color:#e0463b}
@@ -294,34 +295,23 @@ html[data-theme="light"] .ecg-hint b.up{color:#d8392d}html[data-theme="light"] .
 .ecg-where:empty{display:none}
 .ecg-where b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:2px}
 
-.heart-cap{font-weight:800;font-size:16px;margin:3px 0 4px;line-height:1.3}
-.heart-stage{position:relative;height:330px;margin:0 -12px;touch-action:pan-y;overflow:hidden;
-  background:radial-gradient(ellipse at 50% 46%,var(--heart-glow),transparent 68%)}
+.heart-cap{font-weight:800;font-size:16px;margin:3px 0 8px;line-height:1.3}
+.heart-stage{position:relative;height:340px;border-radius:12px;overflow:hidden;border:1px solid var(--line);touch-action:pan-y;background:var(--sk-paper)}
 .heart-stage canvas{display:block;width:100%;height:100%;cursor:grab}
 .heart-stage canvas:active{cursor:grabbing}
-.heart-labels{position:absolute;inset:0;pointer-events:none}
-.hl{position:absolute;left:0;top:0;font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:7px;white-space:nowrap;transition:opacity .2s;
-  background:rgba(10,12,16,.74);color:#fff;border:1px solid rgba(255,255,255,.2);will-change:transform}
-.hl.occ{background:#ffd23f;color:#1b1600;border-color:#fff3b0}
-.hl.cond{background:rgba(40,32,0,.72);color:#ffe27a;border-color:rgba(255,210,63,.55)}
-.hl.hot{background:#e0463b;color:#fff;border-color:#ffb3ad}
-html[data-theme="light"] .hl{background:rgba(255,255,255,.9);color:#151a20;border-color:rgba(0,0,0,.15)}
-html[data-theme="light"] .hl.occ{background:#ffd23f;color:#1b1600}
-html[data-theme="light"] .hl.cond{background:rgba(255,240,190,.95);color:#5a4300;border-color:rgba(180,140,0,.4)}
-html[data-theme="light"] .hl.hot{background:#e0463b;color:#fff}
-.heart-tip{position:absolute;right:12px;bottom:8px;font-size:11.5px;font-weight:700;color:var(--ink-dim);pointer-events:none}
-.heart-msg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:var(--ink-dim);font-size:14px}
-.heart-msg[hidden]{display:none}
-.heart-msg button{margin-top:10px;border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer}
+.heart-tip{position:absolute;right:10px;bottom:7px;font-size:11.5px;font-weight:700;color:var(--ink-dim);pointer-events:none}
 .heart-views{display:flex;gap:6px;margin-top:8px}
 .heart-views button{flex:1;border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:9px 4px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
 .heart-views button:active{transform:scale(.97)}
 .heart-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12.5px;color:var(--ink-dim)}
 .heart-legend:empty{display:none}
-.heart-legend span{display:inline-flex;align-items:center;gap:6px}
-.heart-legend i{width:12px;height:12px;border-radius:50%;display:inline-block;flex:0 0 12px}
+.heart-legend span{display:inline-flex;align-items:center;gap:7px}
+.heart-legend .sw{display:inline-block;flex:0 0 14px;width:14px;height:14px;border-radius:50%;background:var(--c);opacity:.75}
+.heart-legend .sw.line{height:3px;border-radius:2px;opacity:1}
+.heart-legend .sw.dash{height:0;border-radius:0;background:none;border-top:3px dashed var(--c);opacity:1}
+.heart-legend .sw.ring{background:none;border:2.5px solid var(--c);opacity:1}
 
-#beat-cv{display:block;width:100%;height:224px;border-radius:12px;background:var(--ecg-paper)}
+#beat-cv{display:block;width:100%;height:224px;border-radius:10px;border:1px solid var(--line)}
 .rng-list{margin-top:8px}
 .rng{display:grid;grid-template-columns:1fr auto;gap:2px 10px;width:100%;text-align:left;padding:10px 8px;border:0;border-top:1px solid var(--line);
   background:none;color:inherit;font:inherit;cursor:pointer;border-radius:8px}
@@ -645,8 +635,12 @@ html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
       <button class="ecg-clear" id="ecg-clear">Clear</button>
     </div>
 
-    <div class="ecg-sheet12" id="ecg-grid" aria-label="12-lead ECG"></div>
-    <div class="ecg-strip"><canvas id="ecg-rhythm" aria-label="Lead II rhythm strip"></canvas><span class="ecg-ln">II</span><span class="ecg-scale">25 mm/s · 10 mm/mV</span></div>
+    <div class="ecg-tools"><span id="ecg-tip"></span><button type="button" class="ecg-zoom" id="ecg-zoom">Fit page</button></div>
+    <div class="ecg-print" id="ecg-print">
+      <div class="ecg-scroll" id="ecg-scroll">
+        <div class="ecg-paper" id="ecg-paper"><canvas id="ecg-cv" role="img" aria-label="12-lead ECG printout: I, II, III, then aVR, aVL, aVF, then V1 to V3, then V4 to V6, with a lead II rhythm strip"></canvas><div class="ecg-hits" id="ecg-hits"></div></div>
+      </div>
+    </div>
 
     <div class="card ecg-info" id="ecg-info" data-tone="idle">
       <div class="ecg-kicker" id="ecg-kicker">Example</div>
@@ -658,14 +652,13 @@ html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
 
     <div class="card ecg-heart">
       <div class="ecg-kicker">Where is it?</div>
-      <div class="heart-cap" id="heart-cap">Loading…</div>
+      <div class="heart-cap" id="heart-cap"></div>
       <div class="heart-stage" id="heart-stage">
-        <canvas id="heart-cv" aria-label="3D heart. Drag sideways to spin."></canvas>
-        <div class="heart-labels" id="heart-labels" aria-hidden="true"></div>
-        <div class="heart-msg" id="heart-msg">Loading 3D heart…</div>
+        <canvas id="heart-cv" role="img" aria-label="Pencil sketch of the heart. Drag sideways to turn it."></canvas>
+        <div class="heart-tip">Drag sideways to turn</div>
       </div>
       <div class="heart-views" role="group" aria-label="Heart view">
-        <button data-view="front">Front</button><button data-view="left">Left side</button><button data-view="under">Underside</button><button data-view="back">Back</button>
+        <button data-view="front">Front</button><button data-view="left">Left side</button><button data-view="back">Back</button><button data-view="right">Right side</button>
       </div>
       <div class="heart-legend" id="heart-legend"></div>
     </div>
@@ -1772,16 +1765,19 @@ function classify() {
   return R('ST depression — ischaemia', 'warn', 'Not localised.', notes, { kind:'none', label:'ST depression does not localise' });
 }
 
-/* ===== drawing ===== */
-const grid = $('ecg-grid'), stripCv = $('ecg-rhythm'), tiles = {};
-LEADS.forEach(L => {
+/* ===== printout: 3 × 4 (I–III, aVR–aVF, V1–V3, V4–V6) plus a lead II rhythm strip ===== */
+const ROWS = [['I', 'aVR', 'V1', 'V4'], ['II', 'aVL', 'V2', 'V5'], ['III', 'aVF', 'V3', 'V6']];
+const PM = { cal: 7, col: 62.5, row: 25, head: 12, foot: 7, right: 3 };          // millimetres, as on the paper
+const PW = PM.cal + 4 * PM.col + PM.right, PH = PM.head + 4 * PM.row + PM.foot;
+const printBox = $('ecg-print'), paperEl = $('ecg-paper'), printCv = $('ecg-cv'), hitsEl = $('ecg-hits');
+const hits = {};
+ROWS.forEach((row, r) => row.forEach((L, c) => {
   const b = document.createElement('button');
-  b.type = 'button'; b.className = 'ecg-lead'; b.dataset.lead = L; b.tabIndex = -1;
-  b.innerHTML = '<canvas></canvas><span class="ecg-ln">' + L + '</span><span class="ecg-badge"></span>';
-  grid.appendChild(b);
-  tiles[L] = { el: b, cv: b.querySelector('canvas'), badge: b.querySelector('.ecg-badge') };
-});
-let cur = null, mode = 'ex', exId = 'nsr', geo = null;
+  b.type = 'button'; b.className = 'ecg-hit'; b.dataset.lead = L; b.tabIndex = -1; b.setAttribute('aria-label', 'Lead ' + L);
+  b.innerHTML = '<span class="ecg-badge"></span>';
+  hitsEl.appendChild(b); hits[L] = { el: b, badge: b.firstChild, r, c };
+}));
+let cur = null, mode = 'ex', exId = 'nsr', zoom = null, userZoom = false, head = { hr: '75', meas: '' }, pxmm = 3;
 function setModel(m) {
   cur = m; cur.P = pWave(m.pk || 1); cur.spikes = [];
   m.beats.forEach(b => { if (b.m.spike != null) cur.spikes.push(b.t + b.m.spike); });
@@ -1795,75 +1791,106 @@ function sig(L, t) {
   if (cur.base) v += cur.base(L, t);
   return v;
 }
-function measure() {
-  const W = grid.clientWidth - 4; if (W <= 0) return false;
-  const cw = (W - 2) / 2, pxmm = Math.min(3.6, cw / 50);
-  const sw = stripCv.parentElement.clientWidth - 4, spx = Math.min(3.2, sw / 150);
-  geo = { pxmm, ch: Math.round(pxmm * 26), spx, sh: Math.round(spx * 27) };
-  LEADS.forEach(L => { tiles[L].el.style.height = geo.ch + 'px'; });
-  stripCv.style.height = geo.sh + 'px';
-  return true;
-}
-function palette() {
-  const cs = getComputedStyle(document.documentElement), g = n => cs.getPropertyValue(n).trim();
-  return { paper: g('--ecg-paper'), minor: g('--ecg-minor'), major: g('--ecg-major'), trace: g('--ecg-trace'), ink: g('--ink'), dim: g('--ink-dim'),
-    dark: document.documentElement.dataset.theme !== 'light' };
-}
-function prep(cv, W, H) {
-  const dpr = Math.min(3, window.devicePixelRatio || 1);
-  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-  const ctx = cv.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0);
-  return { ctx, dpr };
-}
-function paper(ctx, dpr, W, H, pxmm, col) {
-  const w = W * dpr, h = H * dpr, step = pxmm * dpr;
-  ctx.fillStyle = col.paper; ctx.fillRect(0, 0, w, h);
-  if (step >= 3) {
-    ctx.fillStyle = col.minor;
-    for (let x = 0; x < w; x += step) ctx.fillRect(Math.round(x), 0, 1, h);
-    for (let y = h; y > 0; y -= step) ctx.fillRect(0, Math.round(y), w, 1);
-  }
-  ctx.fillStyle = col.major; const big = step * 5, lw = Math.max(1, Math.round(dpr));
-  for (let x = 0; x < w; x += big) ctx.fillRect(Math.round(x), 0, lw, h);
-  for (let y = h; y > 0; y -= big) ctx.fillRect(0, Math.round(y), w, lw);
-}
 function sample(L, t0, dur, n) {
   const times = [];
   for (let i = 0; i <= n; i++) times.push(t0 + dur * i / n);
   cur.spikes.forEach(ts => { if (ts > t0 && ts < t0 + dur) times.push(ts - .0016, ts, ts + .0016); });
   times.sort((a, b) => a - b);
-  const vals = times.map(t => sig(L, t));
-  let mn = 0, mx = 0; vals.forEach(v => { if (v < mn) mn = v; if (v > mx) mx = v; });
-  return { times, vals, mn, mx };
+  return { times, vals: times.map(t => sig(L, t)) };
 }
-function stroke(ctx, dpr, s, t0, dur, x0, W, y0, g, col) {
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.strokeStyle = col.trace; ctx.lineWidth = 1.4;
-  if (col.dark) { ctx.shadowColor = 'rgba(125,255,92,.55)'; ctx.shadowBlur = 4; }
-  ctx.beginPath();
-  s.times.forEach((t, i) => { const x = x0 + (t - t0) / dur * (W - x0), y = y0 - s.vals[i] * g; if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); });
-  ctx.stroke(); ctx.shadowBlur = 0;
+function prep(cv, W, H) {
+  const dpr = Math.min(3, window.devicePixelRatio || 1);
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  cv.style.width = W + 'px'; cv.style.height = H + 'px';
+  const ctx = cv.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0);
+  return { ctx, dpr };
 }
-const baseline = (s, H, g) => { const y = H / 2 + (s.mx + s.mn) / 2 * g; return Math.min(H - 5 + s.mn * g, Math.max(5 + s.mx * g, y)); };
+/* thermal paper in both themes — just dimmer in dark mode so it doesn't glare */
+function paperCol() {
+  return document.documentElement.dataset.theme !== 'light'
+    ? { paper: '#e6e2d9', minor: 'rgba(196,72,60,.22)', major: 'rgba(186,58,46,.5)', trace: '#121212', text: '#2a2725', dim: '#6b645c' }
+    : { paper: '#fffdf9', minor: 'rgba(229,92,82,.25)', major: 'rgba(212,62,50,.55)', trace: '#121212', text: '#2a2725', dim: '#746c63' };
+}
+function gridPaint(ctx, dpr, x0, y0, x1, y1, px, col) {
+  const step = px * dpr, a = x0 * dpr, b = y0 * dpr, w = (x1 - x0) * dpr, h = (y1 - y0) * dpr;
+  if (step >= 2.6) {
+    ctx.fillStyle = col.minor;
+    for (let x = a; x <= a + w + .5; x += step) ctx.fillRect(Math.round(x), b, 1, h);
+    for (let y = b; y <= b + h + .5; y += step) ctx.fillRect(a, Math.round(y), w, 1);
+  }
+  ctx.fillStyle = col.major; const lw = Math.max(1, Math.round(dpr * .8));
+  for (let x = a; x <= a + w + .5; x += step * 5) ctx.fillRect(Math.round(x), b, lw, h);
+  for (let y = b; y <= b + h + .5; y += step * 5) ctx.fillRect(a, Math.round(y), w, lw);
+}
+function stamp() {
+  const d = new Date(), p = n => String(n).padStart(2, '0');
+  return p(d.getDate()) + '.' + p(d.getMonth() + 1) + '.' + d.getFullYear() + '  ' + p(d.getHours()) + ':' + p(d.getMinutes());
+}
+function layoutPrint() {
+  const avail = printBox.clientWidth; if (!avail) return 0;
+  const fit = avail / PW;
+  if (!userZoom) zoom = fit < 2.2 ? 'zoom' : 'fit';
+  pxmm = zoom === 'fit' ? fit : Math.max(fit, 2.9);
+  const W = Math.floor(PW * pxmm), H = Math.round(PH * pxmm);
+  paperEl.style.width = W + 'px'; paperEl.style.height = H + 'px';
+  ROWS.forEach((row, r) => row.forEach((L, c) => {
+    const s = hits[L].el.style;
+    s.left = ((PM.cal + c * PM.col) * pxmm).toFixed(1) + 'px'; s.top = ((PM.head + r * PM.row) * pxmm).toFixed(1) + 'px';
+    s.width = (PM.col * pxmm).toFixed(1) + 'px'; s.height = (PM.row * pxmm).toFixed(1) + 'px';
+  }));
+  const zb = $('ecg-zoom'), tip = $('ecg-tip'), portrait = window.innerHeight > window.innerWidth;
+  zb.hidden = fit >= 2.9; zb.textContent = zoom === 'fit' ? 'Zoom in' : 'Fit page';
+  zb.parentElement.hidden = zb.hidden;
+  tip.textContent = zb.hidden ? '' : zoom === 'fit' ? 'Whole printout — zoom in to read it.' : 'Swipe the printout sideways' + (portrait ? ', or turn your phone for the whole page.' : '.');
+  return pxmm;
+}
 function drawAll() {
-  if (!cur || !measure()) return;
-  const col = palette();
-  LEADS.forEach((L, i) => {
-    const el = tiles[L].el, W = el.clientWidth, H = el.clientHeight; if (!W) return;
-    const pxmm = geo.pxmm, dur = W / (pxmm * 25), t0 = i < 6 ? 0 : dur, g = 10 * pxmm;
-    const { ctx, dpr } = prep(tiles[L].cv, W, H);
-    paper(ctx, dpr, W, H, pxmm, col);
-    const s = sample(L, t0, dur, Math.ceil(W * 1.5));
-    stroke(ctx, dpr, s, t0, dur, 0, W, baseline(s, H, g), g, col);
+  if (!cur) return;
+  const px = layoutPrint(); if (!px) return;
+  const W = Math.floor(PW * px), H = Math.round(PH * px), col = paperCol();
+  const { ctx, dpr } = prep(printCv, W, H);
+  ctx.fillStyle = col.paper; ctx.fillRect(0, 0, printCv.width, printCv.height);
+  const mm = v => v * px, g = 10 * px, gy0 = mm(PM.head), gy1 = mm(PM.head + 4 * PM.row);
+  gridPaint(ctx, dpr, 0, gy0, W, gy1, px, col);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const font = (w, s) => w + ' ' + mm(s).toFixed(2) + 'px "Helvetica Neue",Helvetica,Arial,sans-serif';
+  // header
+  ctx.fillStyle = col.text; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
+  ctx.font = font(700, 3.4); ctx.fillText('12-lead ECG', mm(3), mm(5.2));
+  const w1 = ctx.measureText('12-lead ECG').width;
+  ctx.font = font(500, 2.9); ctx.fillText(stamp(), mm(3) + w1 + mm(4), mm(5.2));
+  if (head.meas) ctx.fillText(head.meas, mm(3), mm(9.6));
+  ctx.textAlign = 'right';
+  ctx.font = font(700, 3.4); ctx.fillText('HR ' + head.hr + ' /min', mm(PW - 3), mm(5.2));
+  ctx.font = font(500, 2.9); ctx.fillText('25 mm/s   10 mm/mV', mm(PW - 3), mm(9.6));
+  // traces
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.strokeStyle = col.trace; ctx.lineWidth = Math.max(1, px * .36);
+  const cal = y => { ctx.beginPath(); ctx.moveTo(mm(.6), y); ctx.lineTo(mm(1.5), y); ctx.lineTo(mm(1.5), y - g); ctx.lineTo(mm(6.5), y - g); ctx.lineTo(mm(6.5), y); ctx.lineTo(mm(PM.cal), y); ctx.stroke(); };
+  const trace = (L, t0, dur, x0, w, y) => {
+    const s = sample(L, t0, dur, Math.ceil(w * 1.6));
+    ctx.beginPath();
+    s.times.forEach((t, i) => { const x = x0 + (t - t0) / dur * w, yy = y - s.vals[i] * g; if (i) ctx.lineTo(x, yy); else ctx.moveTo(x, yy); });
+    ctx.stroke();
+  };
+  const label = (t, x, y) => { ctx.textAlign = 'left'; ctx.font = font(700, 3.1); ctx.fillStyle = col.text; ctx.fillText(t, x, y); };
+  ROWS.forEach((row, r) => {
+    const top = mm(PM.head + r * PM.row), y = mm(PM.head + r * PM.row + 15);
+    cal(y);
+    row.forEach((L, c) => {
+      const x0 = mm(PM.cal + c * PM.col), w = mm(PM.col);
+      trace(L, c * 2.5, 2.5, x0, w, y);
+      if (c) { ctx.beginPath(); ctx.moveTo(x0, y - mm(2.2)); ctx.lineTo(x0, y + mm(2.2)); ctx.stroke(); }
+      label(L, x0 + mm(1.4), top + mm(4.4));
+    });
   });
-  const W = stripCv.clientWidth, H = stripCv.clientHeight; if (!W) return;
-  const px = geo.spx, g = 10 * px, cal = Math.round(px * 8), dur = (W - cal) / (px * 25);
-  const { ctx, dpr } = prep(stripCv, W, H);
-  paper(ctx, dpr, W, H, px, col);
-  const s = sample('II', 0, dur, Math.ceil(W * 1.5)), y0 = Math.max(baseline(s, H, g), 6 + g);
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.strokeStyle = col.trace; ctx.lineWidth = 1.4; ctx.lineJoin = 'miter';
-  ctx.beginPath(); ctx.moveTo(1, y0); ctx.lineTo(px * 1.5, y0); ctx.lineTo(px * 1.5, y0 - g); ctx.lineTo(px * 6.5, y0 - g); ctx.lineTo(px * 6.5, y0); ctx.lineTo(cal, y0); ctx.stroke();
-  stroke(ctx, dpr, s, 0, dur, cal, W, y0, g, col);
+  const ry = mm(PM.head + 3 * PM.row + 15);
+  cal(ry);
+  trace('II', 0, 10, mm(PM.cal), mm(4 * PM.col), ry);
+  label('II', mm(PM.cal + 1.4), mm(PM.head + 3 * PM.row + 4.4));
+  // footer
+  ctx.font = font(500, 2.7); ctx.fillStyle = col.dim; ctx.textAlign = 'left';
+  ctx.fillText('Teaching trace — generated, not a patient recording', mm(3), mm(PH - 2.3));
+  ctx.textAlign = 'right'; ctx.fillText('10 s · 2.5 s per column', mm(PW - 3), mm(PH - 2.3));
 }
 
 /* ===== info panel ===== */
@@ -1876,19 +1903,20 @@ function info(kicker, title, chips, items, whereLabel, where, tone) {
   $('ecg-where').innerHTML = where ? '<b>' + esc(whereLabel) + '</b>' + esc(where) : '';
   $('ecg-info').dataset.tone = tone;
 }
-const swatch = (c, t) => '<span><i style="background:' + c + '"></i>' + t + '</span>';
+const swatch = (c, t, k) => '<span><i class="sw' + (k ? ' ' + k : '') + '" style="--c:' + c + '"></i>' + t + '</span>';
 function caption(f) {
   const cap = $('heart-cap'), leg = $('heart-legend');
-  if (f.kind === 'mi') { cap.textContent = 'Likely blockage: ' + f.label; leg.innerHTML = swatch('#ffd23f', 'Blockage') + swatch('#6a5cff', 'Muscle at risk') + swatch('#4a3640', 'No flow past the block') + swatch('#e3392c', 'Coronary arteries'); }
-  else if (f.kind === 'cond') { cap.textContent = f.label; leg.innerHTML = swatch('#ffd23f', 'Conduction system') + (f.part === 'all' ? '' : swatch('#ff4d3d', 'Where the problem is')); }
-  else if (f.kind === 'peri') { cap.textContent = f.label; leg.innerHTML = swatch('#ffa726', 'Inflamed pericardium'); }
-  else { cap.textContent = f.label || 'Coronary arteries'; leg.innerHTML = swatch('#e3392c', 'Coronary arteries'); }
+  if (f.kind === 'mi') { cap.textContent = 'Likely blockage: ' + f.label; leg.innerHTML = swatch('var(--sk-hot)', 'Blockage', 'ring') + swatch('var(--sk-terr)', 'Muscle at risk') + swatch('var(--sk-dead)', 'No flow past the block', 'dash') + swatch('var(--sk-art)', 'Coronary arteries', 'line'); }
+  else if (f.kind === 'cond') { cap.textContent = f.label; leg.innerHTML = swatch('var(--sk-cond)', 'Conduction system', 'line') + (f.part === 'all' ? '' : swatch('var(--sk-hot)', 'Where the problem is', 'line')); }
+  else if (f.kind === 'peri') { cap.textContent = f.label; leg.innerHTML = swatch('var(--sk-peri)', 'Inflamed pericardium', 'dash'); }
+  else { cap.textContent = f.label || 'Coronary arteries'; leg.innerHTML = swatch('var(--sk-art)', 'Coronary arteries', 'line'); }
 }
 
 /* ===== modes ===== */
 function showExample(id) {
   const ex = EX.find(e => e.id === id) || EX[0]; exId = ex.id;
   setModel(ex.build());
+  head = { hr: ex.rate ? String(ex.rate) : '---', meas: ex.meas.filter(m => /^(PR|QRS|QTc) /.test(m)).join('    ') };
   if (open) drawAll();
   const tone = ex.g === 'isch' || ex.g === 'arrest' ? 'hot' : ex.g === 'block' ? 'warn' : 'cool';
   info('Example · ' + G[ex.g], ex.name, ex.meas.map(m => [m, m.indexOf('ST ↑') === 0 ? 'up' : m.indexOf('ST ↓') === 0 ? 'down' : '']), ex.feat, 'Where', ex.where, tone);
@@ -1900,12 +1928,13 @@ function showCustom() {
   LEADS.forEach(L => {
     if (cstate[L] === 1) { st[L] = .25; t[L] = baseT(L) < 0 ? -.5 : 1.5; }
     else if (cstate[L] === -1) { st[L] = -.15; t[L] = .8; }
-    const el = tiles[L].el, s = cstate[L];
+    const el = hits[L].el, s = cstate[L];
     el.classList.toggle('up', s === 1); el.classList.toggle('down', s === -1);
-    tiles[L].badge.textContent = s === 1 ? 'ST ↑' : s === -1 ? 'ST ↓' : '';
+    hits[L].badge.textContent = s === 1 ? 'ST ↑' : s === -1 ? 'ST ↓' : '';
     el.setAttribute('aria-label', 'Lead ' + L + ': ' + (s === 1 ? 'ST elevation' : s === -1 ? 'ST depression' : 'no ST change') + '. Tap to change.');
   });
   setModel(sinus(.8, .16, narrow({ qt: .37, st, t })));
+  head = { hr: '75', meas: 'PR 160 ms    QRS 90 ms    QTc 410 ms' };
   if (open) drawAll();
   const r = classify();
   info('Your ECG', r.title, r.chips, r.notes, 'Likely artery', r.artery, r.tone);
@@ -1916,19 +1945,21 @@ function syncMode() {
   $('ecg-m-ex').setAttribute('aria-pressed', String(mode === 'ex'));
   $('ecg-m-cu').setAttribute('aria-pressed', String(mode === 'cu'));
   $('ecg-hint').hidden = mode !== 'cu';
+  hitsEl.classList.toggle('live', mode === 'cu');
   LEADS.forEach(L => {
-    const el = tiles[L].el;
-    el.classList.toggle('tap', mode === 'cu'); el.tabIndex = mode === 'cu' ? 0 : -1;
+    const el = hits[L].el;
+    el.tabIndex = mode === 'cu' ? 0 : -1;
     if (mode !== 'cu') { el.classList.remove('up', 'down'); el.setAttribute('aria-label', 'Lead ' + L); }
   });
 }
-grid.addEventListener('click', e => {
-  const b = e.target.closest('.ecg-lead'); if (!b || mode !== 'cu') return;
+hitsEl.addEventListener('click', e => {
+  const b = e.target.closest('.ecg-hit'); if (!b || mode !== 'cu') return;
   const L = b.dataset.lead;
   cstate[L] = cstate[L] === 0 ? 1 : cstate[L] === 1 ? -1 : 0;
   b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash');
   showCustom();
 });
+$('ecg-zoom').addEventListener('click', () => { userZoom = true; zoom = zoom === 'fit' ? 'zoom' : 'fit'; drawAll(); });
 $('ecg-clear').addEventListener('click', () => { LEADS.forEach(L => { cstate[L] = 0; }); showCustom(); });
 $('ecg-m-cu').addEventListener('click', () => { if (mode === 'cu') return; mode = 'cu'; syncMode(); showCustom(); });
 $('ecg-m-ex').addEventListener('click', () => { if (mode !== 'ex') { mode = 'ex'; syncMode(); showExample(exId); } openSheet(); });
@@ -1962,12 +1993,26 @@ $('ex-close').addEventListener('click', closeSheet);
 back.addEventListener('click', closeSheet);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 
-/* ===== 3D heart ===== */
+/* ===== sketched heart: pencil drawing on a single-axis turntable ===== */
 const Heart = (() => {
-  const stage = $('heart-stage'), cv = $('heart-cv'), lab = $('heart-labels'), msg = $('heart-msg');
-  const tip = document.createElement('div'); tip.className = 'heart-tip'; tip.textContent = 'Drag sideways to spin'; stage.appendChild(tip);
-  /* heart frame: x = patient's left, y = up, z = anterior. v = degrees round the long axis from anterior towards the left. */
+  const stage = $('heart-stage'), cv = $('heart-cv'), ctx = cv.getContext('2d');
+  function sub3(a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }
+  function add3(a, b) { return [a[0] + b[0], a[1] + b[1], a[2] + b[2]]; }
+  function mul3(a, k) { return [a[0] * k, a[1] * k, a[2] * k]; }
+  function dot3(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+  function cross3(a, b) { return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]; }
+  function norm3(a) { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; }
+  function rx(a) { const c = Math.cos(a), s = Math.sin(a); return [1, 0, 0, 0, c, -s, 0, s, c]; }
+  function ry(a) { const c = Math.cos(a), s = Math.sin(a); return [c, 0, s, 0, 1, 0, -s, 0, c]; }
+  function rz(a) { const c = Math.cos(a), s = Math.sin(a); return [c, -s, 0, s, c, 0, 0, 0, 1]; }
+  function mm3(A, B) { const C = new Array(9); for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) C[i * 3 + j] = A[i * 3] * B[j] + A[i * 3 + 1] * B[3 + j] + A[i * 3 + 2] * B[6 + j]; return C; }
+  function mv(A, v) { return [A[0] * v[0] + A[1] * v[1] + A[2] * v[2], A[3] * v[0] + A[4] * v[1] + A[5] * v[2], A[6] * v[0] + A[7] * v[1] + A[8] * v[2]]; }
+
+  /* heart frame: x = patient's left, y = up, z = anterior. v = degrees round the long axis, from the front towards the left. */
   const R0 = 1, KZ = .86, YB = .75, LEN = 2.35, HT = .24, SB = .12, ANTG = 20, POSTG = 210;
+  const PITCH = -.12, LIGHT = norm3([-.5, .55, .68]);
+  const TILT = mm3(rx(-20 * D2R), rz(38 * D2R));
+  const hw = p => mv(TILT, p);
   const angd = (a, b) => { const d = Math.abs((((a - b) % 360) + 360) % 360); return d > 180 ? 360 - d : d; };
   function hpt(s, v) {
     let r, y, u;
@@ -1980,6 +2025,13 @@ const Heart = (() => {
     const a = v * D2R;
     return [r * Math.sin(a), y, r * Math.cos(a) * KZ, u];
   }
+  function hn(s, v) {
+    const e = .004, a = hpt(Math.min(1, s + e), v), b = hpt(Math.max(0, s - e), v), c = hpt(s, v + .6), d = hpt(s, v - .6), p = hpt(s, v);
+    let n = norm3(cross3(sub3(c, d), sub3(a, b)));
+    if (dot3(n, [p[0], p[1] - (YB - LEN * .45), p[2]]) < 0) n = mul3(n, -1);
+    return n;
+  }
+  const surf = (u, v, off) => { const s = SB + Math.min(1, Math.max(0, u)) * (1 - SB), p = hpt(s, v); return hw(add3(p, mul3(hn(Math.min(.995, s), v), off || 0))); };
   const vr = (v, a, b, f) => { f = f || 14; const x = (((v - a) % 360) + 360) % 360, w = (((b - a) % 360) + 360) % 360; const d = x <= w ? Math.min(x, w - x) : -Math.min(x - w, 360 - x); return sm(-f, f, d); };
   const ur = (u, a, b, f) => { f = f || .06; return sm(-f, f, Math.min(u - a, b - u)); };
   const TERR = {
@@ -1992,183 +2044,94 @@ const Heart = (() => {
     posterior: (u, v) => vr(v, 125, 205) * ur(u, -.2, .52),
     rv: (u, v) => vr(v, 255, 375) * ur(u, -.2, .86)
   };
-  const MUSCLE = [.70, .29, .26], ISCH = [.40, .33, 1.0];
-  const VIEWS = { front: [.32, .06], left: [-1.2, .08], under: [2.7, -.62], back: [Math.PI - .4, .08], right: [1.15, -.3], cond: [.6, .12] };
-  let T, ren, scene, cam, root, model, M, Q;
-  let ventGeo, ventMat, colAttr, VU, VV, VW, nV, terrOn = false, shell, shellMat;
-  let atriaMats = [], vesselMats = [], atriaMeshes = [], artGroup, arts = {}, condGroup, cmat, hmat, condParts = {}, extras = {};
-  let mk, halo, labels = [], flutterCurve = null, artLive, artDead;
-  let focus = { kind: 'none' }, period = .8;
-  let yaw = VIEWS.front[0], pitch = VIEWS.front[1], vy = 0, vp = 0, tgt = null, drag = null;
-  let ready = false, loading = false, visible = false, inView = true, raf = 0, last = 0, glass = false;
-
-  function loadThree() {
-    if (window.THREE) return Promise.resolve();
-    return new Promise((res, rej) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-      s.onload = () => window.THREE ? res() : rej(new Error('three.js missing'));
-      s.onerror = () => { s.remove(); rej(new Error('load failed')); };
-      document.head.appendChild(s);
-    });
+  function crSample(pts, n, closed) {
+    const out = [], m = pts.length, L = closed ? m : m - 1;
+    const P = i => closed ? pts[((i % m) + m) % m] : pts[Math.max(0, Math.min(m - 1, i))];
+    for (let k = 0; k <= n; k++) {
+      const t = k / n * L, i = Math.min(L - 1, Math.floor(t)), f = t - i, f2 = f * f, f3 = f2 * f;
+      const p0 = P(i - 1), p1 = P(i), p2 = P(i + 1), p3 = P(i + 2);
+      out.push([0, 1, 2].map(c => .5 * (2 * p1[c] + (-p0[c] + p2[c]) * f + (2 * p0[c] - 5 * p1[c] + 4 * p2[c] - p3[c]) * f2 + (-p0[c] + 3 * p1[c] - 3 * p2[c] + p3[c]) * f3)));
+    }
+    return out;
   }
-  const hw = p => new T.Vector3(p[0], p[1], p[2]).applyMatrix4(M);
-  function surf(u, v, off) {
-    const s = SB + Math.min(1, Math.max(0, u)) * (1 - SB), e = .004;
-    const p = hpt(s, v), a = hpt(Math.min(1, s + e), v), b = hpt(Math.max(0, s - e), v), c = hpt(s, v + .6), d = hpt(s, v - .6);
-    const ds = new T.Vector3(a[0] - b[0], a[1] - b[1], a[2] - b[2]), dv = new T.Vector3(c[0] - d[0], c[1] - d[1], c[2] - d[2]);
-    const n = new T.Vector3().crossVectors(dv, ds).normalize();
-    if (n.dot(new T.Vector3(p[0], p[1] - (YB - LEN * .45), p[2])) < 0) n.negate();
-    const q = new T.Vector3(p[0], p[1], p[2]).addScaledVector(n, off || 0).applyMatrix4(M);
-    return { p: q, n: n.applyQuaternion(Q) };
+  const cumlen = pts => { const L = [0]; for (let i = 1; i < pts.length; i++) L.push(L[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1], pts[i][2] - pts[i - 1][2])); return L; };
+
+  /* ---- geometry: every solid is a wrap-around grid of points with normals ---- */
+  const objs = [];
+  function gridObj(rows, cols, f, hatch, extra) {
+    const P = [], N = [];
+    for (let i = 0; i < rows; i++) for (let j = 0; j < cols; j++) { const r = f(i, j); P.push(r[0]); N.push(r[1]); }
+    const n = rows * cols;
+    const o = Object.assign({ P, N, rows, cols, hatch, S: new Float32Array(n * 2), NZ: new Float32Array(n), TN: new Float32Array(n), zc: 0, seed: objs.length * 31 }, extra || {});
+    objs.push(o); return o;
   }
-  const mat = (hex, o) => new T.MeshStandardMaterial(Object.assign({ color: hex, roughness: .6, metalness: .03 }, o || {}));
-  function tube(pts, r, m, closed) { const c = new T.CatmullRomCurve3(pts, !!closed); return new T.Mesh(new T.TubeGeometry(c, Math.min(96, Math.max(24, pts.length * 10)), r, 12, !!closed), m); }
-  function ball(p, r, m) { const s = new T.Mesh(new T.SphereGeometry(r, 20, 14), m); s.position.copy(p); return s; }
-
-  function build() {
-    T = window.THREE;
-    ren = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true });
-    ren.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-    ren.setClearColor(0x000000, 0);
-    scene = new T.Scene();
-    cam = new T.PerspectiveCamera(30, 1, .1, 60); cam.position.set(0, 0, 8.7);
-    scene.add(new T.HemisphereLight(0xfff2ee, 0x3a1c24, .8));
-    const key = new T.DirectionalLight(0xffffff, .8); key.position.set(3, 4, 6); scene.add(key);
-    const rim = new T.DirectionalLight(0xa9bcff, .5); rim.position.set(-5, 2, -4); scene.add(rim);
-    root = new T.Group(); scene.add(root); model = new T.Group(); root.add(model);
-    M = new T.Matrix4().makeRotationX(-20 * D2R).multiply(new T.Matrix4().makeRotationZ(38 * D2R));
-    Q = new T.Quaternion().setFromRotationMatrix(M);
-
-    /* ventricles: parametric surface, vertex colours carry the territory shading */
-    const NSg = 72, NVg = 84, pos = [], U = [], V = [], idx = [];
-    const push = (p, v) => { pos.push(p[0], p[1], p[2]); U.push(p[3]); V.push(v); };
-    push(hpt(0, 0), 0);
-    for (let i = 1; i < NSg; i++) for (let j = 0; j < NVg; j++) { const v = j * 360 / NVg; push(hpt(i / NSg, v), v); }
-    const apex = U.length; push(hpt(1, 0), 0);
-    const Rg = (i, j) => 1 + (i - 1) * NVg + (((j % NVg) + NVg) % NVg);
-    for (let j = 0; j < NVg; j++) idx.push(0, Rg(1, j), Rg(1, j + 1));
-    for (let i = 1; i < NSg - 1; i++) for (let j = 0; j < NVg; j++) { const a = Rg(i, j), b = Rg(i, j + 1), c = Rg(i + 1, j), d = Rg(i + 1, j + 1); idx.push(a, c, b, b, c, d); }
-    for (let j = 0; j < NVg; j++) idx.push(apex, Rg(NSg - 1, j + 1), Rg(NSg - 1, j));
-    ventGeo = new T.BufferGeometry();
-    ventGeo.setAttribute('position', new T.Float32BufferAttribute(pos, 3));
-    nV = U.length; VU = U; VV = V; VW = new Float32Array(nV);
-    const cols = new Float32Array(nV * 3); for (let i = 0; i < nV; i++) cols.set(MUSCLE, i * 3);
-    colAttr = new T.BufferAttribute(cols, 3); ventGeo.setAttribute('color', colAttr);
-    ventGeo.setIndex(idx); ventGeo.applyMatrix4(M); ventGeo.computeVertexNormals();
-    ventMat = new T.MeshStandardMaterial({ vertexColors: true, roughness: .55, metalness: .04 });
-    model.add(new T.Mesh(ventGeo, ventMat));
-
-    /* pericardial shell for pericarditis */
-    const centre = hw([0, YB - LEN * .45, 0]);
-    const sg = ventGeo.clone(); sg.translate(-centre.x, -centre.y, -centre.z); sg.scale(1.07, 1.07, 1.07); sg.translate(centre.x, centre.y, centre.z);
-    shellMat = new T.MeshBasicMaterial({ color: 0xffa726, transparent: true, opacity: .28, depthWrite: false });
-    shell = new T.Mesh(sg, shellMat); shell.visible = false; model.add(shell);
-
-    /* atria and great vessels */
-    const atr = mat(0xa8524e); atriaMats.push(atr);
-    const ell = (c, r) => { const m = new T.Mesh(new T.SphereGeometry(1, 36, 24), atr); m.scale.set(r[0], r[1], r[2]); m.position.copy(hw(c)); m.quaternion.copy(Q); model.add(m); atriaMeshes.push(m); return m; };
-    ell([-.82, YB + .22, .05], [.5, .52, .58]); ell([.2, YB + .28, -.62], [.62, .42, .42]);
-    ell([-.52, YB + .44, .5], [.26, .2, .22]); ell([.82, YB + .25, .14], [.22, .15, .3]);
-    const ao = mat(0xc84a3e), pa = mat(0x5b64c4), vn = mat(0x5560b5); vesselMats.push(ao, pa, vn);
-    const AO = [-.05, YB + .12, -.02], A0 = hw(AO), P0 = hw([.28, YB + .08, .52]), S0 = hw([-.82, YB + .62, -.02]);
-    const o = (b, x, y, z) => b.clone().add(new T.Vector3(x, y, z));
-    const vessel = (pts, r, m) => { model.add(tube(pts, r, m)); model.add(ball(pts[pts.length - 1], r, m)); };
-    vessel([A0, o(A0, -.1, .5, .08), o(A0, -.05, 1.05, .05), o(A0, .25, 1.42, -.3), o(A0, .62, 1.3, -.72), o(A0, .7, .65, -.9), o(A0, .7, -.1, -.92)], .27, ao);
-    const B = o(P0, .15, .95, -.55);
-    vessel([P0, o(P0, .05, .5, -.02), o(P0, .12, .85, -.3), B], .22, pa);
-    vessel([B, o(B, .35, .02, -.15), o(B, .62, -.05, -.25)], .15, pa);
-    vessel([B, o(B, -.4, 0, -.15), o(B, -.85, -.05, -.2)], .15, pa);
-    vessel([S0, o(S0, 0, .6, 0), o(S0, 0, 1.15, 0)], .17, vn);
-
-    /* coronary arteries */
-    const ART = {
-      LMS: { r: .055, pts: () => [hw([AO[0] + .17, AO[1] + .05, AO[2] - .06]), hw([.45, YB + .15, .1]), surf(0, 42, .03).p] },
-      LAD: { r: .045, parent: 'LMS', path: [[0, 42], [.05, 33], [.18, 25], [.35, 22], [.55, 19], [.75, 17], [.9, 15], [.97, 12], [.995, 70]] },
-      D1: { r: .03, parent: 'LAD', path: [[.2, 25], [.3, 42], [.42, 58], [.58, 70]] },
-      D2: { r: .027, parent: 'LAD', path: [[.48, 20], [.58, 37], [.72, 52]] },
-      LCX: { r: .043, parent: 'LMS', path: [[0, 42], [0, 62], [0, 86], [.005, 112], [.01, 140], [.015, 166]] },
-      OM1: { r: .03, parent: 'LCX', path: [[.003, 96], [.15, 101], [.35, 106], [.56, 110]] },
-      OM2: { r: .027, parent: 'LCX', path: [[.01, 138], [.2, 141], [.42, 143]] },
-      RCA: { r: .05, pts: () => [hw([AO[0] - .13, AO[1] + .04, AO[2] + .2]), hw([-.32, YB + .14, .66])].concat([[0, 330], [0, 300], [0, 270], [.005, 242], [.01, 214]].map(q => surf(q[0], q[1], .03).p)) },
-      AM: { r: .03, parent: 'RCA', path: [[0, 282], [.2, 290], [.4, 297], [.6, 303]] },
-      PDA: { r: .035, parent: 'RCA', path: [[.01, 214], [.15, 211], [.38, 209], [.6, 207], [.8, 206]] },
-      PLB: { r: .027, parent: 'RCA', path: [[.01, 214], [.03, 196], [.09, 182], [.2, 174]] }
-    };
-    Object.keys(ART).forEach(k => { const d = ART[k]; const pts = d.pts ? d.pts() : d.path.map(q => surf(q[0], q[1], .03).p); arts[k] = { r: d.r, parent: d.parent, curve: new T.CatmullRomCurve3(pts), at: 1 }; });
-    Object.keys(arts).forEach(k => {
-      const a = arts[k]; if (!a.parent) return;
-      const first = a.curve.points[0], pc = arts[a.parent].curve; let best = 1e9, bt = 1;
-      for (let i = 0; i <= 200; i++) { const d = pc.getPointAt(i / 200).distanceTo(first); if (d < best) { best = d; bt = i / 200; } }
-      a.at = bt;
-    });
-    artGroup = new T.Group(); model.add(artGroup);
-    artLive = mat(0xe3392c, { emissive: 0x3a0603, roughness: .4 }); artDead = mat(0x4a3640, { roughness: .85 });
-    const ym = new T.MeshStandardMaterial({ color: 0xffd23f, emissive: 0xffb000, emissiveIntensity: .7, roughness: .4 });
-    mk = new T.Mesh(new T.SphereGeometry(.085, 24, 16), ym); mk.visible = false; model.add(mk);
-    const hc = document.createElement('canvas'); hc.width = hc.height = 64;
-    const hx = hc.getContext('2d'), gr = hx.createRadialGradient(32, 32, 4, 32, 32, 32);
-    gr.addColorStop(0, 'rgba(255,230,120,1)'); gr.addColorStop(.45, 'rgba(255,200,40,.55)'); gr.addColorStop(1, 'rgba(255,200,40,0)');
-    hx.fillStyle = gr; hx.fillRect(0, 0, 64, 64);
-    halo = new T.Sprite(new T.SpriteMaterial({ map: new T.CanvasTexture(hc), transparent: true, depthWrite: false, depthTest: false, blending: T.AdditiveBlending }));
-    halo.visible = false; model.add(halo);
-
-    /* conduction system */
-    condGroup = new T.Group(); condGroup.visible = false; model.add(condGroup);
-    cmat = new T.MeshStandardMaterial({ color: 0xffd23f, emissive: 0xb88a00, emissiveIntensity: .7, roughness: .4 });
-    hmat = new T.MeshStandardMaterial({ color: 0xff4d3d, emissive: 0xff2a1a, emissiveIntensity: 1, roughness: .4 });
-    const SA = [-.68, YB + .7, .18], AVN = [-.2, YB + .02, -.1], HIS = [-.02, YB - .22, .03];
-    const sp = (y, kn, kd) => [.879 * kn + .477 * kd, y, .03 - .477 * kn + .879 * kd];
-    const P = {
-      sa: { ball: SA, r: .09 },
-      avn: { ball: AVN, r: .085 },
-      inter: { path: [SA, [-.58, YB + .45, .1], [-.38, YB + .2, -.02], AVN], r: .022 },
-      his: { path: [AVN, [-.1, YB - .08, -.04], HIS], r: .034 },
-      rbb: { path: [HIS, sp(YB - .35, -.1, 0), sp(-.3, -.13, .05), sp(-.8, -.13, .05), sp(-1.15, -.1, .1), [-.42, -1.02, .45]], r: .026 },
-      lbbA: { path: [HIS, sp(YB - .32, .1, .02), sp(-.2, .2, .25), sp(-.75, .3, .35), [.32, -1.25, .3]], r: .026 },
-      lbbP: { path: [HIS, sp(YB - .34, .1, -.02), sp(-.25, .22, -.25), sp(-.8, .32, -.35), [.3, -1.25, -.22]], r: .026 }
-    };
-    Object.keys(P).forEach(k => { const d = P[k]; const m = d.ball ? ball(hw(d.ball), d.r, cmat) : tube(d.path.map(hw), d.r, cmat); condGroup.add(m); condParts[k] = m; });
-    const loop = []; for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; loop.push(hw([-.5 + .3 * Math.cos(a), YB + .1 + .04 * Math.sin(a * 2), .25 + .3 * Math.sin(a)])); }
-    flutterCurve = new T.CatmullRomCurve3(loop, true);
-    extras.flutter = tube(loop, .03, hmat, true); extras.flutterDot = ball(loop[0], .07, cmat);
-    extras.focus = ball(surf(.55, 150, -.08).p, .1, hmat);
-    extras.pvc = ball(surf(.06, 345, -.06).p, .09, hmat);
-    const lead = mat(0xcfd6de, { roughness: .35, metalness: .3 });
-    extras.lead = tube([o(S0, 0, 1.3, 0), o(S0, 0, .6, 0), S0, hw([-.6, YB + .15, .2]), hw([-.35, YB - .3, .38]), hw([-.15, -1.08, .3])], .028, lead);
-    extras.tip = ball(hw([-.15, -1.08, .3]), .06, hmat);
-    Object.keys(extras).forEach(k => { extras[k].visible = false; condGroup.add(extras[k]); });
-
-    const box = new T.Box3().setFromObject(model);
-    model.position.sub(box.getCenter(new T.Vector3()));
-
-    /* interaction */
-    cv.style.touchAction = 'pan-y';
-    cv.addEventListener('pointerdown', e => { drag = { id: e.pointerId, x: e.clientX, y: e.clientY }; tgt = null; vy = vp = 0; try { cv.setPointerCapture(e.pointerId); } catch (_) {} kick(); });
-    cv.addEventListener('pointermove', e => {
-      if (!drag || e.pointerId !== drag.id) return;
-      const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
-      yaw += dx * .011; pitch = clampP(pitch + dy * .009); vy = dx * .011; vp = dy * .009;
-    });
-    const up = e => { if (drag && e.pointerId === drag.id) drag = null; };
-    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', e => { up(e); vy = vp = 0; });
-    if (window.ResizeObserver) new ResizeObserver(resize).observe(stage);
-    if (window.IntersectionObserver) new IntersectionObserver(es => { inView = es[0].isIntersecting; kick(); }).observe(stage);
+  const NSg = 46, NVg = 60, VU = [], VV = [];
+  const vent = gridObj(NSg + 1, NVg, (i, j) => {
+    const s = i / NSg, v = j * 360 / NVg, p = hpt(s, v);
+    VU.push(p[3]); VV.push(v);
+    return [hw(p), mv(TILT, hn(Math.min(.995, Math.max(.005, s)), v))];
+  }, { along: 'cols', step: 2, cross: 'rows', cstep: 3 });
+  function ellipsoid(c, r) {
+    return gridObj(17, 26, (i, j) => {
+      const th = i / 16 * Math.PI, ph = j / 26 * Math.PI * 2, l = [Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)];
+      return [hw([c[0] + r[0] * l[0], c[1] + r[1] * l[1], c[2] + r[2] * l[2]]), mv(TILT, norm3([l[0] / r[0], l[1] / r[1], l[2] / r[2]]))];
+    }, { along: 'rows', step: 2, cross: 'cols', cstep: 4 });
   }
-  const clampP = p => Math.max(-1.45, Math.min(1.45, p));
-  function resize() {
-    if (!ren) return;
-    const w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return;
-    ren.setSize(w, h, false); cam.aspect = w / h;
-    cam.position.z = w / h < .9 ? 8.7 / (w / h) * .9 : 8.7;
-    cam.updateProjectionMatrix();
+  const RA = ellipsoid([-.82, YB + .22, .05], [.5, .52, .58]), LA = ellipsoid([.2, YB + .28, -.62], [.62, .42, .42]);
+  ellipsoid([-.52, YB + .44, .5], [.26, .2, .22]); ellipsoid([.82, YB + .25, .14], [.22, .15, .3]);
+  function tubeObj(ctrl, rad, open) {
+    const pts = crSample(ctrl, Math.max(16, ctrl.length * 7)), frames = [];
+    let Nf = norm3(cross3(norm3(sub3(pts[1], pts[0])), [.3, 1, .2]));
+    for (let i = 0; i < pts.length; i++) {
+      const T = norm3(sub3(pts[Math.min(pts.length - 1, i + 1)], pts[Math.max(0, i - 1)]));
+      Nf = norm3(sub3(Nf, mul3(T, dot3(Nf, T)))); frames.push([Nf, cross3(T, Nf)]);
+    }
+    const cols = 16;
+    return gridObj(pts.length, cols, (i, j) => { const a = j / cols * Math.PI * 2, F = frames[i], n = add3(mul3(F[0], Math.cos(a)), mul3(F[1], Math.sin(a))); return [add3(pts[i], mul3(n, rad)), n]; },
+      { along: 'cols', step: 2, cross: 'rows', cstep: 4 }, { open });
   }
-  function darkFrom(name, occ) {
-    if (!occ) return null;
-    if (name === occ.a) return occ.f;
-    let n = name;
-    while (arts[n].parent) { const p = arts[n].parent; if (p === occ.a) return arts[n].at >= occ.f ? 0 : null; n = p; }
-    return null;
+  const o3 = (b, x, y, z) => [b[0] + x, b[1] + y, b[2] + z];
+  const AO = [-.05, YB + .12, -.02], A0 = hw(AO), P0 = hw([.28, YB + .08, .52]), S0 = hw([-.82, YB + .62, -.02]);
+  tubeObj([A0, o3(A0, -.1, .5, .08), o3(A0, -.05, 1.05, .05), o3(A0, .25, 1.42, -.3), o3(A0, .62, 1.3, -.72), o3(A0, .7, .65, -.9), o3(A0, .7, -.1, -.92)], .27, true);
+  const B = o3(P0, .15, .95, -.55);
+  tubeObj([P0, o3(P0, .05, .5, -.02), o3(P0, .12, .85, -.3), B], .22, false);
+  tubeObj([B, o3(B, .35, .02, -.15), o3(B, .62, -.05, -.25)], .15, true);
+  tubeObj([B, o3(B, -.4, 0, -.15), o3(B, -.85, -.05, -.2)], .15, true);
+  tubeObj([S0, o3(S0, 0, .6, 0), o3(S0, 0, 1.15, 0)], .17, true);
+
+  /* coronary arteries */
+  const ART = {
+    LMS: { r: .055, pts: () => [hw([AO[0] + .17, AO[1] + .05, AO[2] - .06]), hw([.45, YB + .15, .1]), surf(0, 42, .035)] },
+    LAD: { r: .045, parent: 'LMS', path: [[0, 42], [.05, 33], [.18, 25], [.35, 22], [.55, 19], [.75, 17], [.9, 15], [.97, 12], [.995, 70]] },
+    D1: { r: .03, parent: 'LAD', path: [[.2, 25], [.3, 42], [.42, 58], [.58, 70]] },
+    D2: { r: .027, parent: 'LAD', path: [[.48, 20], [.58, 37], [.72, 52]] },
+    LCX: { r: .043, parent: 'LMS', path: [[0, 42], [0, 62], [0, 86], [.005, 112], [.01, 140], [.015, 166]] },
+    OM1: { r: .03, parent: 'LCX', path: [[.003, 96], [.15, 101], [.35, 106], [.56, 110]] },
+    OM2: { r: .027, parent: 'LCX', path: [[.01, 138], [.2, 141], [.42, 143]] },
+    RCA: { r: .05, pts: () => [hw([AO[0] - .13, AO[1] + .04, AO[2] + .2]), hw([-.32, YB + .14, .66])].concat([[0, 330], [0, 300], [0, 270], [.005, 242], [.01, 214]].map(q => surf(q[0], q[1], .035))) },
+    AM: { r: .03, parent: 'RCA', path: [[0, 282], [.2, 290], [.4, 297], [.6, 303]] },
+    PDA: { r: .035, parent: 'RCA', path: [[.01, 214], [.15, 211], [.38, 209], [.6, 207], [.8, 206]] },
+    PLB: { r: .027, parent: 'RCA', path: [[.01, 214], [.03, 196], [.09, 182], [.2, 174]] }
+  };
+  const AX0 = hw([0, YB, 0]), AXD = sub3(hw([0, YB - LEN, 0]), AX0);
+  const radial = p => { const t = Math.max(0, Math.min(1, dot3(sub3(p, AX0), AXD) / dot3(AXD, AXD))); return norm3(sub3(p, add3(AX0, mul3(AXD, t)))); };
+  const arts = {};
+  Object.keys(ART).forEach(k => {
+    const d = ART[k], ctrl = d.pts ? d.pts() : d.path.map(q => surf(q[0], q[1], .035)), pts = crSample(ctrl, 44);
+    arts[k] = { r: d.r, parent: d.parent, pts, nrm: pts.map(radial), len: cumlen(pts), at: 1 };
+  });
+  Object.keys(arts).forEach(k => {
+    const a = arts[k]; if (!a.parent) return;
+    const P = arts[a.parent]; let best = 1e9, bi = 0;
+    P.pts.forEach((p, i) => { const d = Math.hypot(p[0] - a.pts[0][0], p[1] - a.pts[0][1], p[2] - a.pts[0][2]); if (d < best) { best = d; bi = i; } });
+    a.at = P.len[bi] / P.len[P.len.length - 1];
+  });
+  const frac = (a, i) => a.len[i] / a.len[a.len.length - 1];
+  function pointAt(a, f) {
+    const L = a.len, tgt = Math.min(1, Math.max(0, f)) * L[L.length - 1]; let i = 1;
+    while (i < L.length - 1 && L[i] < tgt) i++;
+    const t = (tgt - L[i - 1]) / ((L[i] - L[i - 1]) || 1);
+    return add3(a.pts[i - 1], mul3(sub3(a.pts[i], a.pts[i - 1]), t));
   }
   function occFor(id) {
     const A = arts;
@@ -2184,151 +2147,337 @@ const Heart = (() => {
     }
     return null;
   }
-  function rebuildArteries(occ) {
-    artGroup.children.slice().forEach(c => { artGroup.remove(c); c.geometry.dispose(); });
-    const live = artLive, dead = artDead;
-    const sub = (c, a, b) => { const p = []; for (let i = 0; i <= 24; i++) p.push(c.getPointAt(Math.min(1, Math.max(0, a + (b - a) * i / 24)))); return p; };
-    Object.keys(arts).forEach(k => {
-      const a = arts[k], f = darkFrom(k, occ);
-      if (f === null) artGroup.add(tube(a.curve.points, a.r, live));
-      else if (f <= 0) artGroup.add(tube(a.curve.points, a.r, dead));
-      else { artGroup.add(tube(sub(a.curve, 0, f), a.r, live)); artGroup.add(tube(sub(a.curve, f, 1), a.r, dead)); }
+  function darkFrom(name) {
+    if (!occ) return null;
+    if (name === occ.a) return occ.f;
+    let n = name;
+    while (arts[n].parent) { const p = arts[n].parent; if (p === occ.a) return arts[n].at >= occ.f ? 0 : null; n = p; }
+    return null;
+  }
+
+  /* conduction system */
+  const SA = [-.68, YB + .7, .18], AVN = [-.2, YB + .02, -.1], HIS = [-.02, YB - .22, .03];
+  const sp = (y, kn, kd) => [.879 * kn + .477 * kd, y, .03 - .477 * kn + .879 * kd];
+  const CP = {
+    inter: [SA, [-.58, YB + .45, .1], [-.38, YB + .2, -.02], AVN],
+    his: [AVN, [-.1, YB - .08, -.04], HIS],
+    rbb: [HIS, sp(YB - .35, -.1, 0), sp(-.3, -.13, .05), sp(-.8, -.13, .05), sp(-1.15, -.1, .1), [-.42, -1.02, .45]],
+    lbbA: [HIS, sp(YB - .32, .1, .02), sp(-.2, .2, .25), sp(-.75, .3, .35), [.32, -1.25, .3]],
+    lbbP: [HIS, sp(YB - .34, .1, -.02), sp(-.25, .22, -.25), sp(-.8, .32, -.35), [.3, -1.25, -.22]]
+  };
+  const COND = {}; Object.keys(CP).forEach(k => { COND[k] = crSample(CP[k].map(hw), 30); });
+  const NODES = { sa: hw(SA), avn: hw(AVN) };
+  const loop = []; for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; loop.push(hw([-.5 + .3 * Math.cos(a), YB + .1 + .04 * Math.sin(a * 2), .25 + .3 * Math.sin(a)])); }
+  const FLUT = crSample(loop, 60, true), VTF = surf(.55, 150, -.08), PVCF = surf(.06, 345, -.06);
+  const LEADP = crSample([o3(S0, 0, 1.3, 0), o3(S0, 0, .6, 0), S0, hw([-.6, YB + .15, .2]), hw([-.35, YB - .3, .38]), hw([-.15, -1.08, .3])], 50);
+
+  /* turntable framing: rotate about the vertical axis through the middle of everything */
+  let C0 = [0, 0, 0], RXZ = 1, YLO = -1, YHI = 1;
+  (() => {
+    const mn = [1e9, 1e9, 1e9], mx = [-1e9, -1e9, -1e9];
+    objs.forEach(o => o.P.forEach(p => { for (let c = 0; c < 3; c++) { if (p[c] < mn[c]) mn[c] = p[c]; if (p[c] > mx[c]) mx[c] = p[c]; } }));
+    C0 = [(mn[0] + mx[0]) / 2, (mn[1] + mx[1]) / 2, (mn[2] + mx[2]) / 2];
+    RXZ = 0; objs.forEach(o => o.P.forEach(p => { RXZ = Math.max(RXZ, Math.hypot(p[0] - C0[0], p[2] - C0[2])); }));
+    YLO = mn[1] - C0[1]; YHI = mx[1] - C0[1];
+  })();
+
+  /* ---- drawing ---- */
+  const VIEWS = { front: .15, left: -1.3, back: 2.9, right: 1.25 };
+  let yaw = VIEWS.front, vel = 0, tgt = null, drag = null, raf = 0, last = 0, visible = false;
+  let focus = { kind: 'none' }, occ = null, terrOn = false, V = rx(0), SC = 1, CX = 0, CY = 0;
+  const VW = new Float32Array(VU.length);
+  const HAND = '"Noteworthy","Chalkboard SE","Bradley Hand","Segoe Print","Comic Sans MS",cursive';
+  const J = (a, b) => { const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return s - Math.floor(s) - .5; };
+  function TH() {
+    return document.documentElement.dataset.theme !== 'light'
+      ? { paper: '#1d2126', ink: '#ece5d8', art: '#ff7d6e', dead: '#80858d', terr: '#9b91ff', cond: '#ffd25c', hot: '#ff6b5e', peri: '#ffad4d', lead: '#aeb6bf' }
+      : { paper: '#fbf7ee', ink: '#2b2620', art: '#c0392b', dead: '#8f8f8f', terr: '#4a3fcf', cond: '#c48f00', hot: '#d4372c', peri: '#e07b16', lead: '#7a828b' };
+  }
+  function proj(p) { const x = p[0] - C0[0], y = p[1] - C0[1], z = p[2] - C0[2]; return [CX + (V[0] * x + V[1] * y + V[2] * z) * SC, CY - (V[3] * x + V[4] * y + V[5] * z) * SC, V[6] * x + V[7] * y + V[8] * z]; }
+  const nz = n => V[6] * n[0] + V[7] * n[1] + V[8] * n[2];
+  function project(o) {
+    let zs = 0;
+    for (let k = 0; k < o.P.length; k++) {
+      const p = o.P[k], x = p[0] - C0[0], y = p[1] - C0[1], z = p[2] - C0[2], n = o.N[k];
+      o.S[k * 2] = CX + (V[0] * x + V[1] * y + V[2] * z) * SC; o.S[k * 2 + 1] = CY - (V[3] * x + V[4] * y + V[5] * z) * SC;
+      zs += V[6] * x + V[7] * y + V[8] * z;
+      const n0 = V[0] * n[0] + V[1] * n[1] + V[2] * n[2], n1 = V[3] * n[0] + V[4] * n[1] + V[5] * n[2], n2 = V[6] * n[0] + V[7] * n[1] + V[8] * n[2];
+      o.NZ[k] = n2;
+      const lam = Math.max(0, n0 * LIGHT[0] + n1 * LIGHT[1] + n2 * LIGHT[2]);
+      o.TN[k] = Math.min(1, (1 - lam) * .82 + (1 - Math.max(0, n2)) * .3);
+    }
+    o.zc = zs / o.P.length;
+  }
+  /* a pencil line: one firm stroke and a lighter, wobblier second pass */
+  function pline(pts, color, w, alpha, seed, closed, dash) {
+    if (pts.length < 2) return;
+    for (let pass = 0; pass < 2; pass++) {
+      const k = pass ? 1.1 : .45;
+      ctx.beginPath();
+      for (let i = 0; i < pts.length; i++) { const x = pts[i][0] + J(seed + i * .71, pass + 1) * k, y = pts[i][1] + J(seed - i * .53, pass + 3) * k; if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); }
+      if (closed) ctx.closePath();
+      ctx.setLineDash(dash || []);
+      ctx.strokeStyle = color; ctx.lineWidth = pass ? w * .55 : w; ctx.globalAlpha = alpha * (pass ? .5 : 1); ctx.stroke();
+    }
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+  }
+  function quads(o, test, cb) {
+    const R = o.rows, C = o.cols, Z = o.NZ;
+    for (let i = 0; i < R - 1; i++) for (let j = 0; j < C; j++) {
+      const a = i * C + j, b = i * C + (j + 1) % C, c = (i + 1) * C + (j + 1) % C, d = (i + 1) * C + j;
+      if (Z[a] + Z[b] + Z[c] + Z[d] <= 0) continue;
+      if (test && !test(a, b, c, d)) continue;
+      cb(a, b, c, d);
+    }
+  }
+  function fillFront(o, color, alpha, test) {
+    const S = o.S;
+    ctx.beginPath();
+    quads(o, test, (a, b, c, d) => { ctx.moveTo(S[a * 2], S[a * 2 + 1]); ctx.lineTo(S[b * 2], S[b * 2 + 1]); ctx.lineTo(S[c * 2], S[c * 2 + 1]); ctx.lineTo(S[d * 2], S[d * 2 + 1]); ctx.closePath(); });
+    ctx.globalAlpha = alpha == null ? 1 : alpha; ctx.fillStyle = color; ctx.fill(); ctx.globalAlpha = 1;
+  }
+  /* silhouette = where the surface turns away from the viewer, traced ring by ring */
+  function contours(o) {
+    const R = o.rows, C = o.cols, S = o.S, Z = o.NZ, chains = [];
+    let act = [];
+    for (let i = 0; i < R; i++) {
+      const cr = [];
+      for (let j = 0; j < C; j++) {
+        const a = i * C + j, b = i * C + (j + 1) % C, za = Z[a], zb = Z[b];
+        if ((za > 0) !== (zb > 0)) { const t = za / (za - zb); cr.push([j + t, S[a * 2] + (S[b * 2] - S[a * 2]) * t, S[a * 2 + 1] + (S[b * 2 + 1] - S[a * 2 + 1]) * t]); }
+      }
+      const nxt = [];
+      cr.forEach(p => {
+        let best = null, bd = 1e9;
+        act.forEach(ch => { if (ch.u) return; let d = Math.abs(ch.c - p[0]); d = Math.min(d, C - d); if (d < bd) { bd = d; best = ch; } });
+        if (best && bd < C / 8) { best.u = true; best.c = p[0]; best.pts.push([p[1], p[2]]); nxt.push(best); }
+        else { const ch = { c: p[0], pts: [[p[1], p[2]]], u: true }; chains.push(ch); nxt.push(ch); }
+      });
+      nxt.forEach(ch => { ch.u = false; }); act = nxt;
+    }
+    return chains.filter(ch => ch.pts.length > 1);
+  }
+  /* hatching follows the form and only appears in shadow — denser and darker as it turns away from the light */
+  function hatchObj(o, color, ak) {
+    const h = o.hatch, R = o.rows, C = o.cols, S = o.S, Z = o.NZ, T = o.TN, lv = [[], [], []], cx = [[], []];
+    const r0 = 2, r1 = o === vent ? Math.round(R * .86) : R - 3;
+    const short = (a, b) => { const dx = S[a * 2] - S[b * 2], dy = S[a * 2 + 1] - S[b * 2 + 1]; return dx * dx + dy * dy < 2.2; };
+    const add = (a, b) => { if (Z[a] <= .04 || Z[b] <= .04 || short(a, b)) return; const t = (T[a] + T[b]) / 2, l = t > .8 ? 2 : t > .64 ? 1 : t > .5 ? 0 : -1; if (l >= 0) lv[l].push(a, b); };
+    const addX = (a, b) => { if (Z[a] <= .04 || Z[b] <= .04 || short(a, b)) return; const t = (T[a] + T[b]) / 2; if (t > .86) cx[1].push(a, b); else if (t > .74) cx[0].push(a, b); };
+    /* every hatch line is broken into short strokes with a gap, offset line to line, like hand shading */
+    if (h.along === 'cols') { for (let j = 0; j < C; j += h.step) for (let i = r0; i < r1; i++) { if ((i + j * 3) % 5 === 4) continue; add(i * C + j, (i + 1) * C + j); } }
+    else { for (let i = r0; i < r1; i += h.step) for (let j = 0; j < C; j++) { if ((j + i * 3) % 5 === 4) continue; add(i * C + j, i * C + (j + 1) % C); } }
+    if (h.cross === 'rows') { for (let i = r0; i < r1; i += h.cstep) for (let j = 0; j < C; j++) { if ((j + i) % 4 === 3) continue; addX(i * C + j, i * C + (j + 1) % C); } }
+    else { for (let j = 0; j < C; j += h.cstep) for (let i = r0; i < r1; i++) { if ((i + j) % 4 === 3) continue; addX(i * C + j, (i + 1) * C + j); } }
+    const go = (arr, alpha, w) => {
+      if (!arr.length) return;
+      ctx.beginPath();
+      for (let k = 0; k < arr.length; k += 2) { const a = arr[k], b = arr[k + 1]; ctx.moveTo(S[a * 2] + J(a, 1) * .9, S[a * 2 + 1] + J(a, 2) * .9); ctx.lineTo(S[b * 2] + J(b, 1) * .9, S[b * 2 + 1] + J(b, 2) * .9); }
+      ctx.strokeStyle = color; ctx.globalAlpha = alpha * ak; ctx.lineWidth = w; ctx.stroke();
+    };
+    go(lv[0], .2, .8); go(lv[1], .34, .9); go(lv[2], .5, 1); go(cx[0], .22, .7); go(cx[1], .36, .8);
+    ctx.globalAlpha = 1;
+  }
+  const lastRing = o => { const r = []; for (let j = 0; j < o.cols; j++) { const k = (o.rows - 1) * o.cols + j; r.push([o.S[k * 2], o.S[k * 2 + 1]]); } return r; };
+  function solid(o, th) {
+    fillFront(o, th.paper);
+    hatchObj(o, th.ink, 1);
+    contours(o).forEach((ch, i) => pline(ch.pts, th.ink, o === vent ? 1.9 : 1.5, .92, o.seed + i * 7));
+    if (o.open) pline(lastRing(o), th.ink, 1.3, .85, o.seed + 3, true);
+  }
+  function ghost(o, th) {
+    fillFront(o, th.paper, .5);
+    contours(o).forEach((ch, i) => pline(ch.pts, th.ink, 1.3, .5, o.seed + i * 7));
+    if (o.open) pline(lastRing(o), th.ink, 1.1, .4, o.seed + 3, true);
+  }
+  function drawTerr(th) {
+    const S = vent.S, C = vent.cols, lv = [[], [], []];
+    quads(vent, null, (a, b, c, d) => { const w = (VW[a] + VW[b] + VW[c] + VW[d]) / 4; if (w >= .12) lv[w > .7 ? 2 : w > .4 ? 1 : 0].push(a, b, c, d); });
+    [.12, .2, .3].forEach((al, k) => {
+      const q = lv[k]; if (!q.length) return;
+      ctx.beginPath();
+      for (let m = 0; m < q.length; m += 4) { ctx.moveTo(S[q[m] * 2], S[q[m] * 2 + 1]); for (let z = 1; z < 4; z++) ctx.lineTo(S[q[m + z] * 2], S[q[m + z] * 2 + 1]); ctx.closePath(); }
+      ctx.globalAlpha = al; ctx.fillStyle = th.terr; ctx.fill();
     });
-    if (occ) { const p = arts[occ.a].curve.getPointAt(occ.f); mk.position.copy(p); halo.position.copy(p); }
-    mk.visible = halo.visible = !!occ;
+    ctx.beginPath();
+    for (let i = 1; i < vent.rows - 1; i += 2) for (let j = 0; j < C; j++) {
+      const a = i * C + j, b = i * C + (j + 1) % C;
+      if (vent.NZ[a] <= 0 || vent.NZ[b] <= 0 || (VW[a] + VW[b]) / 2 < .45) continue;
+      ctx.moveTo(S[a * 2] + J(a, 3), S[a * 2 + 1] + J(a, 4)); ctx.lineTo(S[b * 2] + J(b, 3), S[b * 2 + 1] + J(b, 4));
+    }
+    ctx.globalAlpha = .6; ctx.strokeStyle = th.terr; ctx.lineWidth = 1.1; ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  function drawArteries(th) {
+    Object.keys(arts).forEach((k, ai) => {
+      const a = arts[k], f = darkFrom(k), sp2 = a.pts.map(proj), vis = a.nrm.map(n => nz(n) > -.03), w = Math.max(1.3, a.r * SC * .55);
+      const dead = i => f !== null && (f <= 0 || frac(a, i) >= f);
+      const st = i => (vis[i] ? 'v' : 'h') + (dead(i) ? 'd' : 'l');
+      let run = [sp2[0]], s0 = st(0);
+      const flush = () => {
+        if (run.length < 2) return;
+        if (s0[0] === 'h') pline(run, s0[1] === 'd' ? th.dead : th.art, 1, .22, ai * 13, false, [3, 4]);
+        else if (s0[1] === 'd') pline(run, th.dead, w, .95, ai * 13, false, [6, 4]);
+        else pline(run, th.art, w, .95, ai * 13);
+      };
+      for (let i = 1; i < sp2.length; i++) { run.push(sp2[i]); const s1 = st(i); if (s1 !== s0) { flush(); run = [sp2[i]]; s0 = s1; } }
+      flush();
+    });
+  }
+  function ring(q, rx2, ry2, color, w, alpha, seed, dash) {
+    const pts = []; for (let i = 0; i <= 26; i++) { const a = i / 26 * Math.PI * 2 + .3; pts.push([q[0] + Math.cos(a) * (rx2 + J(i, seed) * 1.6), q[1] + Math.sin(a) * (ry2 + J(i, seed + 1) * 1.6)]); }
+    pline(pts, color, w, alpha, seed, false, dash);
+  }
+  function burst(q, th) {
+    ctx.beginPath(); ctx.arc(q[0], q[1], 4.5, 0, Math.PI * 2); ctx.fillStyle = th.hot; ctx.fill();
+    for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2 + J(i, 5) * .3; pline([[q[0] + Math.cos(a) * 8, q[1] + Math.sin(a) * 8], [q[0] + Math.cos(a) * (15 + J(i, 6) * 5), q[1] + Math.sin(a) * (15 + J(i, 6) * 5)]], th.hot, 1.6, .95, i * 3); }
+  }
+  function arrowAt(pts, f, color) {
+    const i = Math.max(1, Math.min(pts.length - 2, Math.round(f * (pts.length - 1)))), p = pts[i], q = pts[i - 1];
+    const dx = p[0] - q[0], dy = p[1] - q[1], d = Math.hypot(dx, dy) || 1, ux = dx / d, uy = dy / d;
+    pline([[p[0] - ux * 8 + uy * 5, p[1] - uy * 8 - ux * 5], p, [p[0] - ux * 8 - uy * 5, p[1] - uy * 8 + ux * 5]], color, 2.2, 1, i);
+  }
+  function scribble(th) {
+    const S = vent.S, C = vent.cols;
+    for (let i = 8; i < vent.rows - 6; i += 5) {
+      const pts = [];
+      for (let j = 0; j < C; j += 2) { const k = i * C + j; if (vent.NZ[k] > .25) pts.push([S[k * 2] + J(k, 7) * 3, S[k * 2 + 1] + ((j / 2) % 2 ? 6 : -6) + J(k, 8) * 2]); }
+      if (pts.length > 2) pline(pts.sort((a, b) => a[0] - b[0]), th.hot, 1.4, .75, i);
+    }
+  }
+  let placed = [];
+  function tag(x, y, text, color, th, bold) {
+    const W = stage.clientWidth, H = stage.clientHeight;
+    let dx = x - CX, dy = y - CY; const d = Math.hypot(dx, dy);
+    if (d < 25) { dx = 0; dy = -1; } else { dx /= d; dy /= d; }
+    ctx.font = (bold ? '700 ' : '600 ') + '15px ' + HAND; ctx.textBaseline = 'middle';
+    const tw = ctx.measureText(text).width, al = dx < -.35 ? 'right' : dx > .35 ? 'left' : 'center';
+    let lx = x + dx * 40, ly = y + dy * 32;
+    const minX = al === 'right' ? tw + 6 : al === 'left' ? 6 : tw / 2 + 6, maxX = al === 'left' ? W - tw - 6 : al === 'right' ? W - 6 : W - tw / 2 - 6;
+    lx = Math.max(minX, Math.min(maxX, lx)); ly = Math.max(12, Math.min(H - 12, ly));
+    const box = y0 => { const l = al === 'right' ? lx - tw : al === 'left' ? lx : lx - tw / 2; return [l - 3, y0 - 10, l + tw + 3, y0 + 10]; };
+    const hit = b => placed.some(p => b[0] < p[2] && b[2] > p[0] && b[1] < p[3] && b[3] > p[1]);
+    let bx = box(ly);
+    if (hit(bx)) {
+      const tries = [22, -22, 44, -44].map(o => Math.max(12, Math.min(H - 12, ly + o))).filter(y1 => !hit(box(y1)));
+      if (!tries.length) { if (!bold) return; } else { ly = tries[0]; bx = box(ly); }
+    }
+    placed.push(bx);
+    ctx.beginPath(); ctx.moveTo(x + dx * 8, y + dy * 8); ctx.quadraticCurveTo(x + dx * 22 + dy * 6, y + dy * 22 - dx * 6, lx - dx * 6, ly - dy * 6);
+    ctx.strokeStyle = color; ctx.lineWidth = 1.3; ctx.globalAlpha = .85; ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.textAlign = al; ctx.lineJoin = 'round'; ctx.lineWidth = 4; ctx.strokeStyle = th.paper; ctx.strokeText(text, lx, ly);
+    ctx.fillStyle = color; ctx.fillText(text, lx, ly);
+  }
+  const HOT = { sa: ['sa'], avn: ['avn'], atria: ['inter'], his: ['his'], rbb: ['rbb'], lbb: ['lbbA', 'lbbP'] };
+  function drawCond(th, tags) {
+    const part = focus.part, hot = HOT[part] || [];
+    Object.keys(COND).sort((a, b) => (hot.indexOf(a) >= 0) - (hot.indexOf(b) >= 0)).forEach((k, i) => {
+      const pts = COND[k].map(proj), h = hot.indexOf(k) >= 0;
+      pline(pts, th.paper, 6.5, .9, i); pline(pts, h ? th.hot : th.cond, h ? 3.6 : 2.6, 1, i * 5 + 3);
+    });
+    ['sa', 'avn'].forEach(k => { const q = proj(NODES[k]), h = hot.indexOf(k) >= 0; ctx.beginPath(); ctx.arc(q[0], q[1], h ? 7 : 5.5, 0, Math.PI * 2); ctx.fillStyle = h ? th.hot : th.cond; ctx.fill(); ctx.lineWidth = 1.4; ctx.strokeStyle = th.ink; ctx.stroke(); });
+    const P = p => proj(p);
+    if (part === 'atria') { [RA, LA].forEach(o => { fillFront(o, th.hot, .14); hatchObj(o, th.hot, 1.6); }); tags.push([P(hw([-.82, YB + .22, .05])), 'atria', 1]); }
+    if (part === 'flutter') { const pts = FLUT.map(proj); pline(pts, th.hot, 2.8, 1, 5, true); arrowAt(pts, .3, th.hot); arrowAt(pts, .8, th.hot); tags.push([pts[15], 'flutter circuit', 1]); }
+    if (part === 'ventricle') { const q = P(VTF); burst(q, th); tags.push([q, 'VT focus', 1]); }
+    if (part === 'pvc') { const q = P(PVCF); burst(q, th); tags.push([q, 'ectopic focus', 1]); }
+    if (part === 'vf') { scribble(th); tags.push([P(surf(.45, 30, .05)), 'ventricles', 1]); }
+    if (part === 'pacing') { const pts = LEADP.map(proj), q = pts[pts.length - 1]; pline(pts, th.ink, 4.4, .9, 3); pline(pts, th.lead, 2.6, 1, 4); ctx.beginPath(); ctx.arc(q[0], q[1], 5, 0, Math.PI * 2); ctx.fillStyle = th.hot; ctx.fill(); tags.push([q, 'lead tip', 1]); }
+    const T2 = (pt, text, h) => tags.push([P(pt), text, h]);
+    if (part === 'all') { T2(NODES.sa, 'SA node'); T2(NODES.avn, 'AV node'); T2(COND.lbbA[20], 'left bundle'); T2(COND.rbb[20], 'right bundle'); }
+    else if (part === 'sa') T2(NODES.sa, 'SA node', 1);
+    else if (part === 'avn') T2(NODES.avn, 'AV node', 1);
+    else if (part === 'his') { T2(NODES.avn, 'AV node'); T2(COND.his[18], 'bundle of His', 1); }
+    else if (part === 'lbb') T2(COND.lbbA[18], 'left bundle', 1);
+    else if (part === 'rbb') T2(COND.rbb[18], 'right bundle', 1);
+  }
+  function render() {
+    const W = stage.clientWidth, H = stage.clientHeight; if (!W || !H) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    const th = TH(); ctx.globalAlpha = 1; ctx.fillStyle = th.paper; ctx.fillRect(0, 0, W, H);
+    V = mm3(rx(PITCH), ry(yaw));
+    SC = Math.min(W * .46 / RXZ, H * .88 / (YHI - YLO)); CX = W / 2; CY = H / 2;
+    objs.forEach(project);
+    const cond = focus.kind === 'cond', tags = [];
+    objs.slice().sort((a, b) => a.zc - b.zc).forEach(o => {
+      if (cond) { ghost(o, th); return; }
+      solid(o, th);
+      if (o === vent) {
+        if (focus.kind === 'peri') {
+          fillFront(vent, th.peri, .15);
+          let sx = 0, sy = 0, n = 0; for (let k = 0; k < vent.P.length; k++) if (vent.NZ[k] > 0) { sx += vent.S[k * 2]; sy += vent.S[k * 2 + 1]; n++; }
+          sx /= n || 1; sy /= n || 1;
+          contours(vent).forEach((ch, i) => pline(ch.pts.map(p => [sx + (p[0] - sx) * 1.07, sy + (p[1] - sy) * 1.07]), th.peri, 2.2, .95, i * 3 + 50, false, [7, 5]));
+          tags.push([proj(surf(.5, 40, .1)), 'pericardium', 1]);
+        }
+        if (terrOn) drawTerr(th);
+        drawArteries(th);
+      }
+    });
+    if (cond) drawCond(th, tags);
+    else {
+      [['LAD', .5, 'LAD'], ['LCX', .62, 'LCx'], ['RCA', .62, 'RCA']].forEach(t => { const p = pointAt(arts[t[0]], t[1]); if (nz(radial(p)) > .2) tags.push([proj(p), t[2], 0, th.art]); });
+      if (occ) {
+        const p = pointAt(arts[occ.a], occ.f), q = proj(p), v = nz(radial(p)) > -.03;
+        ctx.beginPath(); ctx.arc(q[0], q[1], 4.4, 0, Math.PI * 2); ctx.fillStyle = v ? th.ink : th.dead; ctx.fill();
+        ring(q, 11, 10, th.hot, 2.3, v ? 1 : .5, 77, v ? null : [3, 3]);
+        tags.push([q, v ? 'blockage' : 'blockage (behind)', 1]);
+      }
+    }
+    placed = [];
+    tags.sort((a, b) => (b[2] ? 1 : 0) - (a[2] ? 1 : 0)).forEach(t => tag(t[0][0], t[0][1], t[1], t[3] || (t[2] ? th.hot : th.ink), th, !!t[2]));
   }
   function setTerr(list) {
     terrOn = false;
-    for (let i = 0; i < nV; i++) { let w = 0; for (let k = 0; k < list.length; k++) { const f = TERR[list[k]]; if (f) w = Math.max(w, f(VU[i], VV[i])); } VW[i] = w; if (w > .001) terrOn = true; }
-    paint(terrOn ? .7 : 0);
+    for (let i = 0; i < VU.length; i++) { let w = 0; for (let k = 0; k < list.length; k++) { const f = TERR[list[k]]; if (f) w = Math.max(w, f(VU[i], VV[i])); } VW[i] = w; if (w > .001) terrOn = true; }
   }
-  function paint(k) {
-    const a = colAttr.array;
-    for (let i = 0; i < nV; i++) { const w = VW[i] * k; a[i * 3] = MUSCLE[0] + (ISCH[0] - MUSCLE[0]) * w; a[i * 3 + 1] = MUSCLE[1] + (ISCH[1] - MUSCLE[1]) * w; a[i * 3 + 2] = MUSCLE[2] + (ISCH[2] - MUSCLE[2]) * w; }
-    colAttr.needsUpdate = true;
-  }
-  function translucent(on) {
-    [ventMat].concat(atriaMats, vesselMats).forEach((m, i) => {
-      m.transparent = on; m.opacity = on ? (i === 0 ? .34 : .26) : 1; m.depthWrite = !on; m.needsUpdate = true;
-    });
-    glass = on;
-  }
-  const PLACE = { up: 'translate(-50%,-150%)', down: 'translate(-50%,60%)', left: 'translate(-112%,-50%)', right: 'translate(12%,-50%)' };
-  function anchor(p, cls, text, facing, where) {
-    const el = document.createElement('div'); el.className = 'hl' + (cls ? ' ' + cls : ''); el.textContent = text; el.style.opacity = '0'; lab.appendChild(el);
-    const n = facing ? p.clone().sub(hw([0, YB - LEN * .45, 0])).normalize() : null;
-    labels.push({ el, p: p.clone(), n, off: PLACE[where] || PLACE.up });
-  }
-  function apply() {
-    const mi = focus.kind === 'mi', cond = focus.kind === 'cond', part = focus.part;
-    translucent(cond);
-    artGroup.visible = !cond; condGroup.visible = cond; shell.visible = focus.kind === 'peri';
-    rebuildArteries(mi ? occFor(focus.occ) : null);
-    setTerr(mi ? focus.terr : []);
-    Object.keys(condParts).forEach(k => { condParts[k].material = cmat; });
-    Object.keys(extras).forEach(k => { extras[k].visible = false; });
-    const hot = [];
-    if (cond) {
-      if (part === 'sa') hot.push('sa');
-      if (part === 'avn') hot.push('avn');
-      if (part === 'atria') hot.push('inter');
-      if (part === 'his') hot.push('his');
-      if (part === 'rbb') hot.push('rbb');
-      if (part === 'lbb') hot.push('lbbA', 'lbbP');
-      hot.forEach(k => { condParts[k].material = hmat; });
-      if (part === 'flutter') { extras.flutter.visible = extras.flutterDot.visible = true; }
-      if (part === 'ventricle') extras.focus.visible = true;
-      if (part === 'pvc') extras.pvc.visible = true;
-      if (part === 'pacing') { extras.lead.visible = extras.tip.visible = true; }
+  /* turn to whichever angle shows the at-risk muscle and the blockage best */
+  function bestYaw() {
+    let best = yaw, bs = -1e9;
+    const p = occ ? radial(pointAt(arts[occ.a], occ.f)) : null;
+    for (let k = 0; k < 72; k++) {
+      const y = k / 72 * Math.PI * 2, M = mm3(rx(PITCH), ry(y)); let s = 0, n = 0;
+      if (terrOn) for (let i = 0; i < VU.length; i += 2) { if (VW[i] < .3) continue; const q = vent.N[i]; s += Math.max(0, M[6] * q[0] + M[7] * q[1] + M[8] * q[2]) * VW[i]; n += VW[i]; }
+      let score = n ? s / n : 0;
+      if (p) score += .7 * (M[6] * p[0] + M[7] * p[1] + M[8] * p[2]);
+      if (score > bs) { bs = score; best = y; }
     }
-    ventMat.emissive.setHex(cond ? 0x3a1210 : 0x000000); atriaMats[0].emissive.setHex(cond ? 0x2a0c0c : 0x000000);
-    labels.forEach(l => l.el.remove()); labels = [];
-    if (mi) {
-      const o = occFor(focus.occ);
-      anchor(arts.LAD.curve.getPointAt(.5), '', 'LAD', true);
-      anchor(arts.LCX.curve.getPointAt(.62), '', 'LCx', true);
-      anchor(arts.RCA.curve.getPointAt(.62), '', 'RCA', true);
-      if (o) anchor(arts[o.a].curve.getPointAt(o.f), 'occ', 'Blockage', true, 'right');
-    } else if (cond) {
-      const ctr = m => { if (m.position.lengthSq()) return m.position; m.geometry.computeBoundingBox(); return m.geometry.boundingBox.getCenter(new T.Vector3()); };
-      const W = (k, t, h, w) => anchor(ctr(condParts[k]), h ? 'hot' : 'cond', t, false, w);
-      if (part === 'all') { W('sa', 'SA node', 0, 'left'); W('avn', 'AV node', 0, 'up'); W('lbbA', 'Left bundle', 0, 'right'); W('rbb', 'Right bundle', 0, 'down'); }
-      else if (part === 'sa') W('sa', 'SA node', 1, 'left');
-      else if (part === 'avn') W('avn', 'AV node', 1, 'up');
-      else if (part === 'his') { W('avn', 'AV node', 0, 'up'); W('his', 'Bundle of His', 1, 'right'); }
-      else if (part === 'lbb') W('lbbA', 'Left bundle', 1, 'right');
-      else if (part === 'rbb') W('rbb', 'Right bundle', 1, 'down');
-      else if (part === 'atria') anchor(atriaMeshes[0].position, 'hot', 'Atria', false);
-      else if (part === 'flutter') anchor(flutterCurve.getPointAt(.25), 'hot', 'Flutter circuit', false);
-      else if (part === 'ventricle') anchor(extras.focus.position, 'hot', 'VT focus', false);
-      else if (part === 'pvc') anchor(extras.pvc.position, 'hot', 'Ectopic focus', false);
-      else if (part === 'pacing') anchor(extras.tip.position, 'hot', 'Lead tip', false);
-      else if (part === 'vf') anchor(hw([.1, -.4, .5]), 'hot', 'Ventricles', false);
-    } else if (focus.kind === 'peri') anchor(hw([.3, -.2, .95]), 'hot', 'Pericardium', true);
-    goView(VIEWS[focus.view] || (cond ? VIEWS.cond : VIEWS.front));
-    kick();
+    return best;
   }
-  function goView(v) {
-    const d = ((((v[0] - yaw) + Math.PI) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
-    tgt = [yaw + d, v[1]];
-    if (reduceMotion) { yaw = tgt[0]; pitch = tgt[1]; tgt = null; }
-    kick();
-  }
-  function place() {
-    const W = stage.clientWidth, H = stage.clientHeight;
-    model.updateMatrixWorld();
-    labels.forEach(l => {
-      const p = l.p.clone().applyMatrix4(model.matrixWorld);
-      let vis = 1;
-      if (l.n) { const n = l.n.clone().transformDirection(model.matrixWorld), c = cam.position.clone().sub(p).normalize(), d = n.dot(c); vis = d > .2 ? 1 : d > -.05 ? (d + .05) / .25 : 0; }
-      p.project(cam);
-      l.el.style.transform = 'translate(' + ((p.x + 1) / 2 * W).toFixed(1) + 'px,' + ((1 - p.y) / 2 * H).toFixed(1) + 'px) ' + l.off;
-      l.el.style.opacity = vis.toFixed(2);
-    });
+  function goView(y) {
+    const d = ((((y - yaw) + Math.PI) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+    tgt = yaw + d; vel = 0;
+    if (reduceMotion) { yaw = tgt; tgt = null; render(); } else kick();
   }
   function frame(now) {
-    raf = 0;
-    if (!(visible && inView && ready)) return;
-    raf = requestAnimationFrame(frame);
+    raf = 0; if (!visible) return;
     const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
-    if (tgt) {
-      const k = 1 - Math.pow(.002, dt);
-      yaw += (tgt[0] - yaw) * k; pitch += (tgt[1] - pitch) * k;
-      if (Math.abs(tgt[0] - yaw) < .002 && Math.abs(tgt[1] - pitch) < .002) tgt = null;
-    } else if (!drag) { yaw += vy; pitch = clampP(pitch + vp); vy *= .9; vp *= .9; }
-    root.rotation.set(pitch, yaw, 0);
-    const s = now / 1000, ph = reduceMotion ? .7 : .5 + .5 * Math.sin(s * Math.PI * 2 / Math.max(.5, period));
-    if (terrOn) paint(.35 + .6 * ph);
-    if (halo.visible) { halo.scale.setScalar(.35 + .45 * ph); halo.material.opacity = .3 + .6 * (1 - ph); }
-    hmat.emissiveIntensity = .4 + 1.3 * ph;
-    if (focus.kind === 'peri') shellMat.opacity = .14 + .24 * ph;
-    if (focus.kind === 'cond') {
-      if (focus.part === 'flutter' && !reduceMotion) extras.flutterDot.position.copy(flutterCurve.getPointAt((s * .9) % 1));
-      if (focus.part === 'atria') atriaMats[0].emissive.setRGB(.16 + .55 * (.5 + .5 * Math.sin(s * 31) * Math.sin(s * 17)), .05 + .25 * ph, .05);
-      if (focus.part === 'vf') ventMat.emissive.setRGB(.23 + .45 * (.5 + .5 * Math.sin(s * 23) * Math.sin(s * 13.7)), .07, .06);
-      if (focus.part === 'ventricle') ventMat.emissive.setRGB(.23 + .3 * ph, .07, .06);
-    }
-    ren.render(scene, cam);
-    place();
+    let moving = !!drag;
+    if (tgt != null) { yaw += (tgt - yaw) * (1 - Math.pow(.003, dt)); if (Math.abs(tgt - yaw) < .002) { yaw = tgt; tgt = null; } else moving = true; }
+    else if (!drag && Math.abs(vel) > .0008) { yaw += vel; vel *= .9; moving = true; }
+    render();
+    if (moving) raf = requestAnimationFrame(frame); else last = 0;
   }
-  function kick() { if (!raf && visible && inView && ready) { last = 0; raf = requestAnimationFrame(frame); } }
-  function init() {
-    if (loading) return;
-    loading = true; msg.hidden = false; msg.textContent = 'Loading 3D heart…';
-    loadThree().then(() => {
-      try { build(); ready = true; msg.hidden = true; resize(); apply(); }
-      catch (e) { fail('The 3D heart is not available on this device.'); }
-    }).catch(() => fail('The 3D heart needs a data connection the first time it loads.', true)).then(() => { loading = false; });
-  }
-  function fail(text, retry) {
-    msg.hidden = false; msg.innerHTML = '<div>' + text + (retry ? '<br><button type="button">Try again</button>' : '') + '</div>';
-    const b = msg.querySelector('button'); if (b) b.onclick = init;
-  }
-  document.querySelectorAll('.heart-views [data-view]').forEach(b => b.addEventListener('click', () => { if (ready) goView(VIEWS[b.dataset.view]); }));
+  function kick() { if (!raf && visible) raf = requestAnimationFrame(frame); }
+  cv.style.touchAction = 'pan-y';
+  cv.addEventListener('pointerdown', e => { drag = { id: e.pointerId, x: e.clientX }; tgt = null; vel = 0; try { cv.setPointerCapture(e.pointerId); } catch (_) {} kick(); });
+  cv.addEventListener('pointermove', e => { if (!drag || e.pointerId !== drag.id) return; const dx = e.clientX - drag.x; drag.x = e.clientX; yaw += dx * .012; vel = dx * .012; kick(); });
+  const up = e => { if (drag && e.pointerId === drag.id) { drag = null; kick(); } };
+  cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', e => { up(e); vel = 0; });
+  document.querySelectorAll('.heart-views [data-view]').forEach(b => b.addEventListener('click', () => goView(VIEWS[b.dataset.view])));
+  if (window.ResizeObserver) new ResizeObserver(() => { if (visible) render(); }).observe(stage);
   return {
-    show() { visible = true; if (!ready) init(); else { resize(); kick(); } },
+    show() { visible = true; render(); },
     hide() { visible = false; },
-    set(f, rate) { focus = f || { kind: 'none' }; period = rate ? 60 / rate : 1.4; if (focus.kind === 'mi') period = 1.4; if (ready) apply(); }
+    redraw() { if (visible) render(); },
+    set(f) {
+      focus = f || { kind: 'none' };
+      occ = focus.kind === 'mi' ? occFor(focus.occ) : null;
+      setTerr(focus.kind === 'mi' ? focus.terr : []);
+      goView(focus.kind === 'mi' ? bestYaw() : VIEWS[focus.view] != null ? VIEWS[focus.view] : VIEWS.front);
+      if (visible) render();
+    }
   };
 })();
 
@@ -2357,7 +2506,8 @@ rl.addEventListener('click', e => {
 const beatCv = $('beat-cv'), BEAT = narrow({ qt: .37 }), BP = pWave(1);
 function drawBeat() {
   const W = beatCv.clientWidth, H = beatCv.clientHeight; if (!W) return;
-  const col = palette(), { ctx, dpr } = prep(beatCv, W, H);
+  const col = Object.assign(paperCol(), { dark: false }), { ctx, dpr } = prep(beatCv, W, H);
+  col.ink = col.text;
   const top = 16, barsH = 62, tq = .3, span = [tq - .16, tq + .37];
   const pps = W * .84 / (span[1] - span[0]), t0 = (span[0] + span[1]) / 2 - W / 2 / pps;
   const g = (H - barsH - top) / 1.42, y0 = top + 1.2 * g, X = t => (t - t0) * pps;
@@ -2382,7 +2532,7 @@ function drawBeat() {
     const y = y0 - v(w[1]) * g; ctx.fillText(w[0], X(w[1]) + (w[0] === 'Q' ? -6 : w[0] === 'S' ? 6 : 0), w[2] > 0 ? y - 7 : y + 18);
   });
   const bar = (k, row, text) => {
-    const a = X(IV[k][0]), b = X(IV[k][1]), y = H - barsH + 18 + row * 26, on = selK === k, c = on ? (col.dark ? '#9fbaff' : '#2f5fd6') : col.dim;
+    const a = X(IV[k][0]), b = X(IV[k][1]), y = H - barsH + 18 + row * 26, on = selK === k, c = on ? '#2f5fd6' : col.dim;
     ctx.strokeStyle = c; ctx.fillStyle = c; ctx.lineWidth = on ? 3 : 1.5;
     ctx.beginPath(); ctx.moveTo(a + 2, y); ctx.lineTo(b - 2, y); ctx.moveTo(a + 2, y - 5); ctx.lineTo(a + 2, y + 5); ctx.moveTo(b - 2, y - 5); ctx.lineTo(b - 2, y + 5); ctx.stroke();
     ctx.font = (on ? '800 ' : '700 ') + '11.5px -apple-system,system-ui,sans-serif';
@@ -2394,13 +2544,13 @@ function drawBeat() {
 
 /* ===== screen lifecycle ===== */
 let open = false;
-function redraw() { if (open) { drawAll(); drawBeat(); } }
+function redraw() { if (open) { drawAll(); drawBeat(); Heart.redraw(); } }
 document.addEventListener('screen', e => {
   open = e.detail === 'ecg';
   if (open) requestAnimationFrame(() => { redraw(); Heart.show(); });
   else { Heart.hide(); closeSheet(); }
 });
-if (window.ResizeObserver) { let w0 = 0; new ResizeObserver(() => { const w = grid.clientWidth; if (w && w !== w0) { w0 = w; redraw(); } }).observe(grid); }
+if (window.ResizeObserver) { let w0 = 0; new ResizeObserver(() => { const w = printBox.clientWidth; if (w && w !== w0) { w0 = w; if (open) { drawAll(); drawBeat(); } } }).observe(printBox); }
 new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 syncMode();
 showExample('nsr');
