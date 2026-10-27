@@ -236,6 +236,126 @@ html[data-theme="dark"] .bl .br{color:#7fa8ff}
 .mapcard .lt::after{content:" ↗";color:var(--ink-dim);font-weight:600}
 .mapcard .lm{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);margin:3px 0 2px}
 .mapcard .ld{display:block;font-size:13.5px;color:var(--ink-dim)}
+/* ---------- ECG ---------- */
+html[data-theme="dark"]{--ecg-paper:#0b110c;--ecg-minor:rgba(87,232,58,.075);--ecg-major:rgba(87,232,58,.2);--ecg-trace:#7dff5c;--ecg-label:rgba(214,255,200,.85);--ecg-up:rgba(255,92,80,.2);--ecg-down:rgba(90,140,255,.22);--heart-glow:rgba(120,140,255,.10)}
+html[data-theme="light"]{--ecg-paper:#fff7f5;--ecg-minor:rgba(232,95,85,.2);--ecg-major:rgba(220,64,52,.45);--ecg-trace:#141414;--ecg-label:#7a1f17;--ecg-up:rgba(224,70,60,.16);--ecg-down:rgba(60,110,240,.16);--heart-glow:rgba(60,80,160,.08)}
+.key.ecg{--k1:#323a44;--k2:#12161b;--kEdge:#05070a}
+.key.ecg .ic{color:#5cff3d;filter:drop-shadow(0 0 4px rgba(92,255,61,.55))}
+body.lock{overflow:hidden}
+
+.ecg-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.ecg-mode{border:0;border-radius:14px;padding:14px 10px;font:inherit;font-weight:800;font-size:17px;cursor:pointer;
+  background:linear-gradient(180deg,var(--key-1),var(--key-2));color:var(--key-ink);
+  box-shadow:0 5px 0 var(--shade), inset 0 1px 0 var(--shine);transition:transform var(--tap) ease, box-shadow var(--tap) ease}
+.ecg-mode[aria-pressed="true"]{background:linear-gradient(180deg,#3f6fe8,#1b3fae);color:#fff;transform:translateY(3px);box-shadow:0 2px 0 #12297a, inset 0 1px 0 rgba(255,255,255,.3)}
+.ecg-mode:active{transform:translateY(5px);box-shadow:0 0 0 var(--shade)}
+.ecg-hint{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--ink-dim);margin:-2px 2px 10px;line-height:1.35}
+.ecg-hint[hidden]{display:none}
+.ecg-hint b.up{color:#ff6a5e}.ecg-hint b.down{color:#7aa4ff}
+html[data-theme="light"] .ecg-hint b.up{color:#d8392d}html[data-theme="light"] .ecg-hint b.down{color:#2f62d8}
+.ecg-clear{flex:0 0 auto;border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:8px 12px;font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+
+.ecg-sheet12{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(6,auto);grid-auto-flow:column;gap:2px;
+  background:var(--line);border:2px solid var(--line);border-radius:14px;overflow:hidden}
+.ecg-lead{position:relative;display:block;width:100%;padding:0;border:0;margin:0;background:var(--ecg-paper);font:inherit;color:inherit;
+  -webkit-user-select:none;user-select:none;cursor:default}
+.ecg-lead.tap{cursor:pointer}
+.ecg-lead canvas{display:block;width:100%;height:100%}
+.ecg-ln{position:absolute;left:4px;top:3px;font-size:12px;font-weight:800;color:var(--ecg-label);pointer-events:none;background:var(--ecg-paper);padding:0 4px;border-radius:4px;line-height:1.35}
+.ecg-badge{position:absolute;right:5px;top:4px;font-size:10.5px;font-weight:800;letter-spacing:.04em;padding:2px 6px;border-radius:6px;pointer-events:none;display:none;color:#fff}
+.ecg-lead.up::after,.ecg-lead.down::after{content:"";position:absolute;inset:0;pointer-events:none;border:2px solid}
+.ecg-lead.up::after{background:var(--ecg-up);border-color:#ff5a4e}
+.ecg-lead.down::after{background:var(--ecg-down);border-color:#5b8cff}
+.ecg-lead.up .ecg-badge{display:block;background:#e0463b}
+.ecg-lead.down .ecg-badge{display:block;background:#3a6ff0}
+.ecg-lead:focus-visible{outline:3px solid #6ea8ff;outline-offset:-3px;z-index:1}
+.ecg-lead.flash{animation:leadflash .22s ease}
+@keyframes leadflash{from{filter:brightness(1.6)}to{filter:none}}
+.ecg-strip{position:relative;margin-top:8px;border:2px solid var(--line);border-radius:14px;overflow:hidden;background:var(--ecg-paper)}
+.ecg-strip canvas{display:block;width:100%}
+.ecg-strip .ecg-ln{left:8px}
+.ecg-scale{position:absolute;right:8px;bottom:4px;font-size:10.5px;font-weight:700;color:var(--ecg-label);opacity:.75;pointer-events:none}
+
+.ecg-info{margin-top:12px;border-left:5px solid var(--line)}
+.ecg-info[data-tone="hot"]{border-left-color:#e0463b}
+.ecg-info[data-tone="warn"]{border-left-color:#e8a13f}
+.ecg-info[data-tone="cool"]{border-left-color:#3f6fe8}
+.ecg-kicker{font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim)}
+.ecg-info .ecg-title{font-size:21px;margin:3px 0 8px;letter-spacing:-.01em;line-height:1.2;text-transform:none;color:var(--ink);font-weight:800}
+.ecg-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.ecg-chips:empty{display:none}
+.ecg-chip{font-size:12.5px;font-weight:700;padding:4px 9px;border-radius:999px;background:var(--bg-2);border:1px solid var(--line);font-variant-numeric:tabular-nums}
+.ecg-chip.up{background:rgba(224,70,59,.14);border-color:rgba(224,70,59,.55)}
+.ecg-chip.down{background:rgba(58,111,240,.14);border-color:rgba(58,111,240,.55)}
+.ecg-feat{margin:0;padding-left:18px;font-size:14.5px;line-height:1.5}
+.ecg-feat li{margin:3px 0}
+.ecg-feat:empty{display:none}
+.ecg-where{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:14.5px;line-height:1.45}
+.ecg-where:empty{display:none}
+.ecg-where b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:2px}
+
+.heart-cap{font-weight:800;font-size:16px;margin:3px 0 4px;line-height:1.3}
+.heart-stage{position:relative;height:330px;margin:0 -12px;touch-action:pan-y;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 46%,var(--heart-glow),transparent 68%)}
+.heart-stage canvas{display:block;width:100%;height:100%;cursor:grab}
+.heart-stage canvas:active{cursor:grabbing}
+.heart-labels{position:absolute;inset:0;pointer-events:none}
+.hl{position:absolute;left:0;top:0;font-size:11.5px;font-weight:800;padding:2px 7px;border-radius:7px;white-space:nowrap;transition:opacity .2s;
+  background:rgba(10,12,16,.74);color:#fff;border:1px solid rgba(255,255,255,.2);will-change:transform}
+.hl.occ{background:#ffd23f;color:#1b1600;border-color:#fff3b0}
+.hl.cond{background:rgba(40,32,0,.72);color:#ffe27a;border-color:rgba(255,210,63,.55)}
+.hl.hot{background:#e0463b;color:#fff;border-color:#ffb3ad}
+html[data-theme="light"] .hl{background:rgba(255,255,255,.9);color:#151a20;border-color:rgba(0,0,0,.15)}
+html[data-theme="light"] .hl.occ{background:#ffd23f;color:#1b1600}
+html[data-theme="light"] .hl.cond{background:rgba(255,240,190,.95);color:#5a4300;border-color:rgba(180,140,0,.4)}
+html[data-theme="light"] .hl.hot{background:#e0463b;color:#fff}
+.heart-tip{position:absolute;right:12px;bottom:8px;font-size:11.5px;font-weight:700;color:var(--ink-dim);pointer-events:none}
+.heart-msg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;color:var(--ink-dim);font-size:14px}
+.heart-msg[hidden]{display:none}
+.heart-msg button{margin-top:10px;border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:700;cursor:pointer}
+.heart-views{display:flex;gap:6px;margin-top:8px}
+.heart-views button{flex:1;border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:9px 4px;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.heart-views button:active{transform:scale(.97)}
+.heart-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12.5px;color:var(--ink-dim)}
+.heart-legend:empty{display:none}
+.heart-legend span{display:inline-flex;align-items:center;gap:6px}
+.heart-legend i{width:12px;height:12px;border-radius:50%;display:inline-block;flex:0 0 12px}
+
+#beat-cv{display:block;width:100%;height:224px;border-radius:12px;background:var(--ecg-paper)}
+.rng-list{margin-top:8px}
+.rng{display:grid;grid-template-columns:1fr auto;gap:2px 10px;width:100%;text-align:left;padding:10px 8px;border:0;border-top:1px solid var(--line);
+  background:none;color:inherit;font:inherit;cursor:pointer;border-radius:8px}
+.rng:first-child{border-top:0}
+.rng .rk{font-weight:800;font-size:15px}
+.rng .rv{font-weight:800;font-size:14.5px;text-align:right;color:#2f5fd6;font-variant-numeric:tabular-nums}
+html[data-theme="dark"] .rng .rv{color:#8fb0ff}
+.rng .rn{grid-column:1/-1;font-size:13px;color:var(--ink-dim);line-height:1.4}
+.rng[aria-pressed="true"]{background:rgba(63,111,232,.13)}
+.rng-h{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin:16px 0 6px;font-weight:800}
+.rng-ul{margin:0;padding-left:18px;font-size:14px;line-height:1.5}
+.rng-ul li{margin:3px 0}
+.rng-p{margin:0;font-size:14px;line-height:1.5}
+
+.ecg-sheet-back{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:40;animation:ecgfade .15s ease}
+.ecg-sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:560px;margin:0 auto;max-height:80vh;display:flex;flex-direction:column;
+  background:var(--card);border:1px solid var(--line);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.45);
+  padding-bottom:env(safe-area-inset-bottom);animation:ecgup .2s ease}
+.ecg-sheet[hidden],.ecg-sheet-back[hidden]{display:none}
+@keyframes ecgup{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@keyframes ecgfade{from{opacity:0}to{opacity:1}}
+.ecg-sheet-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 6px}
+.ecg-sheet-head h2{margin:0;font-size:19px}
+.ecg-sheet-head button{border:0;background:none;color:#3f6fe8;font:inherit;font-weight:800;font-size:16px;cursor:pointer;padding:6px}
+html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
+.ecg-sheet-body{position:relative;overflow:auto;padding:0 12px 16px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.ex-g{font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin:14px 4px 6px}
+.ex-i{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:1px solid var(--line);background:var(--bg-2);color:var(--ink);
+  border-radius:12px;padding:11px 12px;margin-bottom:6px;font:inherit;cursor:pointer}
+.ex-i:active{transform:scale(.99)}
+.ex-i b{display:block;font-size:15.5px}
+.ex-i small{display:block;font-size:12.5px;color:var(--ink-dim);margin-top:1px;line-height:1.35}
+.ex-i[aria-current="true"]{border-color:#3f6fe8;background:rgba(63,111,232,.15)}
+.ex-i .dot{flex:0 0 10px;height:10px;border-radius:50%}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -281,7 +401,10 @@ html[data-theme="dark"] .bl .br{color:#7fa8ff}
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5 3.5 5.6v15l5.5-2.1 6 2.1 5.5-2.1v-15L15 5.6z"/><path d="M9 3.5v15M15 5.6v15"/></svg>
         Maps
       </button>
-      <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
+      <button class="key ecg" data-go="ecg">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M5 13h3l1.5-4 2 7 1.5-5 1 2h5"/></svg>
+        ECG
+      </button>
     </div>
     <p class="note">Decision-support aid only. Scores and guidance do not replace clinical judgement or your service's own protocols.</p>
   </section>
@@ -505,6 +628,75 @@ html[data-theme="dark"] .bl .br{color:#7fa8ff}
     <p class="note">Maps open from the source website, so they need signal and will break if the owner moves the file. Send me any PDF and it can live in the app instead.</p>
   </section>
 
+  <!-- ============ ECG ============ -->
+  <section id="ecg" class="screen">
+    <div class="topbar">
+      <button class="back" data-go="home">‹ Back</button>
+      <div><h1>ECG</h1><p class="sub">12-lead explorer</p></div>
+    </div>
+
+    <div class="ecg-modes" role="group" aria-label="ECG mode">
+      <button class="ecg-mode" id="ecg-m-ex" aria-pressed="true" aria-haspopup="dialog">Examples <span aria-hidden="true">▾</span></button>
+      <button class="ecg-mode" id="ecg-m-cu" aria-pressed="false">Custom</button>
+    </div>
+
+    <div class="ecg-hint" id="ecg-hint" hidden>
+      <span>Tap a lead: once for <b class="up">ST elevation</b>, twice for <b class="down">depression</b>, again to clear.</span>
+      <button class="ecg-clear" id="ecg-clear">Clear</button>
+    </div>
+
+    <div class="ecg-sheet12" id="ecg-grid" aria-label="12-lead ECG"></div>
+    <div class="ecg-strip"><canvas id="ecg-rhythm" aria-label="Lead II rhythm strip"></canvas><span class="ecg-ln">II</span><span class="ecg-scale">25 mm/s · 10 mm/mV</span></div>
+
+    <div class="card ecg-info" id="ecg-info" data-tone="idle">
+      <div class="ecg-kicker" id="ecg-kicker">Example</div>
+      <h2 class="ecg-title" id="ecg-title">Normal sinus rhythm</h2>
+      <div class="ecg-chips" id="ecg-chips"></div>
+      <ul class="ecg-feat" id="ecg-feat"></ul>
+      <div class="ecg-where" id="ecg-where"></div>
+    </div>
+
+    <div class="card ecg-heart">
+      <div class="ecg-kicker">Where is it?</div>
+      <div class="heart-cap" id="heart-cap">Loading…</div>
+      <div class="heart-stage" id="heart-stage">
+        <canvas id="heart-cv" aria-label="3D heart. Drag sideways to spin."></canvas>
+        <div class="heart-labels" id="heart-labels" aria-hidden="true"></div>
+        <div class="heart-msg" id="heart-msg">Loading 3D heart…</div>
+      </div>
+      <div class="heart-views" role="group" aria-label="Heart view">
+        <button data-view="front">Front</button><button data-view="left">Left side</button><button data-view="under">Underside</button><button data-view="back">Back</button>
+      </div>
+      <div class="heart-legend" id="heart-legend"></div>
+    </div>
+
+    <div class="card ecg-ranges">
+      <div class="ecg-kicker">Normal ranges</div>
+      <p class="sub" style="margin:0 0 8px">Adult values. Tap a row to see it on the beat.</p>
+      <canvas id="beat-cv" aria-label="Annotated normal beat"></canvas>
+      <div class="rng-list" id="rng-list"></div>
+      <h3 class="rng-h">STEMI thresholds</h3>
+      <ul class="rng-ul">
+        <li>New ST elevation at the J point in <b>2 contiguous leads</b>.</li>
+        <li><b>V2–V3:</b> 2 mm or more in men aged 40+, 2.5 mm in men under 40, 1.5 mm in women.</li>
+        <li><b>All other leads:</b> 1 mm or more.</li>
+        <li><b>Posterior:</b> ST depression in V1–V3 — confirm with 0.5 mm elevation in V7–V9 (1 mm in men under 40).</li>
+        <li><b>Right ventricle:</b> 0.5 mm elevation in V3R–V4R (1 mm in men under 30).</li>
+        <li><b>LBBB or paced:</b> ST changes are unreliable — use Sgarbossa criteria.</li>
+      </ul>
+      <h3 class="rng-h">ECG paper</h3>
+      <p class="rng-p">1 small square = 40 ms and 0.1 mV. 1 large square = 200 ms and 0.5 mV. Standard speed 25 mm/s, gain 10 mm/mV.</p>
+    </div>
+
+    <p class="note">Teaching aid. Waveforms are generated, not real recordings, and the territory call is pattern matching — a real STEMI decision needs ST magnitude, morphology, the clinical picture and your local PPCI pathway. STEMI thresholds from the Fourth Universal Definition of Myocardial Infarction (2018).</p>
+
+    <div class="ecg-sheet-back" id="ex-back" hidden></div>
+    <div class="ecg-sheet" id="ex-sheet" role="dialog" aria-modal="true" aria-labelledby="ex-title" hidden>
+      <div class="ecg-sheet-head"><h2 id="ex-title">Examples</h2><button id="ex-close">Done</button></div>
+      <div class="ecg-sheet-body" id="ex-list"></div>
+    </div>
+  </section>
+
   <!-- ============ SPARE ============ -->
   <section id="spare" class="screen">
     <div class="topbar">
@@ -546,6 +738,7 @@ tick(); setInterval(tick, 200);
 function go(id){
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.id === id));
   window.scrollTo(0,0);
+  document.dispatchEvent(new CustomEvent('screen', { detail: id }));
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-go]');
@@ -1202,6 +1395,1016 @@ document.getElementById('map-list').innerHTML =
   (MAPS.other.length ? MAPS.other.map(m => mapCard(m, false)).join('')
     : '<div class="empty"><b>Nothing here yet</b>Caravan parks, industrial estates and other sites go here.</div>');
 
+
+/* ---------- ECG ---------- */
+(() => {
+const $ = id => document.getElementById(id);
+const LEADS = ['I','II','III','aVR','aVL','aVF','V1','V2','V3','V4','V5','V6'];
+const LIMB = LEADS.slice(0, 6), CHEST = LEADS.slice(6);
+const ANG = { I:0, II:60, III:120, aVR:-150, aVL:-30, aVF:90 };
+const D2R = Math.PI / 180;
+const reduceMotion = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const proj = (ang, mag) => { const o = {}; LIMB.forEach(L => { o[L] = mag * Math.cos((ang - ANG[L]) * D2R); }); return o; };
+const sm = (a, b, x) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
+const andList = a => a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1];
+
+/* ===== waveform engine =====
+   Component times are relative to QRS onset (P waves: relative to P onset). Amplitudes in mV.
+   g: gaussian [centre, sd, mV]   a: asymmetric gaussian [centre, sd before, sd after, mV]
+   s: ST shift [J, fade start, fade end, mV]   p: PR-segment shift [start, end, mV]   k: pacing spike [t, mV] */
+function ev(c, x) {
+  switch (c[0]) {
+    case 'g': { const d = (x - c[1]) / c[2]; return d * d > 40 ? 0 : c[3] * Math.exp(-0.5 * d * d); }
+    case 'a': { const d = (x - c[1]) / (x < c[1] ? c[2] : c[3]); return d * d > 40 ? 0 : c[4] * Math.exp(-0.5 * d * d); }
+    case 's': return (x < c[1] - 0.02 || x > c[3]) ? 0 : c[4] * sm(c[1] - 0.02, c[1] + 0.008, x) * (1 - sm(c[2], c[3], x));
+    case 'p': return (x < c[1] || x > c[2]) ? 0 : c[3] * sm(c[1], c[1] + 0.02, x) * (1 - sm(c[2] - 0.015, c[2], x));
+    case 'k': { const d = Math.abs(x - c[1]); return d < 0.0016 ? c[2] * (1 - d / 0.0016) : 0; }
+  }
+  return 0;
+}
+function pWave(k) {
+  const P = proj(55, 0.15 * k), o = {};
+  LIMB.forEach(L => { o[L] = [['g', 0.05, 0.022, P[L]]]; });
+  o.V1 = [['g', 0.035, 0.016, 0.06 * k], ['g', 0.075, 0.016, -0.05 * k]];
+  ['V2','V3','V4','V5','V6'].forEach(L => { o[L] = [['g', 0.05, 0.022, 0.07 * k]]; });
+  return o;
+}
+/* normal narrow beat: frontal-plane vectors for limb leads, table for chest leads [q, R, S, T] */
+const NQ = proj(210, .10), NR = proj(50, 1.15), NS = proj(-120, .18), NT = proj(45, .33);
+const CH = { V1:[0,.22,-1.0,.10], V2:[0,.42,-1.45,.45], V3:[0,.80,-.90,.45], V4:[-.03,1.30,-.45,.40], V5:[-.07,1.35,-.22,.33], V6:[-.08,1.05,-.12,.26] };
+const baseT = L => CH[L] ? CH[L][3] : NT[L];
+function narrow(o) {
+  o = o || {};
+  const w = o.w || 1, qt = o.qt || 0.37, tp = qt - 0.085, J = 0.088 * w, st = o.st || {}, comps = {};
+  LEADS.forEach(L => {
+    const a = CH[L] ? CH[L].slice() : [NQ[L], NR[L], NS[L], NT[L]];
+    if (o.amp && o.amp[L]) o.amp[L].forEach((v, i) => { if (v != null) a[i] = v; });
+    const tk = typeof o.t === 'number' ? o.t : (o.t && o.t[L] != null ? o.t[L] : 1);
+    const c = [];
+    if (a[0]) c.push(['g', 0.012 * w, 0.006 * w, a[0]]);
+    if (a[1]) c.push(['g', 0.038 * w, 0.0095 * w, a[1]]);
+    if (a[2]) c.push(['g', 0.064 * w, 0.0095 * w, a[2]]);
+    c.push(o.peaked ? ['a', tp, 0.032, 0.026, a[3] * tk] : ['a', tp, 0.06, 0.036, a[3] * tk]);
+    const s = st[L] || 0;
+    if (s > 0) c.push(['s', J, tp, qt - 0.005, s]);
+    else if (s < 0) c.push(['s', J, tp - 0.075, tp - 0.012, s]);
+    if (o.pr && o.pr[L]) c.push(['p', -o.prInt + 0.11, -0.005, o.pr[L]]);
+    if (o.extra && o.extra[L]) c.push.apply(c, o.extra[L]);
+    comps[L] = c;
+  });
+  return { comps, J, qt };
+}
+/* wide complexes: limb components given as frontal vectors [..., angle, mV] */
+function vec(list) {
+  const o = {};
+  LIMB.forEach(L => { o[L] = list.map(c => { const n = c.length; return c.slice(0, n - 2).concat(c[n - 1] * Math.cos((c[n - 2] - ANG[L]) * D2R)); }); });
+  return o;
+}
+const wide = (limb, chest, qt, J) => ({ comps: Object.assign(vec(limb), chest), qt, J });
+const tw = (c, a) => ['a', c, .07, .045, a];
+const LBBB = () => wide(
+  [['g', .055, .022, -10, .85], ['g', .105, .022, -10, .9], ['s', .15, .3, .43, 170, .1], ['a', .34, .07, .045, 170, .32]],
+  { V1: [['g', .02, .008, .12], ['g', .08, .03, -1.45], ['s', .15, .3, .43, .18], tw(.34, .42)],
+    V2: [['g', .02, .008, .15], ['g', .08, .03, -1.7], ['s', .15, .3, .43, .22], tw(.34, .5)],
+    V3: [['g', .022, .009, .22], ['g', .085, .028, -1.35], ['s', .15, .3, .43, .18], tw(.34, .45)],
+    V4: [['g', .05, .02, .55], ['g', .105, .024, -.85], ['s', .15, .3, .43, .04], tw(.34, .15)],
+    V5: [['g', .055, .022, .8], ['g', .105, .022, .85], ['s', .15, .3, .43, -.1], tw(.34, -.32)],
+    V6: [['g', .055, .022, .75], ['g', .105, .022, .8], ['s', .15, .3, .43, -.09], tw(.34, -.3)] }, .44, .15);
+const RBBB = () => {
+  const term = vec([['g', .1, .02, 170, .32]]), extra = {};
+  LIMB.forEach(L => { extra[L] = term[L]; });
+  Object.assign(extra, { V1: [['g', .097, .016, .75]], V2: [['g', .1, .016, .45]], V3: [['g', .105, .014, .15]],
+    V4: [['g', .1, .02, -.2]], V5: [['g', .1, .022, -.32]], V6: [['g', .1, .022, -.3]] });
+  const m = narrow({ qt: .40, amp: { V1: [0, .25, -.45, -.18], V2: [0, .35, -.85, -.05], V3: [0, .75, -.7, .3] }, extra });
+  m.J = .13; return m;
+};
+const VT = () => wide([['g', .05, .02, -100, 1.0], ['g', .1, .022, -112, .6], ['a', .23, .045, .04, 80, .45]],
+  { V1: [['g', .05, .02, 1.05], ['g', .1, .022, .55], ['a', .23, .045, .04, -.4]], V2: [['g', .05, .02, .85], ['g', .1, .022, .5], ['a', .23, .045, .04, -.35]],
+    V3: [['g', .05, .02, .4], ['g', .1, .022, .2], ['a', .23, .045, .04, -.15]], V4: [['g', .05, .02, -.45], ['g', .1, .022, -.3], ['a', .23, .045, .04, .2]],
+    V5: [['g', .05, .02, -.8], ['g', .1, .022, -.45], ['a', .23, .045, .04, .35]], V6: [['g', .05, .02, -.9], ['g', .1, .022, -.5], ['a', .23, .045, .04, .38]] }, .3, .16);
+const PVC = (k, tc) => { k = k || 1; tc = tc || .34; return wide([['g', .065, .03, 80, 1.35 * k], ['a', tc, .065, .045, -100, .5 * k]], {
+  V1: [['g', .065, .03, -1.25 * k], ['a', tc, .065, .045, .42 * k]],
+  V2: [['g', .065, .03, -1.45 * k], ['a', tc, .065, .045, .5 * k]],
+  V3: [['g', .04, .015, .3 * k], ['g', .085, .025, -.9 * k], ['a', tc, .065, .045, .3 * k]],
+  V4: [['g', .06, .025, .9 * k], ['g', .11, .02, -.3 * k], ['a', tc, .065, .045, -.15 * k]],
+  V5: [['g', .065, .03, 1.3 * k], ['a', tc, .065, .045, -.4 * k]],
+  V6: [['g', .065, .03, 1.2 * k], ['a', tc, .065, .045, -.38 * k]] }, tc + .08, .15); };
+const PACED = () => {
+  const m = wide([['g', .07, .03, -75, 1.1], ['a', .36, .07, .045, 105, .35]], {
+    V1: [['g', .07, .03, -1.15], tw(.36, .35)], V2: [['g', .07, .03, -1.45], tw(.36, .42)], V3: [['g', .07, .03, -1.3], tw(.36, .4)],
+    V4: [['g', .07, .03, -1.0], tw(.36, .3)], V5: [['g', .07, .03, -.65], tw(.36, .2)], V6: [['g', .035, .012, .15], ['g', .08, .025, -.4], tw(.36, .12)] }, .44, .15);
+  LEADS.forEach(L => { m.comps[L].push(['k', -.004, .6]); });
+  m.spike = -.004; return m;
+};
+
+/* ===== rhythms ===== */
+const DUR = 13;
+function rng(seed) { return () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+function sinus(rr, pr, m, t0) { const beats = [], ps = []; for (let t = t0 || .3; t < DUR; t += rr) { beats.push({ t, m }); if (pr) ps.push(t - pr); } return { beats, ps }; }
+const regular = (rr, m, t0) => sinus(rr, 0, m, t0 || .2);
+const FIBK = { I:.3, II:.9, III:.8, aVR:-.7, aVL:.2, aVF:.9, V1:1.5, V2:1.0, V3:.6, V4:.4, V5:.35, V6:.3 };
+const fib = (L, t) => .045 * FIBK[L] * (Math.sin(2 * Math.PI * 6.3 * t + 1.1) + .7 * Math.sin(2 * Math.PI * 7.9 * t + 2.3) + .5 * Math.sin(2 * Math.PI * 9.4 * t + .4) + .3 * Math.sin(2 * Math.PI * 5.1 * t + 2.9));
+function af(m) {
+  const rr = [.62,.86,.55,.98,.71,.6,1.04,.66,.79,.53,.92,.68,.84,.58,.95,.7,.63,.88], beats = [];
+  for (let t = .25, i = 0; t < DUR; t += rr[i++ % rr.length]) beats.push({ t, m });
+  return { beats, ps: [], base: fib };
+}
+const FLK = { I:.02, II:.38, III:.38, aVR:-.2, aVL:-.18, aVF:.4, V1:-.32, V2:-.15, V3:-.08, V4:.05, V5:.06, V6:.06 };
+const saw = t => { const ph = (((t % .2) + .2) % .2) / .2; const s = ph < .72 ? -(ph / .72) : -(1 - (ph - .72) / .28); return s + .5; };
+function flutter(m) { const beats = []; for (let t = .33; t < DUR; t += .4) beats.push({ t, m }); return { beats, ps: [], base: (L, t) => FLK[L] * saw(t) }; }
+const VFP = (() => { const r = rng(7), o = {}; LEADS.forEach(L => { o[L] = [0, 1, 2, 3].map(() => [r() * 6.28, r() * 6.28, .7 + r() * .6]); }); return o; })();
+const VFF = [4.3, 5.4, 6.2, 3.6], VFA = [.32, .22, .16, .25];
+const vf = (L, t) => { let v = 0; const p = VFP[L]; for (let k = 0; k < 4; k++) v += VFA[k] * p[k][2] * (.6 + .4 * Math.sin(2 * Math.PI * .33 * t + p[k][1])) * Math.sin(2 * Math.PI * VFF[k] * t + p[k][0]); return v * 1.15; };
+function ectopics(m, pvc) {
+  const beats = [], ps = [], rr = .8;
+  for (let k = 0, t = .3; t < DUR; k++, t += rr) { if (k % 4 === 2) beats.push({ t: t - rr + .48, m: pvc }); else { beats.push({ t, m }); ps.push(t - .16); } }
+  return { beats, ps };
+}
+function dropped(m, pp, prs) { const beats = [], ps = []; for (let k = 0, p = .1; p < DUR; k++, p += pp) { ps.push(p); const pr = prs[k % prs.length]; if (pr) beats.push({ t: p + pr, m }); } return { beats, ps }; }
+function chb(esc) { const ps = [], beats = []; for (let p = .12; p < DUR; p += .667) ps.push(p); for (let t = .75; t < DUR; t += 1.6) beats.push({ t, m: esc }); return { beats, ps }; }
+
+/* ===== examples ===== */
+const G = { rr:'Rate and rhythm', arrest:'Broad complex and arrest', block:'Heart block', cond:'Conduction', isch:'Ischaemia', other:'Other' };
+const GC = { rr:'#57e83a', arrest:'#e0463b', block:'#e8a13f', cond:'#8a63d2', isch:'#ff6a5e', other:'#1fa8a0' };
+const EX = [
+  { id:'nsr', g:'rr', name:'Normal sinus rhythm', hint:'The reference — compare everything to this', rate:75,
+    build: () => sinus(.8, .16, narrow({ qt: .37 })),
+    meas: ['Rate 75', 'PR 160 ms', 'QRS 90 ms', 'QTc 410 ms'],
+    feat: ['Regular, 60–100 a minute, with a P wave before every QRS.', 'PR 120–200 ms and QRS under 120 ms.', 'T waves upright in I, II and V3–V6; inverted in aVR.', 'R waves grow across the chest leads, crossing over around V3–V4.'],
+    where: 'Normal conduction: sinoatrial node → atria → AV node → bundle of His → left and right bundle branches.',
+    focus: { kind:'cond', part:'all', label:'Normal conduction pathway' } },
+  { id:'stach', g:'rr', name:'Sinus tachycardia', hint:'Sinus rhythm over 100', rate:120,
+    build: () => sinus(.5, .14, narrow({ qt: .30 })),
+    meas: ['Rate 120', 'PR 140 ms', 'QRS 90 ms', 'QTc 420 ms'],
+    feat: ['Sinus rhythm faster than 100, with a normal P wave before each QRS.', 'Usually a response — pain, fever, hypovolaemia, sepsis, hypoxia, PE, anxiety. Treat the cause.', 'Rarely above 150 at rest in adults. Faster and regular: think SVT or flutter.'],
+    where: 'The sinoatrial node firing faster than normal.',
+    focus: { kind:'cond', part:'sa', label:'Sinoatrial node' } },
+  { id:'sbrady', g:'rr', name:'Sinus bradycardia', hint:'Sinus rhythm under 60', rate:45,
+    build: () => sinus(1.333, .18, narrow({ qt: .46 }), .25),
+    meas: ['Rate 45', 'PR 180 ms', 'QRS 90 ms', 'QTc 400 ms'],
+    feat: ['Sinus rhythm slower than 60.', 'Normal in fit people and during sleep.', 'Otherwise think beta blockers, digoxin, hypothermia, hypothyroidism, raised intracranial pressure or inferior MI.'],
+    where: 'The sinoatrial node firing slowly.',
+    focus: { kind:'cond', part:'sa', label:'Sinoatrial node' } },
+  { id:'af', g:'rr', name:'Atrial fibrillation', hint:'Irregularly irregular, no P waves', rate:80,
+    build: () => af(narrow({ qt: .36 })),
+    meas: ['Rate ~80', 'Irregularly irregular', 'No P waves', 'QRS 90 ms'],
+    feat: ['Irregularly irregular R–R intervals with no P waves.', 'Fine fibrillatory baseline, often clearest in V1 and the inferior leads.', 'Fast AF with shock, syncope, chest pain or heart failure is unstable.', 'Raises stroke risk — anticoagulation is decided by hospital or GP.'],
+    where: 'Chaotic electrical activity across both atria. The AV node lets through an irregular sample.',
+    focus: { kind:'cond', part:'atria', label:'Atria — chaotic activity' } },
+  { id:'flutter', g:'rr', name:'Atrial flutter', hint:'Sawtooth waves, regular 150', rate:150,
+    build: () => flutter(narrow({ qt: .27 })),
+    meas: ['Ventricular rate 150', 'Flutter waves 300/min', '2:1 block', 'QRS 90 ms'],
+    feat: ['Sawtooth flutter waves at about 300 a minute, best seen in II, III, aVF and V1.', 'With 2:1 block the ventricular rate sits regularly at about 150.', 'A regular narrow-complex tachycardia at 150 — always consider flutter.'],
+    where: 'A re-entry circuit spinning around the right atrium, usually around the tricuspid valve.',
+    focus: { kind:'cond', part:'flutter', label:'Flutter circuit in the right atrium' } },
+  { id:'svt', g:'rr', name:'SVT', hint:'Regular narrow complex, 150–250', rate:180,
+    build: () => regular(.333, narrow({ qt: .25 })),
+    meas: ['Rate 180', 'Regular', 'No visible P', 'QRS 90 ms'],
+    feat: ['Regular narrow-complex tachycardia, usually 150–250.', 'P waves hidden in or just after the QRS.', 'If stable: vagal manoeuvres such as the modified Valsalva, per local protocol.'],
+    where: 'A re-entry loop in or around the AV node (AVNRT), or through an extra pathway (AVRT).',
+    focus: { kind:'cond', part:'avn', label:'AV node re-entry' } },
+  { id:'pvc', g:'rr', name:'Ventricular ectopics', hint:'Early broad beats, then a pause', rate:75,
+    build: () => ectopics(narrow({ qt: .37 }), PVC()),
+    meas: ['Rate 75', 'Ectopic QRS 150 ms', 'Compensatory pause'],
+    feat: ['Early broad complexes with no P wave in front, followed by a compensatory pause.', 'Common and often benign.', 'More concerning when frequent, in runs, from more than one focus, or landing on the T wave (R on T).'],
+    where: 'An early beat from an irritable spot in the ventricle — here the right ventricular outflow tract.',
+    focus: { kind:'cond', part:'pvc', label:'Ectopic focus' } },
+  { id:'vt', g:'arrest', name:'Ventricular tachycardia', hint:'Regular broad complex, fast', rate:170,
+    build: () => regular(.353, VT(), .15),
+    meas: ['Rate 170', 'QRS 160 ms', 'Regular', 'No P waves'],
+    feat: ['Regular broad-complex tachycardia — QRS 120 ms or more.', 'Treat any regular broad-complex tachycardia as VT until proven otherwise.', 'Check for a pulse and adverse features: shock, syncope, chest pain, heart failure.'],
+    where: 'An irritable focus or a circuit around scar in the ventricular muscle, often an old infarct.',
+    focus: { kind:'cond', part:'ventricle', label:'Ventricular focus' } },
+  { id:'vf', g:'arrest', name:'Ventricular fibrillation', hint:'Chaotic — cardiac arrest', rate:0,
+    build: () => ({ beats: [], ps: [], base: vf }),
+    meas: ['No rate', 'No QRS complexes', 'Chaotic'],
+    feat: ['Chaotic, irregular waveform with no identifiable QRS complexes.', 'Cardiac arrest rhythm — shockable. CPR and defibrillation per Resuscitation Council UK ALS.', 'In a conscious patient, check leads first — movement artefact can mimic VF.'],
+    where: 'Disorganised electrical activity throughout the ventricles, so there is no coordinated contraction.',
+    focus: { kind:'cond', part:'vf', label:'Ventricles — no organised activity' } },
+  { id:'avb1', g:'block', name:'First-degree heart block', hint:'Long PR, nothing dropped', rate:68,
+    build: () => sinus(.882, .30, narrow({ qt: .39 })),
+    meas: ['Rate 68', 'PR 300 ms', 'QRS 90 ms'],
+    feat: ['PR interval longer than 200 ms — here 300 ms.', 'Every P wave is still conducted; no dropped beats.', 'Usually benign: athletes, older age, beta blockers, digoxin, inferior MI.'],
+    where: 'Slowed conduction through the AV node.',
+    focus: { kind:'cond', part:'avn', label:'AV node — slow conduction' } },
+  { id:'mob1', g:'block', name:'Mobitz I (Wenckebach)', hint:'PR lengthens, then a beat drops', rate:64,
+    build: () => dropped(narrow({ qt: .37 }), .706, [.16, .25, .31, 0]),
+    meas: ['Atrial rate 85', 'PR 160 → 250 → 310', 'Then a dropped beat'],
+    feat: ['PR lengthens beat by beat until one P wave is not conducted, then the cycle restarts.', 'Block is usually in the AV node — generally lower risk.', 'Seen with inferior MI, drugs and high vagal tone.'],
+    where: 'The AV node fatigues progressively until one impulse fails to get through.',
+    focus: { kind:'cond', part:'avn', label:'AV node' } },
+  { id:'mob2', g:'block', name:'Mobitz II', hint:'Fixed PR, sudden dropped beats', rate:60,
+    build: () => dropped(narrow({ qt: .37 }), .75, [.17, .17, .17, 0]),
+    meas: ['Atrial rate 80', 'PR 170 ms fixed', '4:3 conduction'],
+    feat: ['PR stays constant, then a P wave suddenly fails to conduct.', 'Block is below the AV node — risk of sudden complete heart block or asystole.', 'Often with a bundle branch block. Needs cardiology and usually pacing.'],
+    where: 'Intermittent failure below the AV node, in the bundle of His or the bundle branches.',
+    focus: { kind:'cond', part:'his', label:'Below the AV node' } },
+  { id:'chb', g:'block', name:'Complete heart block', hint:'P waves and QRS unrelated', rate:38,
+    build: () => chb(PVC(.8, .42)),
+    meas: ['Atrial rate 90', 'Ventricular rate 38', 'QRS 150 ms', 'No relationship'],
+    feat: ['P waves and QRS complexes march independently — AV dissociation.', 'Slow escape rhythm, broad here, so the escape is ventricular.', 'Risk of asystole. Bradycardia with adverse features: atropine, then pacing, per ALS.'],
+    where: 'Nothing gets through from the atria; a backup pacemaker in the ventricles takes over.',
+    focus: { kind:'cond', part:'his', label:'Complete block below the atria' } },
+  { id:'lbbb', g:'cond', name:'Left bundle branch block', hint:'Broad, notched R in V6', rate:75,
+    build: () => sinus(.8, .16, LBBB()),
+    meas: ['Rate 75', 'PR 160 ms', 'QRS 150 ms'],
+    feat: ['QRS 120 ms or more. Broad, notched R in I, aVL and V5–V6 with no septal q waves.', 'Deep S waves in V1–V3. The ST segment and T wave point the opposite way to the QRS — expected here.', 'Hides STEMI. With ischaemic chest pain, discuss with the PPCI centre — Sgarbossa criteria help.'],
+    where: 'The left bundle branch is blocked, so the left ventricle is activated late, cell to cell.',
+    focus: { kind:'cond', part:'lbb', label:'Left bundle branch' } },
+  { id:'rbbb', g:'cond', name:'Right bundle branch block', hint:'RSR′ in V1', rate:75,
+    build: () => sinus(.8, .16, RBBB()),
+    meas: ['Rate 75', 'PR 160 ms', 'QRS 130 ms'],
+    feat: ['QRS 120 ms or more with an RSR′ ("M" shape) in V1–V2.', 'Broad, slurred S waves in I, aVL and V5–V6.', 'Can be a normal variant. A new RBBB can signal a PE or an anterior MI.'],
+    where: 'The right bundle branch is blocked, so the right ventricle is activated late.',
+    focus: { kind:'cond', part:'rbb', label:'Right bundle branch' } },
+  { id:'paced', g:'cond', name:'Paced rhythm', hint:'Spike before each broad QRS', rate:70,
+    build: () => regular(.857, PACED(), .3),
+    meas: ['Rate 70', 'Pacing spike', 'QRS 150 ms'],
+    feat: ['A sharp pacing spike immediately before each broad QRS.', 'Right ventricular pacing gives an LBBB-like shape.', 'ST changes are unreliable — Sgarbossa principles apply. Look for failure to capture or to sense.'],
+    where: 'A pacing lead in the right ventricle; the box usually sits under the left collarbone.',
+    focus: { kind:'cond', part:'pacing', label:'Pacing lead in the right ventricle' } },
+  { id:'inf', g:'isch', name:'Inferior STEMI', hint:'II, III, aVF up; I, aVL down', rate:80,
+    build: () => sinus(.75, .16, narrow({ qt: .37, st: Object.assign(proj(110, .3), { V2: -.05 }),
+      amp: { II:[null, null, null, .45], III:[-.12, null, null, .36], aVF:[null, null, null, .42], aVL:[null, null, null, -.12], I:[null, null, null, .1] } })),
+    meas: ['Rate 80', 'ST ↑ II, III, aVF', 'ST ↓ I, aVL'],
+    feat: ['ST elevation in II, III and aVF — bigger in III than II.', 'Reciprocal ST depression in I and aVL.', 'Elevation in III greater than II, with depression in I, favours the right coronary artery.', 'Record right-sided leads (V4R). Right ventricular involvement makes the patient preload-dependent — be cautious with GTN.'],
+    where: 'Usually the right coronary artery (about 80%); the circumflex in the rest.',
+    focus: { kind:'mi', occ:'RCA-mid', terr:['inferior'], view:'under', label:'Mid right coronary artery' } },
+  { id:'ant', g:'isch', name:'Anterior STEMI', hint:'V1–V4 up', rate:80,
+    build: () => sinus(.75, .16, narrow({ qt: .37, st: Object.assign(proj(-90, .08), { V1: .15, V2: .35, V3: .38, V4: .25, V5: .06 }),
+      amp: { V1:[0, .06, -.95, .25], V2:[0, .2, -1.2, .85], V3:[0, .5, -.85, .9], V4:[-.03, 1.1, -.45, .7] } })),
+    meas: ['Rate 80', 'ST ↑ V1–V4', 'ST ↓ III, aVF'],
+    feat: ['ST elevation in V1–V4 (anteroseptal) with tall, broad T waves.', 'R waves shrinking in V1–V3.', 'Reciprocal depression may appear in the inferior leads.', 'The largest area of muscle at risk — time-critical.'],
+    where: 'Left anterior descending artery (LAD).',
+    focus: { kind:'mi', occ:'LAD-prox', terr:['septal', 'anterior', 'apex'], view:'front', label:'Proximal LAD' } },
+  { id:'lat', g:'isch', name:'Lateral STEMI', hint:'I, aVL, V5–V6 up', rate:80,
+    build: () => sinus(.75, .16, narrow({ qt: .37, st: Object.assign(proj(-20, .22), { V4: .05, V5: .16, V6: .18, V1: -.05, V2: -.05 }),
+      amp: { I:[null, null, null, .35], aVL:[null, null, null, .3], V5:[null, null, null, .5], V6:[null, null, null, .45], III:[null, null, null, -.1] } })),
+    meas: ['Rate 80', 'ST ↑ I, aVL, V5–V6', 'ST ↓ III, aVF'],
+    feat: ['ST elevation in I, aVL, V5 and V6.', 'Reciprocal depression in III and aVF — often more obvious than the elevation.', 'Easy to miss: elevation in aVL may be only 1 mm.'],
+    where: 'Circumflex artery, or a diagonal branch of the LAD.',
+    focus: { kind:'mi', occ:'LCX-prox', terr:['lateral', 'highLateral'], view:'left', label:'Proximal circumflex' } },
+  { id:'post', g:'isch', name:'Posterior MI', hint:'V1–V3 down, tall R waves', rate:80,
+    build: () => sinus(.75, .16, narrow({ qt: .37, st: { V1: -.15, V2: -.25, V3: -.2, V4: -.08 },
+      amp: { V1:[0, .75, -.45, .3], V2:[0, .95, -.7, .6], V3:[0, 1.0, -.6, .55] } })),
+    meas: ['Rate 80', 'ST ↓ V1–V3', 'Tall R in V1–V2'],
+    feat: ['Horizontal ST depression in V1–V3 with upright T waves and tall R waves.', 'It is the mirror image of ST elevation on the back of the heart.', 'Record V7–V9: 0.5 mm of ST elevation confirms posterior STEMI.'],
+    where: 'Circumflex artery, or the posterior branches of the right coronary.',
+    focus: { kind:'mi', occ:'LCX-dist', terr:['posterior'], view:'back', label:'Distal circumflex' } },
+  { id:'peri', g:'other', name:'Pericarditis', hint:'Widespread ST up, PR down', rate:95,
+    build: () => sinus(.63, .16, narrow({ qt: .34, st: Object.assign(proj(55, .18), { V1: 0, V2: .12, V3: .15, V4: .16, V5: .15, V6: .12 }),
+      pr: Object.assign(proj(235, .07), { V2: -.05, V3: -.05, V4: -.05, V5: -.05, V6: -.05 }), prInt: .16 })),
+    meas: ['Rate 95', 'ST ↑ most leads', 'PR ↓', 'aVR: ST ↓, PR ↑'],
+    feat: ['Widespread concave ST elevation that does not fit one coronary territory.', 'PR depression, with ST depression and PR elevation in aVR.', 'No reciprocal depression other than aVR and V1.', 'Sharp pleuritic pain, eased by sitting forward. If unsure, treat as STEMI.'],
+    where: 'The pericardium — the sac around the whole heart — not a blocked artery.',
+    focus: { kind:'peri', label:'Inflamed pericardium — not a blocked artery', view:'front' } },
+  { id:'hyperk', g:'other', name:'Hyperkalaemia', hint:'Peaked T waves, wide QRS', rate:70,
+    build: () => Object.assign(sinus(.857, .22, narrow({ qt: .40, w: 1.35, t: 2.6, peaked: true })), { pk: .35 }),
+    meas: ['Rate 70', 'PR 220 ms', 'QRS 120 ms', 'Peaked T'],
+    feat: ['Tall, narrow, peaked T waves come first.', 'Then flattened P waves, a longer PR and a widening QRS.', 'Late: sine-wave pattern, VF or asystole.', 'Think renal failure, missed dialysis, rhabdomyolysis after a long lie, ACE inhibitors.'],
+    where: 'No single site — high potassium slows conduction in every cardiac cell.',
+    focus: { kind:'none', label:'Whole heart — a metabolic problem' } }
+];
+
+/* ===== custom-mode territory call ===== */
+const cstate = {}; LEADS.forEach(L => { cstate[L] = 0; });
+function classify() {
+  const E = new Set(), D = new Set();
+  LEADS.forEach(L => { if (cstate[L] === 1) E.add(L); else if (cstate[L] === -1) D.add(L); });
+  const ls = (set, arr) => (arr || LEADS).filter(l => set.has(l));
+  const eL = ls(E), dL = ls(D), chips = [];
+  if (eL.length) chips.push(['ST ↑ ' + eL.join(', '), 'up']);
+  if (dL.length) chips.push(['ST ↓ ' + dL.join(', '), 'down']);
+  const R = (title, tone, artery, notes, focus) => ({ title, tone, artery, notes, focus, chips });
+  if (!E.size && !D.size) return R('No ST changes marked', 'idle', '', ['Tap a lead once for ST elevation, twice for depression, and a third time to clear it.', 'Mark the elevation and any reciprocal depression — the territory, likely artery and heart view update as you go.'], { kind:'none', label:'Mark leads to see the territory' });
+
+  const cov = new Set(); let run = [];
+  const flush = () => { if (run.length >= 2) run.forEach(l => cov.add(l)); run = []; };
+  CHEST.forEach(l => { if (E.has(l)) run.push(l); else flush(); }); flush();
+  const sept = cov.has('V1') || cov.has('V2'), ant = cov.has('V3') || cov.has('V4'), lowLat = cov.has('V5') || cov.has('V6');
+  const inferior = ls(E, ['II', 'III', 'aVF']).length >= 2;
+  const highLat = E.has('I') && E.has('aVL'), latLimb = E.has('I') || E.has('aVL');
+  const lateral = highLat || lowLat || (latLimb && (E.has('V5') || E.has('V6')));
+  const post = ((D.has('V1') && D.has('V2')) || (D.has('V2') && D.has('V3'))) && !E.has('V1') && !E.has('V2') && !E.has('V3');
+  const infD = ls(D, ['II', 'III', 'aVF']), latD = ls(D, ['I', 'aVL', 'V4', 'V5', 'V6']);
+  const wideDep = D.size >= 5 || (infD.length >= 2 && latD.length >= 2);
+  const recip = (arr, label) => { const r = ls(D, arr); return r.length ? 'Reciprocal depression in ' + andList(r) + ' supports a true ' + label + ' STEMI.' : 'Look for reciprocal depression in ' + andList(arr) + ' — it supports the diagnosis.'; };
+  const thr = 'Needs 1 mm in 2 contiguous leads (V2–V3: 2 mm in men 40+, 2.5 mm in men under 40, 1.5 mm in women).';
+
+  if (E.has('aVR') && wideDep && !inferior && !(sept && ant) && !lowLat)
+    return R('Left main or multivessel ischaemia', 'hot', 'Left main stem, proximal LAD, or severe three-vessel disease.', [
+      'ST elevation in aVR (often V1 too) with widespread ST depression in six or more leads.',
+      'Not a classic STEMI pattern, but very high risk — most of the left ventricle is short of blood.',
+      'Discuss with the PPCI centre or cardiology per your local pathway.'],
+      { kind:'mi', occ:'LMS', terr:['septal', 'anterior', 'apex', 'highLateral', 'lateral', 'posterior'], view:'front', label:'Left main stem' });
+
+  const groupsUp = [inferior, lateral, sept || ant].filter(Boolean).length;
+  if (E.size >= 7 && inferior && groupsUp >= 2 && !E.has('aVR') && dL.every(l => l === 'aVR' || l === 'V1'))
+    return R('Widespread ST elevation', 'warn', 'Does not fit one artery.', [
+      'Elevation across more than one territory, with no reciprocal depression other than aVR and V1, points towards pericarditis.',
+      'Look for concave ST segments, PR depression and pleuritic pain that eases sitting forward.',
+      'A wraparound LAD or multivessel occlusion can look similar — if in doubt, treat as STEMI and seek advice.'],
+      { kind:'peri', label:'Pericardium — or more than one artery', view:'front' });
+
+  if (inferior) {
+    const rv = E.has('V1') && !ant, notes = [], terr = ['inferior'];
+    let title = 'Inferior STEMI', artery = 'Right coronary artery in about 80% — circumflex in the rest.', occ = 'RCA-mid', label = 'Mid right coronary artery', view = 'under';
+    if (lateral && post) title = 'Inferolateral STEMI with posterior extension';
+    else if (lateral) title = 'Inferolateral STEMI';
+    else if (post) title = 'Inferoposterior STEMI';
+    if (ant) title = 'Inferior and anterior STEMI';
+    if (rv) title += ' with right ventricular involvement';
+    if (ant) { artery = 'A long LAD that wraps around the apex — or more than one artery.'; occ = 'LAD-mid'; label = 'Wraparound LAD'; terr.push('anterior', 'apex'); view = 'front';
+      notes.push('Elevation in both the inferior and anterior leads: a wraparound LAD occlusion, or multivessel disease.'); }
+    else if (lateral) { artery = 'Circumflex, or a dominant right coronary artery.'; occ = 'LCX-prox'; label = 'Circumflex'; terr.push('lateral', 'posterior'); }
+    else if (rv) { artery = 'Proximal right coronary artery — before its right ventricular branches.'; occ = 'RCA-prox'; label = 'Proximal right coronary artery'; terr.push('rv'); view = 'right'; }
+    if (post && terr.indexOf('posterior') < 0) terr.push('posterior');
+    notes.push(recip(['I', 'aVL'], 'inferior'));
+    if (!lateral && !ant) notes.push('Elevation in III greater than II, with depression in I, favours the right coronary artery.');
+    if (rv) notes.push('ST elevation in V1 alongside an inferior STEMI is a clue to right ventricular infarction.');
+    notes.push('Record right-sided leads (V4R). Right ventricular involvement makes the patient preload-dependent — be cautious with GTN.');
+    if (post) notes.push('ST depression in V1–V3 suggests posterior extension — record V7–V9.');
+    return R(title, 'hot', artery, notes, { kind:'mi', occ, terr, view, label });
+  }
+
+  if (sept || ant || lateral) {
+    const anyAnt = sept || ant, notes = [];
+    let title, artery, occ = 'LAD-prox', label = 'Proximal LAD', terr, view = 'front';
+    if (sept && ant && (lowLat || latLimb)) { title = 'Extensive anterior STEMI'; artery = 'Proximal LAD — before its first septal and diagonal branches.'; terr = ['septal', 'anterior', 'apex', 'highLateral', 'lateral']; }
+    else if (sept && ant) { title = 'Anteroseptal STEMI'; artery = 'LAD, proximal to mid.'; terr = ['septal', 'anterior', 'apex']; }
+    else if (ant && (lowLat || latLimb)) { title = 'Anterolateral STEMI'; artery = 'LAD and its diagonal branch, or the circumflex.'; label = 'LAD before the first diagonal'; terr = ['anterior', 'apex', 'lateral'].concat(latLimb ? ['highLateral'] : []); }
+    else if (sept && (lowLat || latLimb)) { title = 'Septal and lateral STEMI'; artery = 'Proximal LAD — involving its septal and first diagonal branches.'; terr = ['septal', 'highLateral', 'lateral']; }
+    else if (sept) { title = 'Septal STEMI'; artery = 'Proximal LAD — septal branches.'; terr = ['septal']; notes.push('Elevation confined to V1–V2. Watch for spread into V3–V4.'); }
+    else if (ant) { title = 'Anterior STEMI'; artery = 'Mid LAD.'; occ = 'LAD-mid'; label = 'Mid LAD'; terr = ['anterior', 'apex']; }
+    else if (post) { title = 'Posterolateral STEMI'; artery = 'Circumflex artery.'; occ = 'LCX-prox'; label = 'Circumflex'; terr = ['lateral', 'posterior']; view = 'back';
+      notes.push('The ST depression in V1–V3 is the posterior part — record V7–V9.'); }
+    else if (highLat && !lowLat) { title = 'High lateral STEMI'; artery = 'First diagonal branch of the LAD, or the circumflex (obtuse marginal).'; occ = 'D1'; label = 'First diagonal branch'; terr = ['highLateral']; view = 'left'; }
+    else { title = 'Lateral STEMI'; artery = 'Circumflex, or a diagonal branch of the LAD.'; occ = 'LCX-prox'; label = 'Circumflex'; terr = ['lateral'].concat(latLimb ? ['highLateral'] : []); view = 'left'; }
+    const infDep = ls(D, ['II', 'III', 'aVF']);
+    if (!anyAnt) notes.push(recip(['II', 'III', 'aVF'], 'lateral'));
+    else notes.push(infDep.length ? 'Reciprocal depression in ' + andList(infDep) + ' supports the diagnosis.' : 'Reciprocal depression in the inferior leads may appear, but is not required.');
+    if (anyAnt) notes.push('The largest area of muscle at risk — time-critical.');
+    if (title === 'High lateral STEMI') notes.push('The reciprocal depression in III and aVF is often more obvious than the elevation.');
+    notes.push(thr);
+    return R(title, 'hot', artery, notes, { kind:'mi', occ, terr, view, label });
+  }
+
+  if (post && !E.size)
+    return R('Posterior MI', 'hot', 'Circumflex artery, or the posterior branches of the right coronary.', [
+      'ST depression in V1–V3 is the mirror image of ST elevation on the back of the heart.',
+      'Look for tall R waves and upright T waves in V1–V2.',
+      'Record V7–V9: 0.5 mm of ST elevation (1 mm in men under 40) confirms posterior STEMI.'],
+      { kind:'mi', occ:'LCX-dist', terr:['posterior'], view:'back', label:'Distal circumflex' });
+
+  if (E.size) {
+    const n = [];
+    if (E.has('aVR') && E.size === 1) n.push('Isolated aVR elevation: look for widespread ST depression — if present, think left main or multivessel ischaemia.');
+    else n.push('STEMI criteria need elevation in two contiguous leads — for example II, III and aVF, or neighbouring chest leads such as V2 and V3.');
+    n.push('Elevation in one lead alone is often early repolarisation, artefact or a misplaced electrode. Repeat the ECG.');
+    return R('No contiguous territory', 'warn', 'Not localised.', n, { kind:'none', label:'No territory identified yet' });
+  }
+  if (dL.every(l => l === 'I' || l === 'aVL'))
+    return R('Check the inferior leads', 'warn', 'Possibly the right coronary artery.', ['ST depression in aVL can be the earliest sign of an inferior STEMI — look closely at II, III and aVF.', 'Repeat the ECG in a few minutes; early changes evolve.'], { kind:'none', label:'Watch the inferior leads' });
+  if (dL.every(l => l === 'II' || l === 'III' || l === 'aVF'))
+    return R('Check the high lateral leads', 'warn', 'Possibly a diagonal or circumflex branch.', ['Inferior ST depression can be reciprocal to a subtle high lateral STEMI — look hard at I and aVL.', 'Otherwise it suggests ischaemia rather than infarction.'], { kind:'none', label:'Watch I and aVL' });
+  const notes = ['Horizontal or downsloping ST depression suggests ischaemia — NSTE-ACS, or demand from tachycardia, anaemia or hypotension.', 'ST depression does not localise an artery.', 'Repeat the ECG — dynamic changes matter.'];
+  if (wideDep) notes.push('Widespread depression: check aVR — elevation there raises the possibility of left main disease.');
+  return R('ST depression — ischaemia', 'warn', 'Not localised.', notes, { kind:'none', label:'ST depression does not localise' });
+}
+
+/* ===== drawing ===== */
+const grid = $('ecg-grid'), stripCv = $('ecg-rhythm'), tiles = {};
+LEADS.forEach(L => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'ecg-lead'; b.dataset.lead = L; b.tabIndex = -1;
+  b.innerHTML = '<canvas></canvas><span class="ecg-ln">' + L + '</span><span class="ecg-badge"></span>';
+  grid.appendChild(b);
+  tiles[L] = { el: b, cv: b.querySelector('canvas'), badge: b.querySelector('.ecg-badge') };
+});
+let cur = null, mode = 'ex', exId = 'nsr', geo = null;
+function setModel(m) {
+  cur = m; cur.P = pWave(m.pk || 1); cur.spikes = [];
+  m.beats.forEach(b => { if (b.m.spike != null) cur.spikes.push(b.t + b.m.spike); });
+}
+function sig(L, t) {
+  let v = 0;
+  const bs = cur.beats;
+  for (let i = 0; i < bs.length; i++) { const x = t - bs[i].t; if (x > -0.3 && x < 0.75) { const cs = bs[i].m.comps[L]; for (let j = 0; j < cs.length; j++) v += ev(cs[j], x); } }
+  const ps = cur.ps, pc = cur.P[L];
+  for (let i = 0; i < ps.length; i++) { const x = t - ps[i]; if (x > -0.01 && x < 0.16) for (let j = 0; j < pc.length; j++) v += ev(pc[j], x); }
+  if (cur.base) v += cur.base(L, t);
+  return v;
+}
+function measure() {
+  const W = grid.clientWidth - 4; if (W <= 0) return false;
+  const cw = (W - 2) / 2, pxmm = Math.min(3.6, cw / 50);
+  const sw = stripCv.parentElement.clientWidth - 4, spx = Math.min(3.2, sw / 150);
+  geo = { pxmm, ch: Math.round(pxmm * 26), spx, sh: Math.round(spx * 27) };
+  LEADS.forEach(L => { tiles[L].el.style.height = geo.ch + 'px'; });
+  stripCv.style.height = geo.sh + 'px';
+  return true;
+}
+function palette() {
+  const cs = getComputedStyle(document.documentElement), g = n => cs.getPropertyValue(n).trim();
+  return { paper: g('--ecg-paper'), minor: g('--ecg-minor'), major: g('--ecg-major'), trace: g('--ecg-trace'), ink: g('--ink'), dim: g('--ink-dim'),
+    dark: document.documentElement.dataset.theme !== 'light' };
+}
+function prep(cv, W, H) {
+  const dpr = Math.min(3, window.devicePixelRatio || 1);
+  cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+  const ctx = cv.getContext('2d'); ctx.setTransform(1, 0, 0, 1, 0, 0);
+  return { ctx, dpr };
+}
+function paper(ctx, dpr, W, H, pxmm, col) {
+  const w = W * dpr, h = H * dpr, step = pxmm * dpr;
+  ctx.fillStyle = col.paper; ctx.fillRect(0, 0, w, h);
+  if (step >= 3) {
+    ctx.fillStyle = col.minor;
+    for (let x = 0; x < w; x += step) ctx.fillRect(Math.round(x), 0, 1, h);
+    for (let y = h; y > 0; y -= step) ctx.fillRect(0, Math.round(y), w, 1);
+  }
+  ctx.fillStyle = col.major; const big = step * 5, lw = Math.max(1, Math.round(dpr));
+  for (let x = 0; x < w; x += big) ctx.fillRect(Math.round(x), 0, lw, h);
+  for (let y = h; y > 0; y -= big) ctx.fillRect(0, Math.round(y), w, lw);
+}
+function sample(L, t0, dur, n) {
+  const times = [];
+  for (let i = 0; i <= n; i++) times.push(t0 + dur * i / n);
+  cur.spikes.forEach(ts => { if (ts > t0 && ts < t0 + dur) times.push(ts - .0016, ts, ts + .0016); });
+  times.sort((a, b) => a - b);
+  const vals = times.map(t => sig(L, t));
+  let mn = 0, mx = 0; vals.forEach(v => { if (v < mn) mn = v; if (v > mx) mx = v; });
+  return { times, vals, mn, mx };
+}
+function stroke(ctx, dpr, s, t0, dur, x0, W, y0, g, col) {
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.strokeStyle = col.trace; ctx.lineWidth = 1.4;
+  if (col.dark) { ctx.shadowColor = 'rgba(125,255,92,.55)'; ctx.shadowBlur = 4; }
+  ctx.beginPath();
+  s.times.forEach((t, i) => { const x = x0 + (t - t0) / dur * (W - x0), y = y0 - s.vals[i] * g; if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); });
+  ctx.stroke(); ctx.shadowBlur = 0;
+}
+const baseline = (s, H, g) => { const y = H / 2 + (s.mx + s.mn) / 2 * g; return Math.min(H - 5 + s.mn * g, Math.max(5 + s.mx * g, y)); };
+function drawAll() {
+  if (!cur || !measure()) return;
+  const col = palette();
+  LEADS.forEach((L, i) => {
+    const el = tiles[L].el, W = el.clientWidth, H = el.clientHeight; if (!W) return;
+    const pxmm = geo.pxmm, dur = W / (pxmm * 25), t0 = i < 6 ? 0 : dur, g = 10 * pxmm;
+    const { ctx, dpr } = prep(tiles[L].cv, W, H);
+    paper(ctx, dpr, W, H, pxmm, col);
+    const s = sample(L, t0, dur, Math.ceil(W * 1.5));
+    stroke(ctx, dpr, s, t0, dur, 0, W, baseline(s, H, g), g, col);
+  });
+  const W = stripCv.clientWidth, H = stripCv.clientHeight; if (!W) return;
+  const px = geo.spx, g = 10 * px, cal = Math.round(px * 8), dur = (W - cal) / (px * 25);
+  const { ctx, dpr } = prep(stripCv, W, H);
+  paper(ctx, dpr, W, H, px, col);
+  const s = sample('II', 0, dur, Math.ceil(W * 1.5)), y0 = Math.max(baseline(s, H, g), 6 + g);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.strokeStyle = col.trace; ctx.lineWidth = 1.4; ctx.lineJoin = 'miter';
+  ctx.beginPath(); ctx.moveTo(1, y0); ctx.lineTo(px * 1.5, y0); ctx.lineTo(px * 1.5, y0 - g); ctx.lineTo(px * 6.5, y0 - g); ctx.lineTo(px * 6.5, y0); ctx.lineTo(cal, y0); ctx.stroke();
+  stroke(ctx, dpr, s, 0, dur, cal, W, y0, g, col);
+}
+
+/* ===== info panel ===== */
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+function info(kicker, title, chips, items, whereLabel, where, tone) {
+  $('ecg-kicker').textContent = kicker;
+  $('ecg-title').textContent = title;
+  $('ecg-chips').innerHTML = chips.map(c => '<span class="ecg-chip' + (c[1] ? ' ' + c[1] : '') + '">' + esc(c[0]) + '</span>').join('');
+  $('ecg-feat').innerHTML = items.map(t => '<li>' + esc(t) + '</li>').join('');
+  $('ecg-where').innerHTML = where ? '<b>' + esc(whereLabel) + '</b>' + esc(where) : '';
+  $('ecg-info').dataset.tone = tone;
+}
+const swatch = (c, t) => '<span><i style="background:' + c + '"></i>' + t + '</span>';
+function caption(f) {
+  const cap = $('heart-cap'), leg = $('heart-legend');
+  if (f.kind === 'mi') { cap.textContent = 'Likely blockage: ' + f.label; leg.innerHTML = swatch('#ffd23f', 'Blockage') + swatch('#6a5cff', 'Muscle at risk') + swatch('#4a3640', 'No flow past the block') + swatch('#e3392c', 'Coronary arteries'); }
+  else if (f.kind === 'cond') { cap.textContent = f.label; leg.innerHTML = swatch('#ffd23f', 'Conduction system') + (f.part === 'all' ? '' : swatch('#ff4d3d', 'Where the problem is')); }
+  else if (f.kind === 'peri') { cap.textContent = f.label; leg.innerHTML = swatch('#ffa726', 'Inflamed pericardium'); }
+  else { cap.textContent = f.label || 'Coronary arteries'; leg.innerHTML = swatch('#e3392c', 'Coronary arteries'); }
+}
+
+/* ===== modes ===== */
+function showExample(id) {
+  const ex = EX.find(e => e.id === id) || EX[0]; exId = ex.id;
+  setModel(ex.build());
+  if (open) drawAll();
+  const tone = ex.g === 'isch' || ex.g === 'arrest' ? 'hot' : ex.g === 'block' ? 'warn' : 'cool';
+  info('Example · ' + G[ex.g], ex.name, ex.meas.map(m => [m, m.indexOf('ST ↑') === 0 ? 'up' : m.indexOf('ST ↓') === 0 ? 'down' : '']), ex.feat, 'Where', ex.where, tone);
+  Heart.set(ex.focus, ex.rate);
+  caption(ex.focus);
+}
+function showCustom() {
+  const st = {}, t = {};
+  LEADS.forEach(L => {
+    if (cstate[L] === 1) { st[L] = .25; t[L] = baseT(L) < 0 ? -.5 : 1.5; }
+    else if (cstate[L] === -1) { st[L] = -.15; t[L] = .8; }
+    const el = tiles[L].el, s = cstate[L];
+    el.classList.toggle('up', s === 1); el.classList.toggle('down', s === -1);
+    tiles[L].badge.textContent = s === 1 ? 'ST ↑' : s === -1 ? 'ST ↓' : '';
+    el.setAttribute('aria-label', 'Lead ' + L + ': ' + (s === 1 ? 'ST elevation' : s === -1 ? 'ST depression' : 'no ST change') + '. Tap to change.');
+  });
+  setModel(sinus(.8, .16, narrow({ qt: .37, st, t })));
+  if (open) drawAll();
+  const r = classify();
+  info('Your ECG', r.title, r.chips, r.notes, 'Likely artery', r.artery, r.tone);
+  Heart.set(r.focus, 75);
+  caption(r.focus);
+}
+function syncMode() {
+  $('ecg-m-ex').setAttribute('aria-pressed', String(mode === 'ex'));
+  $('ecg-m-cu').setAttribute('aria-pressed', String(mode === 'cu'));
+  $('ecg-hint').hidden = mode !== 'cu';
+  LEADS.forEach(L => {
+    const el = tiles[L].el;
+    el.classList.toggle('tap', mode === 'cu'); el.tabIndex = mode === 'cu' ? 0 : -1;
+    if (mode !== 'cu') { el.classList.remove('up', 'down'); el.setAttribute('aria-label', 'Lead ' + L); }
+  });
+}
+grid.addEventListener('click', e => {
+  const b = e.target.closest('.ecg-lead'); if (!b || mode !== 'cu') return;
+  const L = b.dataset.lead;
+  cstate[L] = cstate[L] === 0 ? 1 : cstate[L] === 1 ? -1 : 0;
+  b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash');
+  showCustom();
+});
+$('ecg-clear').addEventListener('click', () => { LEADS.forEach(L => { cstate[L] = 0; }); showCustom(); });
+$('ecg-m-cu').addEventListener('click', () => { if (mode === 'cu') return; mode = 'cu'; syncMode(); showCustom(); });
+$('ecg-m-ex').addEventListener('click', () => { if (mode !== 'ex') { mode = 'ex'; syncMode(); showExample(exId); } openSheet(); });
+
+/* examples sheet */
+const sheet = $('ex-sheet'), back = $('ex-back'), list = $('ex-list');
+/* the screen's entrance animation leaves a transform on the section, which would trap position:fixed — so the sheet lives on <body> */
+document.body.appendChild(back); document.body.appendChild(sheet);
+(() => {
+  let h = '', g = '';
+  EX.forEach(ex => {
+    if (ex.g !== g) { g = ex.g; h += '<div class="ex-g">' + G[g] + '</div>'; }
+    h += '<button type="button" class="ex-i" data-ex="' + ex.id + '"><span class="dot" style="background:' + GC[ex.g] + '"></span><span><b>' + esc(ex.name) + '</b><small>' + esc(ex.hint) + '</small></span></button>';
+  });
+  list.innerHTML = h;
+})();
+function openSheet() {
+  list.querySelectorAll('.ex-i').forEach(b => b.setAttribute('aria-current', String(b.dataset.ex === exId)));
+  sheet.hidden = false; back.hidden = false; document.body.classList.add('lock');
+  const curBtn = list.querySelector('[aria-current="true"]');
+  const body = sheet.querySelector('.ecg-sheet-body');
+  if (curBtn) { curBtn.focus({ preventScroll: true }); body.scrollTop = Math.max(0, curBtn.offsetTop - body.clientHeight / 2); }
+}
+function closeSheet() {
+  if (sheet.hidden) return;
+  sheet.hidden = true; back.hidden = true; document.body.classList.remove('lock');
+  $('ecg-m-ex').focus({ preventScroll: true });
+}
+list.addEventListener('click', e => { const b = e.target.closest('[data-ex]'); if (!b) return; showExample(b.dataset.ex); closeSheet(); });
+$('ex-close').addEventListener('click', closeSheet);
+back.addEventListener('click', closeSheet);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+
+/* ===== 3D heart ===== */
+const Heart = (() => {
+  const stage = $('heart-stage'), cv = $('heart-cv'), lab = $('heart-labels'), msg = $('heart-msg');
+  const tip = document.createElement('div'); tip.className = 'heart-tip'; tip.textContent = 'Drag sideways to spin'; stage.appendChild(tip);
+  /* heart frame: x = patient's left, y = up, z = anterior. v = degrees round the long axis from anterior towards the left. */
+  const R0 = 1, KZ = .86, YB = .75, LEN = 2.35, HT = .24, SB = .12, ANTG = 20, POSTG = 210;
+  const angd = (a, b) => { const d = Math.abs((((a - b) % 360) + 360) % 360); return d > 180 ? 360 - d : d; };
+  function hpt(s, v) {
+    let r, y, u;
+    if (s <= SB) { const a = s / SB; r = R0 * Math.sin(a * Math.PI / 2); y = YB + HT * Math.cos(a * Math.PI / 2); u = 0; }
+    else { const b = (s - SB) / (1 - SB); r = R0 * Math.sqrt(Math.max(0, 1 - Math.pow(b, 2.3))) * (1 + .07 * Math.sin(Math.PI * b)); y = YB - LEN * b; u = b; }
+    const fade = Math.min(1, (1 - u) * 4) * (s <= SB ? Math.min(1, s / SB * 1.5) : 1);
+    let k = 1 - .05 * Math.exp(-Math.pow(angd(v, ANTG) / 8, 2)) * fade - .045 * Math.exp(-Math.pow(angd(v, POSTG) / 8, 2)) * fade;
+    k *= 1 + .07 * Math.exp(-Math.pow(angd(v, 315) / 55, 2)) * (1 - u);
+    r *= k;
+    const a = v * D2R;
+    return [r * Math.sin(a), y, r * Math.cos(a) * KZ, u];
+  }
+  const vr = (v, a, b, f) => { f = f || 14; const x = (((v - a) % 360) + 360) % 360, w = (((b - a) % 360) + 360) % 360; const d = x <= w ? Math.min(x, w - x) : -Math.min(x - w, 360 - x); return sm(-f, f, d); };
+  const ur = (u, a, b, f) => { f = f || .06; return sm(-f, f, Math.min(u - a, b - u)); };
+  const TERR = {
+    septal: (u, v) => vr(v, -10, 45) * ur(u, -.2, .7),
+    anterior: (u, v) => vr(v, 10, 88) * ur(u, .12, 1.2),
+    apex: u => ur(u, .8, 1.2, .08),
+    highLateral: (u, v) => vr(v, 55, 130) * ur(u, -.2, .42),
+    lateral: (u, v) => vr(v, 70, 155) * ur(u, -.2, .88),
+    inferior: (u, v) => vr(v, 165, 258) * ur(u, .1, 1.05),
+    posterior: (u, v) => vr(v, 125, 205) * ur(u, -.2, .52),
+    rv: (u, v) => vr(v, 255, 375) * ur(u, -.2, .86)
+  };
+  const MUSCLE = [.70, .29, .26], ISCH = [.40, .33, 1.0];
+  const VIEWS = { front: [.32, .06], left: [-1.2, .08], under: [2.7, -.62], back: [Math.PI - .4, .08], right: [1.15, -.3], cond: [.6, .12] };
+  let T, ren, scene, cam, root, model, M, Q;
+  let ventGeo, ventMat, colAttr, VU, VV, VW, nV, terrOn = false, shell, shellMat;
+  let atriaMats = [], vesselMats = [], atriaMeshes = [], artGroup, arts = {}, condGroup, cmat, hmat, condParts = {}, extras = {};
+  let mk, halo, labels = [], flutterCurve = null, artLive, artDead;
+  let focus = { kind: 'none' }, period = .8;
+  let yaw = VIEWS.front[0], pitch = VIEWS.front[1], vy = 0, vp = 0, tgt = null, drag = null;
+  let ready = false, loading = false, visible = false, inView = true, raf = 0, last = 0, glass = false;
+
+  function loadThree() {
+    if (window.THREE) return Promise.resolve();
+    return new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      s.onload = () => window.THREE ? res() : rej(new Error('three.js missing'));
+      s.onerror = () => { s.remove(); rej(new Error('load failed')); };
+      document.head.appendChild(s);
+    });
+  }
+  const hw = p => new T.Vector3(p[0], p[1], p[2]).applyMatrix4(M);
+  function surf(u, v, off) {
+    const s = SB + Math.min(1, Math.max(0, u)) * (1 - SB), e = .004;
+    const p = hpt(s, v), a = hpt(Math.min(1, s + e), v), b = hpt(Math.max(0, s - e), v), c = hpt(s, v + .6), d = hpt(s, v - .6);
+    const ds = new T.Vector3(a[0] - b[0], a[1] - b[1], a[2] - b[2]), dv = new T.Vector3(c[0] - d[0], c[1] - d[1], c[2] - d[2]);
+    const n = new T.Vector3().crossVectors(dv, ds).normalize();
+    if (n.dot(new T.Vector3(p[0], p[1] - (YB - LEN * .45), p[2])) < 0) n.negate();
+    const q = new T.Vector3(p[0], p[1], p[2]).addScaledVector(n, off || 0).applyMatrix4(M);
+    return { p: q, n: n.applyQuaternion(Q) };
+  }
+  const mat = (hex, o) => new T.MeshStandardMaterial(Object.assign({ color: hex, roughness: .6, metalness: .03 }, o || {}));
+  function tube(pts, r, m, closed) { const c = new T.CatmullRomCurve3(pts, !!closed); return new T.Mesh(new T.TubeGeometry(c, Math.min(96, Math.max(24, pts.length * 10)), r, 12, !!closed), m); }
+  function ball(p, r, m) { const s = new T.Mesh(new T.SphereGeometry(r, 20, 14), m); s.position.copy(p); return s; }
+
+  function build() {
+    T = window.THREE;
+    ren = new T.WebGLRenderer({ canvas: cv, antialias: true, alpha: true });
+    ren.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    ren.setClearColor(0x000000, 0);
+    scene = new T.Scene();
+    cam = new T.PerspectiveCamera(30, 1, .1, 60); cam.position.set(0, 0, 8.7);
+    scene.add(new T.HemisphereLight(0xfff2ee, 0x3a1c24, .8));
+    const key = new T.DirectionalLight(0xffffff, .8); key.position.set(3, 4, 6); scene.add(key);
+    const rim = new T.DirectionalLight(0xa9bcff, .5); rim.position.set(-5, 2, -4); scene.add(rim);
+    root = new T.Group(); scene.add(root); model = new T.Group(); root.add(model);
+    M = new T.Matrix4().makeRotationX(-20 * D2R).multiply(new T.Matrix4().makeRotationZ(38 * D2R));
+    Q = new T.Quaternion().setFromRotationMatrix(M);
+
+    /* ventricles: parametric surface, vertex colours carry the territory shading */
+    const NSg = 72, NVg = 84, pos = [], U = [], V = [], idx = [];
+    const push = (p, v) => { pos.push(p[0], p[1], p[2]); U.push(p[3]); V.push(v); };
+    push(hpt(0, 0), 0);
+    for (let i = 1; i < NSg; i++) for (let j = 0; j < NVg; j++) { const v = j * 360 / NVg; push(hpt(i / NSg, v), v); }
+    const apex = U.length; push(hpt(1, 0), 0);
+    const Rg = (i, j) => 1 + (i - 1) * NVg + (((j % NVg) + NVg) % NVg);
+    for (let j = 0; j < NVg; j++) idx.push(0, Rg(1, j), Rg(1, j + 1));
+    for (let i = 1; i < NSg - 1; i++) for (let j = 0; j < NVg; j++) { const a = Rg(i, j), b = Rg(i, j + 1), c = Rg(i + 1, j), d = Rg(i + 1, j + 1); idx.push(a, c, b, b, c, d); }
+    for (let j = 0; j < NVg; j++) idx.push(apex, Rg(NSg - 1, j + 1), Rg(NSg - 1, j));
+    ventGeo = new T.BufferGeometry();
+    ventGeo.setAttribute('position', new T.Float32BufferAttribute(pos, 3));
+    nV = U.length; VU = U; VV = V; VW = new Float32Array(nV);
+    const cols = new Float32Array(nV * 3); for (let i = 0; i < nV; i++) cols.set(MUSCLE, i * 3);
+    colAttr = new T.BufferAttribute(cols, 3); ventGeo.setAttribute('color', colAttr);
+    ventGeo.setIndex(idx); ventGeo.applyMatrix4(M); ventGeo.computeVertexNormals();
+    ventMat = new T.MeshStandardMaterial({ vertexColors: true, roughness: .55, metalness: .04 });
+    model.add(new T.Mesh(ventGeo, ventMat));
+
+    /* pericardial shell for pericarditis */
+    const centre = hw([0, YB - LEN * .45, 0]);
+    const sg = ventGeo.clone(); sg.translate(-centre.x, -centre.y, -centre.z); sg.scale(1.07, 1.07, 1.07); sg.translate(centre.x, centre.y, centre.z);
+    shellMat = new T.MeshBasicMaterial({ color: 0xffa726, transparent: true, opacity: .28, depthWrite: false });
+    shell = new T.Mesh(sg, shellMat); shell.visible = false; model.add(shell);
+
+    /* atria and great vessels */
+    const atr = mat(0xa8524e); atriaMats.push(atr);
+    const ell = (c, r) => { const m = new T.Mesh(new T.SphereGeometry(1, 36, 24), atr); m.scale.set(r[0], r[1], r[2]); m.position.copy(hw(c)); m.quaternion.copy(Q); model.add(m); atriaMeshes.push(m); return m; };
+    ell([-.82, YB + .22, .05], [.5, .52, .58]); ell([.2, YB + .28, -.62], [.62, .42, .42]);
+    ell([-.52, YB + .44, .5], [.26, .2, .22]); ell([.82, YB + .25, .14], [.22, .15, .3]);
+    const ao = mat(0xc84a3e), pa = mat(0x5b64c4), vn = mat(0x5560b5); vesselMats.push(ao, pa, vn);
+    const AO = [-.05, YB + .12, -.02], A0 = hw(AO), P0 = hw([.28, YB + .08, .52]), S0 = hw([-.82, YB + .62, -.02]);
+    const o = (b, x, y, z) => b.clone().add(new T.Vector3(x, y, z));
+    const vessel = (pts, r, m) => { model.add(tube(pts, r, m)); model.add(ball(pts[pts.length - 1], r, m)); };
+    vessel([A0, o(A0, -.1, .5, .08), o(A0, -.05, 1.05, .05), o(A0, .25, 1.42, -.3), o(A0, .62, 1.3, -.72), o(A0, .7, .65, -.9), o(A0, .7, -.1, -.92)], .27, ao);
+    const B = o(P0, .15, .95, -.55);
+    vessel([P0, o(P0, .05, .5, -.02), o(P0, .12, .85, -.3), B], .22, pa);
+    vessel([B, o(B, .35, .02, -.15), o(B, .62, -.05, -.25)], .15, pa);
+    vessel([B, o(B, -.4, 0, -.15), o(B, -.85, -.05, -.2)], .15, pa);
+    vessel([S0, o(S0, 0, .6, 0), o(S0, 0, 1.15, 0)], .17, vn);
+
+    /* coronary arteries */
+    const ART = {
+      LMS: { r: .055, pts: () => [hw([AO[0] + .17, AO[1] + .05, AO[2] - .06]), hw([.45, YB + .15, .1]), surf(0, 42, .03).p] },
+      LAD: { r: .045, parent: 'LMS', path: [[0, 42], [.05, 33], [.18, 25], [.35, 22], [.55, 19], [.75, 17], [.9, 15], [.97, 12], [.995, 70]] },
+      D1: { r: .03, parent: 'LAD', path: [[.2, 25], [.3, 42], [.42, 58], [.58, 70]] },
+      D2: { r: .027, parent: 'LAD', path: [[.48, 20], [.58, 37], [.72, 52]] },
+      LCX: { r: .043, parent: 'LMS', path: [[0, 42], [0, 62], [0, 86], [.005, 112], [.01, 140], [.015, 166]] },
+      OM1: { r: .03, parent: 'LCX', path: [[.003, 96], [.15, 101], [.35, 106], [.56, 110]] },
+      OM2: { r: .027, parent: 'LCX', path: [[.01, 138], [.2, 141], [.42, 143]] },
+      RCA: { r: .05, pts: () => [hw([AO[0] - .13, AO[1] + .04, AO[2] + .2]), hw([-.32, YB + .14, .66])].concat([[0, 330], [0, 300], [0, 270], [.005, 242], [.01, 214]].map(q => surf(q[0], q[1], .03).p)) },
+      AM: { r: .03, parent: 'RCA', path: [[0, 282], [.2, 290], [.4, 297], [.6, 303]] },
+      PDA: { r: .035, parent: 'RCA', path: [[.01, 214], [.15, 211], [.38, 209], [.6, 207], [.8, 206]] },
+      PLB: { r: .027, parent: 'RCA', path: [[.01, 214], [.03, 196], [.09, 182], [.2, 174]] }
+    };
+    Object.keys(ART).forEach(k => { const d = ART[k]; const pts = d.pts ? d.pts() : d.path.map(q => surf(q[0], q[1], .03).p); arts[k] = { r: d.r, parent: d.parent, curve: new T.CatmullRomCurve3(pts), at: 1 }; });
+    Object.keys(arts).forEach(k => {
+      const a = arts[k]; if (!a.parent) return;
+      const first = a.curve.points[0], pc = arts[a.parent].curve; let best = 1e9, bt = 1;
+      for (let i = 0; i <= 200; i++) { const d = pc.getPointAt(i / 200).distanceTo(first); if (d < best) { best = d; bt = i / 200; } }
+      a.at = bt;
+    });
+    artGroup = new T.Group(); model.add(artGroup);
+    artLive = mat(0xe3392c, { emissive: 0x3a0603, roughness: .4 }); artDead = mat(0x4a3640, { roughness: .85 });
+    const ym = new T.MeshStandardMaterial({ color: 0xffd23f, emissive: 0xffb000, emissiveIntensity: .7, roughness: .4 });
+    mk = new T.Mesh(new T.SphereGeometry(.085, 24, 16), ym); mk.visible = false; model.add(mk);
+    const hc = document.createElement('canvas'); hc.width = hc.height = 64;
+    const hx = hc.getContext('2d'), gr = hx.createRadialGradient(32, 32, 4, 32, 32, 32);
+    gr.addColorStop(0, 'rgba(255,230,120,1)'); gr.addColorStop(.45, 'rgba(255,200,40,.55)'); gr.addColorStop(1, 'rgba(255,200,40,0)');
+    hx.fillStyle = gr; hx.fillRect(0, 0, 64, 64);
+    halo = new T.Sprite(new T.SpriteMaterial({ map: new T.CanvasTexture(hc), transparent: true, depthWrite: false, depthTest: false, blending: T.AdditiveBlending }));
+    halo.visible = false; model.add(halo);
+
+    /* conduction system */
+    condGroup = new T.Group(); condGroup.visible = false; model.add(condGroup);
+    cmat = new T.MeshStandardMaterial({ color: 0xffd23f, emissive: 0xb88a00, emissiveIntensity: .7, roughness: .4 });
+    hmat = new T.MeshStandardMaterial({ color: 0xff4d3d, emissive: 0xff2a1a, emissiveIntensity: 1, roughness: .4 });
+    const SA = [-.68, YB + .7, .18], AVN = [-.2, YB + .02, -.1], HIS = [-.02, YB - .22, .03];
+    const sp = (y, kn, kd) => [.879 * kn + .477 * kd, y, .03 - .477 * kn + .879 * kd];
+    const P = {
+      sa: { ball: SA, r: .09 },
+      avn: { ball: AVN, r: .085 },
+      inter: { path: [SA, [-.58, YB + .45, .1], [-.38, YB + .2, -.02], AVN], r: .022 },
+      his: { path: [AVN, [-.1, YB - .08, -.04], HIS], r: .034 },
+      rbb: { path: [HIS, sp(YB - .35, -.1, 0), sp(-.3, -.13, .05), sp(-.8, -.13, .05), sp(-1.15, -.1, .1), [-.42, -1.02, .45]], r: .026 },
+      lbbA: { path: [HIS, sp(YB - .32, .1, .02), sp(-.2, .2, .25), sp(-.75, .3, .35), [.32, -1.25, .3]], r: .026 },
+      lbbP: { path: [HIS, sp(YB - .34, .1, -.02), sp(-.25, .22, -.25), sp(-.8, .32, -.35), [.3, -1.25, -.22]], r: .026 }
+    };
+    Object.keys(P).forEach(k => { const d = P[k]; const m = d.ball ? ball(hw(d.ball), d.r, cmat) : tube(d.path.map(hw), d.r, cmat); condGroup.add(m); condParts[k] = m; });
+    const loop = []; for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2; loop.push(hw([-.5 + .3 * Math.cos(a), YB + .1 + .04 * Math.sin(a * 2), .25 + .3 * Math.sin(a)])); }
+    flutterCurve = new T.CatmullRomCurve3(loop, true);
+    extras.flutter = tube(loop, .03, hmat, true); extras.flutterDot = ball(loop[0], .07, cmat);
+    extras.focus = ball(surf(.55, 150, -.08).p, .1, hmat);
+    extras.pvc = ball(surf(.06, 345, -.06).p, .09, hmat);
+    const lead = mat(0xcfd6de, { roughness: .35, metalness: .3 });
+    extras.lead = tube([o(S0, 0, 1.3, 0), o(S0, 0, .6, 0), S0, hw([-.6, YB + .15, .2]), hw([-.35, YB - .3, .38]), hw([-.15, -1.08, .3])], .028, lead);
+    extras.tip = ball(hw([-.15, -1.08, .3]), .06, hmat);
+    Object.keys(extras).forEach(k => { extras[k].visible = false; condGroup.add(extras[k]); });
+
+    const box = new T.Box3().setFromObject(model);
+    model.position.sub(box.getCenter(new T.Vector3()));
+
+    /* interaction */
+    cv.style.touchAction = 'pan-y';
+    cv.addEventListener('pointerdown', e => { drag = { id: e.pointerId, x: e.clientX, y: e.clientY }; tgt = null; vy = vp = 0; try { cv.setPointerCapture(e.pointerId); } catch (_) {} kick(); });
+    cv.addEventListener('pointermove', e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y; drag.x = e.clientX; drag.y = e.clientY;
+      yaw += dx * .011; pitch = clampP(pitch + dy * .009); vy = dx * .011; vp = dy * .009;
+    });
+    const up = e => { if (drag && e.pointerId === drag.id) drag = null; };
+    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', e => { up(e); vy = vp = 0; });
+    if (window.ResizeObserver) new ResizeObserver(resize).observe(stage);
+    if (window.IntersectionObserver) new IntersectionObserver(es => { inView = es[0].isIntersecting; kick(); }).observe(stage);
+  }
+  const clampP = p => Math.max(-1.45, Math.min(1.45, p));
+  function resize() {
+    if (!ren) return;
+    const w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return;
+    ren.setSize(w, h, false); cam.aspect = w / h;
+    cam.position.z = w / h < .9 ? 8.7 / (w / h) * .9 : 8.7;
+    cam.updateProjectionMatrix();
+  }
+  function darkFrom(name, occ) {
+    if (!occ) return null;
+    if (name === occ.a) return occ.f;
+    let n = name;
+    while (arts[n].parent) { const p = arts[n].parent; if (p === occ.a) return arts[n].at >= occ.f ? 0 : null; n = p; }
+    return null;
+  }
+  function occFor(id) {
+    const A = arts;
+    switch (id) {
+      case 'LMS': return { a: 'LMS', f: .55 };
+      case 'LAD-prox': return { a: 'LAD', f: Math.max(.03, A.D1.at * .35) };
+      case 'LAD-mid': return { a: 'LAD', f: Math.min(.8, A.D1.at + .08) };
+      case 'D1': return { a: 'D1', f: .18 };
+      case 'LCX-prox': return { a: 'LCX', f: A.OM1.at * .4 };
+      case 'LCX-dist': return { a: 'LCX', f: A.OM1.at + (A.OM2.at - A.OM1.at) * .45 };
+      case 'RCA-prox': return { a: 'RCA', f: A.AM.at * .55 };
+      case 'RCA-mid': return { a: 'RCA', f: A.AM.at + (1 - A.AM.at) * .3 };
+    }
+    return null;
+  }
+  function rebuildArteries(occ) {
+    artGroup.children.slice().forEach(c => { artGroup.remove(c); c.geometry.dispose(); });
+    const live = artLive, dead = artDead;
+    const sub = (c, a, b) => { const p = []; for (let i = 0; i <= 24; i++) p.push(c.getPointAt(Math.min(1, Math.max(0, a + (b - a) * i / 24)))); return p; };
+    Object.keys(arts).forEach(k => {
+      const a = arts[k], f = darkFrom(k, occ);
+      if (f === null) artGroup.add(tube(a.curve.points, a.r, live));
+      else if (f <= 0) artGroup.add(tube(a.curve.points, a.r, dead));
+      else { artGroup.add(tube(sub(a.curve, 0, f), a.r, live)); artGroup.add(tube(sub(a.curve, f, 1), a.r, dead)); }
+    });
+    if (occ) { const p = arts[occ.a].curve.getPointAt(occ.f); mk.position.copy(p); halo.position.copy(p); }
+    mk.visible = halo.visible = !!occ;
+  }
+  function setTerr(list) {
+    terrOn = false;
+    for (let i = 0; i < nV; i++) { let w = 0; for (let k = 0; k < list.length; k++) { const f = TERR[list[k]]; if (f) w = Math.max(w, f(VU[i], VV[i])); } VW[i] = w; if (w > .001) terrOn = true; }
+    paint(terrOn ? .7 : 0);
+  }
+  function paint(k) {
+    const a = colAttr.array;
+    for (let i = 0; i < nV; i++) { const w = VW[i] * k; a[i * 3] = MUSCLE[0] + (ISCH[0] - MUSCLE[0]) * w; a[i * 3 + 1] = MUSCLE[1] + (ISCH[1] - MUSCLE[1]) * w; a[i * 3 + 2] = MUSCLE[2] + (ISCH[2] - MUSCLE[2]) * w; }
+    colAttr.needsUpdate = true;
+  }
+  function translucent(on) {
+    [ventMat].concat(atriaMats, vesselMats).forEach((m, i) => {
+      m.transparent = on; m.opacity = on ? (i === 0 ? .34 : .26) : 1; m.depthWrite = !on; m.needsUpdate = true;
+    });
+    glass = on;
+  }
+  const PLACE = { up: 'translate(-50%,-150%)', down: 'translate(-50%,60%)', left: 'translate(-112%,-50%)', right: 'translate(12%,-50%)' };
+  function anchor(p, cls, text, facing, where) {
+    const el = document.createElement('div'); el.className = 'hl' + (cls ? ' ' + cls : ''); el.textContent = text; el.style.opacity = '0'; lab.appendChild(el);
+    const n = facing ? p.clone().sub(hw([0, YB - LEN * .45, 0])).normalize() : null;
+    labels.push({ el, p: p.clone(), n, off: PLACE[where] || PLACE.up });
+  }
+  function apply() {
+    const mi = focus.kind === 'mi', cond = focus.kind === 'cond', part = focus.part;
+    translucent(cond);
+    artGroup.visible = !cond; condGroup.visible = cond; shell.visible = focus.kind === 'peri';
+    rebuildArteries(mi ? occFor(focus.occ) : null);
+    setTerr(mi ? focus.terr : []);
+    Object.keys(condParts).forEach(k => { condParts[k].material = cmat; });
+    Object.keys(extras).forEach(k => { extras[k].visible = false; });
+    const hot = [];
+    if (cond) {
+      if (part === 'sa') hot.push('sa');
+      if (part === 'avn') hot.push('avn');
+      if (part === 'atria') hot.push('inter');
+      if (part === 'his') hot.push('his');
+      if (part === 'rbb') hot.push('rbb');
+      if (part === 'lbb') hot.push('lbbA', 'lbbP');
+      hot.forEach(k => { condParts[k].material = hmat; });
+      if (part === 'flutter') { extras.flutter.visible = extras.flutterDot.visible = true; }
+      if (part === 'ventricle') extras.focus.visible = true;
+      if (part === 'pvc') extras.pvc.visible = true;
+      if (part === 'pacing') { extras.lead.visible = extras.tip.visible = true; }
+    }
+    ventMat.emissive.setHex(cond ? 0x3a1210 : 0x000000); atriaMats[0].emissive.setHex(cond ? 0x2a0c0c : 0x000000);
+    labels.forEach(l => l.el.remove()); labels = [];
+    if (mi) {
+      const o = occFor(focus.occ);
+      anchor(arts.LAD.curve.getPointAt(.5), '', 'LAD', true);
+      anchor(arts.LCX.curve.getPointAt(.62), '', 'LCx', true);
+      anchor(arts.RCA.curve.getPointAt(.62), '', 'RCA', true);
+      if (o) anchor(arts[o.a].curve.getPointAt(o.f), 'occ', 'Blockage', true, 'right');
+    } else if (cond) {
+      const ctr = m => { if (m.position.lengthSq()) return m.position; m.geometry.computeBoundingBox(); return m.geometry.boundingBox.getCenter(new T.Vector3()); };
+      const W = (k, t, h, w) => anchor(ctr(condParts[k]), h ? 'hot' : 'cond', t, false, w);
+      if (part === 'all') { W('sa', 'SA node', 0, 'left'); W('avn', 'AV node', 0, 'up'); W('lbbA', 'Left bundle', 0, 'right'); W('rbb', 'Right bundle', 0, 'down'); }
+      else if (part === 'sa') W('sa', 'SA node', 1, 'left');
+      else if (part === 'avn') W('avn', 'AV node', 1, 'up');
+      else if (part === 'his') { W('avn', 'AV node', 0, 'up'); W('his', 'Bundle of His', 1, 'right'); }
+      else if (part === 'lbb') W('lbbA', 'Left bundle', 1, 'right');
+      else if (part === 'rbb') W('rbb', 'Right bundle', 1, 'down');
+      else if (part === 'atria') anchor(atriaMeshes[0].position, 'hot', 'Atria', false);
+      else if (part === 'flutter') anchor(flutterCurve.getPointAt(.25), 'hot', 'Flutter circuit', false);
+      else if (part === 'ventricle') anchor(extras.focus.position, 'hot', 'VT focus', false);
+      else if (part === 'pvc') anchor(extras.pvc.position, 'hot', 'Ectopic focus', false);
+      else if (part === 'pacing') anchor(extras.tip.position, 'hot', 'Lead tip', false);
+      else if (part === 'vf') anchor(hw([.1, -.4, .5]), 'hot', 'Ventricles', false);
+    } else if (focus.kind === 'peri') anchor(hw([.3, -.2, .95]), 'hot', 'Pericardium', true);
+    goView(VIEWS[focus.view] || (cond ? VIEWS.cond : VIEWS.front));
+    kick();
+  }
+  function goView(v) {
+    const d = ((((v[0] - yaw) + Math.PI) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+    tgt = [yaw + d, v[1]];
+    if (reduceMotion) { yaw = tgt[0]; pitch = tgt[1]; tgt = null; }
+    kick();
+  }
+  function place() {
+    const W = stage.clientWidth, H = stage.clientHeight;
+    model.updateMatrixWorld();
+    labels.forEach(l => {
+      const p = l.p.clone().applyMatrix4(model.matrixWorld);
+      let vis = 1;
+      if (l.n) { const n = l.n.clone().transformDirection(model.matrixWorld), c = cam.position.clone().sub(p).normalize(), d = n.dot(c); vis = d > .2 ? 1 : d > -.05 ? (d + .05) / .25 : 0; }
+      p.project(cam);
+      l.el.style.transform = 'translate(' + ((p.x + 1) / 2 * W).toFixed(1) + 'px,' + ((1 - p.y) / 2 * H).toFixed(1) + 'px) ' + l.off;
+      l.el.style.opacity = vis.toFixed(2);
+    });
+  }
+  function frame(now) {
+    raf = 0;
+    if (!(visible && inView && ready)) return;
+    raf = requestAnimationFrame(frame);
+    const dt = Math.min(.05, (now - (last || now)) / 1000); last = now;
+    if (tgt) {
+      const k = 1 - Math.pow(.002, dt);
+      yaw += (tgt[0] - yaw) * k; pitch += (tgt[1] - pitch) * k;
+      if (Math.abs(tgt[0] - yaw) < .002 && Math.abs(tgt[1] - pitch) < .002) tgt = null;
+    } else if (!drag) { yaw += vy; pitch = clampP(pitch + vp); vy *= .9; vp *= .9; }
+    root.rotation.set(pitch, yaw, 0);
+    const s = now / 1000, ph = reduceMotion ? .7 : .5 + .5 * Math.sin(s * Math.PI * 2 / Math.max(.5, period));
+    if (terrOn) paint(.35 + .6 * ph);
+    if (halo.visible) { halo.scale.setScalar(.35 + .45 * ph); halo.material.opacity = .3 + .6 * (1 - ph); }
+    hmat.emissiveIntensity = .4 + 1.3 * ph;
+    if (focus.kind === 'peri') shellMat.opacity = .14 + .24 * ph;
+    if (focus.kind === 'cond') {
+      if (focus.part === 'flutter' && !reduceMotion) extras.flutterDot.position.copy(flutterCurve.getPointAt((s * .9) % 1));
+      if (focus.part === 'atria') atriaMats[0].emissive.setRGB(.16 + .55 * (.5 + .5 * Math.sin(s * 31) * Math.sin(s * 17)), .05 + .25 * ph, .05);
+      if (focus.part === 'vf') ventMat.emissive.setRGB(.23 + .45 * (.5 + .5 * Math.sin(s * 23) * Math.sin(s * 13.7)), .07, .06);
+      if (focus.part === 'ventricle') ventMat.emissive.setRGB(.23 + .3 * ph, .07, .06);
+    }
+    ren.render(scene, cam);
+    place();
+  }
+  function kick() { if (!raf && visible && inView && ready) { last = 0; raf = requestAnimationFrame(frame); } }
+  function init() {
+    if (loading) return;
+    loading = true; msg.hidden = false; msg.textContent = 'Loading 3D heart…';
+    loadThree().then(() => {
+      try { build(); ready = true; msg.hidden = true; resize(); apply(); }
+      catch (e) { fail('The 3D heart is not available on this device.'); }
+    }).catch(() => fail('The 3D heart needs a data connection the first time it loads.', true)).then(() => { loading = false; });
+  }
+  function fail(text, retry) {
+    msg.hidden = false; msg.innerHTML = '<div>' + text + (retry ? '<br><button type="button">Try again</button>' : '') + '</div>';
+    const b = msg.querySelector('button'); if (b) b.onclick = init;
+  }
+  document.querySelectorAll('.heart-views [data-view]').forEach(b => b.addEventListener('click', () => { if (ready) goView(VIEWS[b.dataset.view]); }));
+  return {
+    show() { visible = true; if (!ready) init(); else { resize(); kick(); } },
+    hide() { visible = false; },
+    set(f, rate) { focus = f || { kind: 'none' }; period = rate ? 60 / rate : 1.4; if (focus.kind === 'mi') period = 1.4; if (ready) apply(); }
+  };
+})();
+
+/* ===== normal ranges ===== */
+const RANGES = [
+  { k:'rate', n:'Heart rate', v:'60–100 /min', d:'300 ÷ large squares between two R waves. Irregular: count the QRS complexes in 10 seconds and multiply by 6.' },
+  { k:'p', n:'P wave', v:'< 120 ms', d:'Under 3 small squares wide and under 2.5 mm tall. Upright in II, inverted in aVR.' },
+  { k:'pr', n:'PR interval', v:'120–200 ms', d:'3–5 small squares, from the start of the P wave to the start of the QRS.' },
+  { k:'qrs', n:'QRS complex', v:'< 120 ms', d:'Under 3 small squares. 120 ms or more: bundle branch block, ventricular origin or paced.' },
+  { k:'st', n:'ST segment', v:'On the baseline', d:'Level with the PR segment. A little elevation in V2–V3 can be normal — see the STEMI thresholds below.' },
+  { k:'t', n:'T wave', v:'Upright I, II, V3–V6', d:'Inverted in aVR is normal, and it can be inverted in III and V1. Peaked, flat or newly inverted T waves need explaining.' },
+  { k:'qt', n:'QTc', v:'< 440 ms men, < 460 women', d:'From the start of the QRS to the end of the T wave, corrected for heart rate. Over 500 ms carries a high risk of torsades de pointes.' },
+  { k:'axis', n:'Axis', v:'−30° to +90°', d:'QRS positive in I and II: normal. Positive in I, negative in II: left axis deviation. Negative in I, positive in aVF: right axis deviation.' },
+  { k:'q', n:'Q waves', v:'Small septal q only', d:'Small q waves in I, aVL and V5–V6 are normal. Pathological if 40 ms or wider, or deeper than a quarter of the R wave.' },
+  { k:'rwp', n:'R-wave progression', v:'R = S by V3–V4', d:'R grows from V1 to V5. Poor progression: old anterior MI, left ventricular hypertrophy or misplaced chest leads.' }
+];
+const rl = $('rng-list');
+rl.innerHTML = RANGES.map(r => '<button type="button" class="rng" data-k="' + r.k + '" aria-pressed="false"><span class="rk">' + esc(r.n) + '</span><span class="rv">' + esc(r.v) + '</span><span class="rn">' + esc(r.d) + '</span></button>').join('');
+let selK = null;
+rl.addEventListener('click', e => {
+  const b = e.target.closest('.rng'); if (!b) return;
+  selK = selK === b.dataset.k ? null : b.dataset.k;
+  rl.querySelectorAll('.rng').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.k === selK)));
+  drawBeat();
+});
+const beatCv = $('beat-cv'), BEAT = narrow({ qt: .37 }), BP = pWave(1);
+function drawBeat() {
+  const W = beatCv.clientWidth, H = beatCv.clientHeight; if (!W) return;
+  const col = palette(), { ctx, dpr } = prep(beatCv, W, H);
+  const top = 16, barsH = 62, tq = .3, span = [tq - .16, tq + .37];
+  const pps = W * .84 / (span[1] - span[0]), t0 = (span[0] + span[1]) / 2 - W / 2 / pps;
+  const g = (H - barsH - top) / 1.42, y0 = top + 1.2 * g, X = t => (t - t0) * pps;
+  ctx.fillStyle = col.paper; ctx.fillRect(0, 0, W * dpr, H * dpr);
+  ctx.fillStyle = col.minor; const sq = .04 * pps * dpr;
+  for (let i = 0, x = (Math.ceil(t0 / .04) * .04 - t0) * pps * dpr; x < W * dpr; i++, x += sq) {
+    const big = Math.round((t0 + x / dpr / pps) / .04) % 5 === 0;
+    ctx.fillStyle = big ? col.major : col.minor; ctx.fillRect(Math.round(x), 0, Math.max(1, Math.round(dpr * (big ? 1 : .6))), (H - barsH + 6) * dpr);
+  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.fillStyle = col.major; ctx.fillRect(0, y0, W, 1);
+  const v = t => { let s = 0; BEAT.comps.II.forEach(c => { s += ev(c, t - tq); }); BP.II.forEach(c => { s += ev(c, t - (tq - .16)); }); return s; };
+  const IV = { p: [tq - .16, tq - .06], pr: [tq - .16, tq], qrs: [tq, tq + .088], st: [tq + .088, tq + .19], t: [tq + .19, tq + .37], qt: [tq, tq + .37] };
+  if (IV[selK]) { ctx.fillStyle = 'rgba(63,111,232,.2)'; ctx.fillRect(X(IV[selK][0]), 0, X(IV[selK][1]) - X(IV[selK][0]), H - barsH + 6); }
+  ctx.strokeStyle = col.trace; ctx.lineWidth = 2.2; ctx.lineJoin = 'round';
+  if (col.dark) { ctx.shadowColor = 'rgba(125,255,92,.5)'; ctx.shadowBlur = 5; }
+  ctx.beginPath();
+  for (let i = 0; i <= W * 2; i++) { const t = t0 + i / 2 / pps, y = y0 - v(t) * g; if (i) ctx.lineTo(X(t), y); else ctx.moveTo(X(t), y); }
+  ctx.stroke(); ctx.shadowBlur = 0;
+  ctx.font = '800 13px -apple-system,system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = col.ink;
+  [['P', tq - .11, 1], ['Q', tq + .01, -1], ['R', tq + .038, 1], ['S', tq + .068, -1], ['T', tq + .285, 1]].forEach(w => {
+    const y = y0 - v(w[1]) * g; ctx.fillText(w[0], X(w[1]) + (w[0] === 'Q' ? -6 : w[0] === 'S' ? 6 : 0), w[2] > 0 ? y - 7 : y + 18);
+  });
+  const bar = (k, row, text) => {
+    const a = X(IV[k][0]), b = X(IV[k][1]), y = H - barsH + 18 + row * 26, on = selK === k, c = on ? (col.dark ? '#9fbaff' : '#2f5fd6') : col.dim;
+    ctx.strokeStyle = c; ctx.fillStyle = c; ctx.lineWidth = on ? 3 : 1.5;
+    ctx.beginPath(); ctx.moveTo(a + 2, y); ctx.lineTo(b - 2, y); ctx.moveTo(a + 2, y - 5); ctx.lineTo(a + 2, y + 5); ctx.moveTo(b - 2, y - 5); ctx.lineTo(b - 2, y + 5); ctx.stroke();
+    ctx.font = (on ? '800 ' : '700 ') + '11.5px -apple-system,system-ui,sans-serif';
+    ctx.fillText(text, (a + b) / 2, y + 15);
+  };
+  bar('p', 0, 'P'); bar('qrs', 0, 'QRS'); bar('st', 0, 'ST'); bar('t', 0, 'T');
+  bar('pr', 1, 'PR interval'); bar('qt', 1, 'QT interval');
+}
+
+/* ===== screen lifecycle ===== */
+let open = false;
+function redraw() { if (open) { drawAll(); drawBeat(); } }
+document.addEventListener('screen', e => {
+  open = e.detail === 'ecg';
+  if (open) requestAnimationFrame(() => { redraw(); Heart.show(); });
+  else { Heart.hide(); closeSheet(); }
+});
+if (window.ResizeObserver) { let w0 = 0; new ResizeObserver(() => { const w = grid.clientWidth; if (w && w !== w0) { w0 = w; redraw(); } }).observe(grid); }
+new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+syncMode();
+showExample('nsr');
+})();
 </script>
 </body>
 </html>
