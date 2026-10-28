@@ -295,6 +295,30 @@ html[data-theme="light"] .ecg-hint b.up{color:#d8392d}html[data-theme="light"] .
 .ecg-where:empty{display:none}
 .ecg-where b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:2px}
 
+.ecg-do[hidden],.ecg-mine[hidden],.ecg-bk[hidden]{display:none}
+.ecg-do{margin-top:12px;padding:11px 12px 10px;border-radius:12px;background:var(--bg-2);border:1px solid var(--line)}
+.ecg-do-h,.ecg-mine-h{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:3px}
+.ecg-mine-h span{letter-spacing:.02em;text-transform:none;font-weight:700}
+.ecg-do-list{margin:0;padding-left:18px;font-size:14.5px;line-height:1.5}
+.ecg-do-list li{margin:4px 0}
+.ecg-do-foot{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;margin-top:9px}
+.ecg-do-foot span{flex:1 1 150px;font-size:12px;color:var(--ink-dim);line-height:1.35}
+.ecg-do-foot span:empty{display:none}
+.ecg-jr{flex:0 0 auto;margin-left:auto;border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:7px 12px;font-weight:700;font-size:13.5px;text-decoration:none}
+.ecg-do-note{margin:8px 0 0;font-size:12px;color:var(--ink-dim);line-height:1.4}
+.ecg-mine{margin-top:12px}
+.ecg-mine textarea,.ecg-bk textarea{display:block;width:100%;box-sizing:border-box;min-height:84px;resize:vertical;margin:4px 0 0;
+  border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:10px 12px;font:inherit;font-size:16px;line-height:1.45}
+.ecg-mine-foot{display:flex;align-items:center;gap:10px;margin-top:6px}
+.ecg-mine-foot span{flex:1;font-size:12.5px;color:var(--ink-dim);line-height:1.35}
+.ecg-mini{flex:0 0 auto;border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:7px 12px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer}
+.ecg-bk{margin-top:10px;padding:10px 12px 4px;border:1px dashed var(--line);border-radius:12px}
+.ecg-bk p{margin:0 0 9px;font-size:13px;color:var(--ink-dim);line-height:1.42}
+.ecg-bk textarea{margin:9px 0}
+.ecg-bk .ecg-bk-msg{margin:8px 0 6px;color:var(--ink);font-weight:600}
+.ecg-bk .ecg-bk-msg:empty{display:none}
+.ex-i.has-note b::after{content:" ✎";font-weight:700;color:var(--ink-dim)}
+
 .heart-cap{font-weight:800;font-size:16px;margin:3px 0 8px;line-height:1.3}
 .heart-stage{position:relative;height:340px;border-radius:12px;overflow:hidden;border:1px solid var(--line);touch-action:pan-y;background:var(--sk-paper)}
 .heart-stage canvas{display:block;width:100%;height:100%;cursor:grab}
@@ -648,6 +672,27 @@ html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
       <div class="ecg-chips" id="ecg-chips"></div>
       <ul class="ecg-feat" id="ecg-feat"></ul>
       <div class="ecg-where" id="ecg-where"></div>
+      <div class="ecg-do" id="ecg-do" hidden>
+        <div class="ecg-do-h">What to do</div>
+        <ul class="ecg-do-list" id="ecg-do-list"></ul>
+        <div class="ecg-do-foot">
+          <span id="ecg-do-src"></span>
+          <a class="ecg-jr" href="https://apps.apple.com/app/id1317027458" target="_blank" rel="noopener">Check JRCALC Plus ↗</a>
+        </div>
+        <p class="ecg-do-note">Pointers written for this app from public guidance, without doses. Not JRCALC — check JRCALC and your trust’s guidance before you act.</p>
+      </div>
+      <div class="ecg-mine" id="ecg-mine" hidden>
+        <label class="ecg-mine-h" for="ecg-note">My notes <span>· <span id="ecg-note-for"></span></span></label>
+        <textarea id="ecg-note" rows="3" placeholder="Your own notes from JRCALC — what you do for this one"></textarea>
+        <div class="ecg-mine-foot"><span id="ecg-note-state" role="status">Saved on this phone only — never on the website.</span><button type="button" class="ecg-mini" id="ecg-bk-open" aria-expanded="false" aria-controls="ecg-bk">Back up</button></div>
+        <div class="ecg-bk" id="ecg-bk" hidden>
+          <p>Your notes live only in this browser on this phone. They don’t follow you to another device, and clearing Safari’s website data deletes them — iPhone can also clear them if Crew Toolkit isn’t opened for a while. If you use it from a Home Screen icon and in Safari, each keeps its own notes. Keep a copy somewhere safe, such as the Notes app.</p>
+          <button type="button" class="ecg-mini" id="ecg-bk-copy">Copy all my notes</button>
+          <textarea id="ecg-bk-text" rows="3" placeholder="To restore, paste a copied backup here" aria-label="Paste a backup to restore"></textarea>
+          <button type="button" class="ecg-mini" id="ecg-bk-restore">Restore from pasted text</button>
+          <p class="ecg-bk-msg" id="ecg-bk-msg" role="status"></p>
+        </div>
+      </div>
     </div>
 
     <div class="card ecg-heart">
@@ -681,7 +726,7 @@ html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
       <p class="rng-p">1 small square = 40 ms and 0.1 mV. 1 large square = 200 ms and 0.5 mV. Standard speed 25 mm/s, gain 10 mm/mV.</p>
     </div>
 
-    <p class="note">Teaching aid. Waveforms are generated, not real recordings, and the territory call is pattern matching — a real STEMI decision needs ST magnitude, morphology, the clinical picture and your local PPCI pathway. STEMI thresholds from the Fourth Universal Definition of Myocardial Infarction (2018).</p>
+    <p class="note">Teaching aid. Waveforms are generated, not real recordings, and the territory call is pattern matching — a real STEMI decision needs ST magnitude, morphology, the clinical picture and your local PPCI pathway. STEMI thresholds from the Fourth Universal Definition of Myocardial Infarction (2018). "What to do" pointers summarise Resuscitation Council UK (2025), NICE and ESC guidance in our own words; they are not JRCALC and don’t replace it or your trust’s protocols.</p>
 
     <div class="ecg-sheet-back" id="ex-back" hidden></div>
     <div class="ecg-sheet" id="ex-sheet" role="dialog" aria-modal="true" aria-labelledby="ex-title" hidden>
@@ -1541,7 +1586,7 @@ const EX = [
   { id:'af', g:'rr', name:'Atrial fibrillation', hint:'Irregularly irregular, no P waves', rate:80,
     build: () => af(narrow({ qt: .36 })),
     meas: ['Rate ~80', 'Irregularly irregular', 'No P waves', 'QRS 90 ms'],
-    feat: ['Irregularly irregular R–R intervals with no P waves.', 'Fine fibrillatory baseline, often clearest in V1 and the inferior leads.', 'Fast AF with shock, syncope, chest pain or heart failure is unstable.', 'Raises stroke risk — anticoagulation is decided by hospital or GP.'],
+    feat: ['Irregularly irregular R–R intervals with no P waves.', 'Fine fibrillatory baseline, often clearest in V1 and the inferior leads.', 'The rate can be fast, normal or slow — the irregular rhythm with no P waves makes the diagnosis.', 'Raises stroke risk — anticoagulation is decided by hospital or GP.'],
     where: 'Chaotic electrical activity across both atria. The AV node lets through an irregular sample.',
     focus: { kind:'cond', part:'atria', label:'Atria — chaotic activity' } },
   { id:'flutter', g:'rr', name:'Atrial flutter', hint:'Sawtooth waves, regular 150', rate:150,
@@ -1553,7 +1598,7 @@ const EX = [
   { id:'svt', g:'rr', name:'SVT', hint:'Regular narrow complex, 150–250', rate:180,
     build: () => regular(.333, narrow({ qt: .25 })),
     meas: ['Rate 180', 'Regular', 'No visible P', 'QRS 90 ms'],
-    feat: ['Regular narrow-complex tachycardia, usually 150–250.', 'P waves hidden in or just after the QRS.', 'If stable: vagal manoeuvres such as the modified Valsalva, per local protocol.'],
+    feat: ['Regular narrow-complex tachycardia, usually 150–250.', 'P waves hidden in or just after the QRS.', 'Usually starts and stops suddenly, often in otherwise healthy people.'],
     where: 'A re-entry loop in or around the AV node (AVNRT), or through an extra pathway (AVRT).',
     focus: { kind:'cond', part:'avn', label:'AV node re-entry' } },
   { id:'pvc', g:'rr', name:'Ventricular ectopics', hint:'Early broad beats, then a pause', rate:75,
@@ -1565,13 +1610,13 @@ const EX = [
   { id:'vt', g:'arrest', name:'Ventricular tachycardia', hint:'Regular broad complex, fast', rate:170,
     build: () => regular(.353, VT(), .15),
     meas: ['Rate 170', 'QRS 160 ms', 'Regular', 'No P waves'],
-    feat: ['Regular broad-complex tachycardia — QRS 120 ms or more.', 'Treat any regular broad-complex tachycardia as VT until proven otherwise.', 'Check for a pulse and adverse features: shock, syncope, chest pain, heart failure.'],
+    feat: ['Regular broad-complex tachycardia — QRS 120 ms or more.', 'Treat any regular broad-complex tachycardia as VT until proven otherwise.', 'Can deteriorate to pulseless VT or VF at any moment.'],
     where: 'An irritable focus or a circuit around scar in the ventricular muscle, often an old infarct.',
     focus: { kind:'cond', part:'ventricle', label:'Ventricular focus' } },
   { id:'vf', g:'arrest', name:'Ventricular fibrillation', hint:'Chaotic — cardiac arrest', rate:0,
     build: () => ({ beats: [], ps: [], base: vf }),
     meas: ['No rate', 'No QRS complexes', 'Chaotic'],
-    feat: ['Chaotic, irregular waveform with no identifiable QRS complexes.', 'Cardiac arrest rhythm — shockable. CPR and defibrillation per Resuscitation Council UK ALS.', 'In a conscious patient, check leads first — movement artefact can mimic VF.'],
+    feat: ['Chaotic, irregular waveform with no identifiable QRS complexes.', 'Cardiac arrest rhythm — shockable.', 'In a conscious patient, check leads first — movement artefact can mimic VF.'],
     where: 'Disorganised electrical activity throughout the ventricles, so there is no coordinated contraction.',
     focus: { kind:'cond', part:'vf', label:'Ventricles — no organised activity' } },
   { id:'avb1', g:'block', name:'First-degree heart block', hint:'Long PR, nothing dropped', rate:68,
@@ -1595,13 +1640,13 @@ const EX = [
   { id:'chb', g:'block', name:'Complete heart block', hint:'P waves and QRS unrelated', rate:38,
     build: () => chb(PVC(.8, .42)),
     meas: ['Atrial rate 90', 'Ventricular rate 38', 'QRS 150 ms', 'No relationship'],
-    feat: ['P waves and QRS complexes march independently — AV dissociation.', 'Slow escape rhythm, broad here, so the escape is ventricular.', 'Risk of asystole. Bradycardia with adverse features: atropine, then pacing, per ALS.'],
+    feat: ['P waves and QRS complexes march independently — AV dissociation.', 'Slow escape rhythm, broad here, so the escape is ventricular.', 'High risk of asystole — a slow, broad escape rhythm can stop without warning.'],
     where: 'Nothing gets through from the atria; a backup pacemaker in the ventricles takes over.',
     focus: { kind:'cond', part:'his', label:'Complete block below the atria' } },
   { id:'lbbb', g:'cond', name:'Left bundle branch block', hint:'Broad, notched R in V6', rate:75,
     build: () => sinus(.8, .16, LBBB()),
     meas: ['Rate 75', 'PR 160 ms', 'QRS 150 ms'],
-    feat: ['QRS 120 ms or more. Broad, notched R in I, aVL and V5–V6 with no septal q waves.', 'Deep S waves in V1–V3. The ST segment and T wave point the opposite way to the QRS — expected here.', 'Hides STEMI. With ischaemic chest pain, discuss with the PPCI centre — Sgarbossa criteria help.'],
+    feat: ['QRS 120 ms or more. Broad, notched R in I, aVL and V5–V6 with no septal q waves.', 'Deep S waves in V1–V3. The ST segment and T wave point the opposite way to the QRS — expected here.', 'Hides STEMI — the usual ST elevation criteria don’t apply.'],
     where: 'The left bundle branch is blocked, so the left ventricle is activated late, cell to cell.',
     focus: { kind:'cond', part:'lbb', label:'Left bundle branch' } },
   { id:'rbbb', g:'cond', name:'Right bundle branch block', hint:'RSR′ in V1', rate:75,
@@ -1613,28 +1658,28 @@ const EX = [
   { id:'paced', g:'cond', name:'Paced rhythm', hint:'Spike before each broad QRS', rate:70,
     build: () => regular(.857, PACED(), .3),
     meas: ['Rate 70', 'Pacing spike', 'QRS 150 ms'],
-    feat: ['A sharp pacing spike immediately before each broad QRS.', 'Right ventricular pacing gives an LBBB-like shape.', 'ST changes are unreliable — Sgarbossa principles apply. Look for failure to capture or to sense.'],
+    feat: ['A sharp pacing spike immediately before each broad QRS.', 'Right ventricular pacing gives an LBBB-like shape.', 'ST changes are unreliable, as in LBBB. Look for failure to capture or to sense.'],
     where: 'A pacing lead in the right ventricle; the box usually sits under the left collarbone.',
     focus: { kind:'cond', part:'pacing', label:'Pacing lead in the right ventricle' } },
   { id:'inf', g:'isch', name:'Inferior STEMI', hint:'II, III, aVF up; I, aVL down', rate:80,
     build: () => sinus(.75, .16, narrow({ qt: .37, st: Object.assign(proj(110, .3), { V2: -.05 }),
       amp: { II:[null, null, null, .45], III:[-.12, null, null, .36], aVF:[null, null, null, .42], aVL:[null, null, null, -.12], I:[null, null, null, .1] } })),
     meas: ['Rate 80', 'ST ↑ II, III, aVF', 'ST ↓ I, aVL'],
-    feat: ['ST elevation in II, III and aVF — bigger in III than II.', 'Reciprocal ST depression in I and aVL.', 'Elevation in III greater than II, with depression in I, favours the right coronary artery.', 'Record right-sided leads (V4R). Right ventricular involvement makes the patient preload-dependent — be cautious with GTN.'],
+    feat: ['ST elevation in II, III and aVF — bigger in III than II.', 'Reciprocal ST depression in I and aVL.', 'Elevation in III greater than II, with depression in I, favours the right coronary artery.'],
     where: 'Usually the right coronary artery (about 80%); the circumflex in the rest.',
     focus: { kind:'mi', occ:'RCA-mid', terr:['inferior'], view:'under', label:'Mid right coronary artery' } },
   { id:'ant', g:'isch', name:'Anterior STEMI', hint:'V1–V4 up', rate:80,
     build: () => sinus(.75, .16, narrow({ qt: .37, st: Object.assign(proj(-90, .08), { V1: .15, V2: .35, V3: .38, V4: .25, V5: .06 }),
       amp: { V1:[0, .06, -.95, .25], V2:[0, .2, -1.2, .85], V3:[0, .5, -.85, .9], V4:[-.03, 1.1, -.45, .7] } })),
     meas: ['Rate 80', 'ST ↑ V1–V4', 'ST ↓ III, aVF'],
-    feat: ['ST elevation in V1–V4 (anteroseptal) with tall, broad T waves.', 'R waves shrinking in V1–V3.', 'Reciprocal depression may appear in the inferior leads.', 'The largest area of muscle at risk — time-critical.'],
+    feat: ['ST elevation in V1–V4 (anteroseptal) with tall, broad T waves.', 'R waves shrinking in V1–V3.', 'Reciprocal depression may appear in the inferior leads.'],
     where: 'Left anterior descending artery (LAD).',
     focus: { kind:'mi', occ:'LAD-prox', terr:['septal', 'anterior', 'apex'], view:'front', label:'Proximal LAD' } },
   { id:'sept', g:'isch', name:'Septal STEMI', hint:'V1–V2 up only', rate:80,
     build: () => sinus(.75, .16, narrow({ qt: .37, st: { V1: .15, V2: .28, V3: .06 },
       amp: { V1:[0, .04, -.95, .3], V2:[0, .12, -1.35, .75] } })),
     meas: ['Rate 80', 'ST ↑ V1–V2', 'V3–V6 normal'],
-    feat: ['ST elevation confined to V1 and V2 — the septal leads.', 'The small r wave in V1–V2 shrinks or disappears as Q waves form.', 'Often the first sign of a proximal LAD occlusion. Repeat the ECG and watch for spread into V3–V4.', 'V1–V2 elevation has mimics: LBBB, LVH, Brugada pattern and the normal V2 elevation of many young men — check the threshold for age and sex.'],
+    feat: ['ST elevation confined to V1 and V2 — the septal leads.', 'The small r wave in V1–V2 shrinks or disappears as Q waves form.', 'Often an early proximal LAD occlusion that can spread into V3–V4.', 'V1–V2 elevation has mimics: LBBB, LVH, Brugada pattern and the normal V2 elevation of many young men — check the threshold for age and sex.'],
     where: 'The septal branches of the left anterior descending artery (LAD) — usually a blockage in the proximal LAD.',
     focus: { kind:'mi', occ:'LAD-prox', terr:['septal'], view:'front', label:'Proximal LAD — septal branches' } },
   { id:'lat', g:'isch', name:'Lateral STEMI', hint:'I, aVL, V5–V6 up', rate:80,
@@ -1648,14 +1693,14 @@ const EX = [
     build: () => sinus(.75, .16, narrow({ qt: .37, st: { V1: -.15, V2: -.25, V3: -.2, V4: -.08 },
       amp: { V1:[0, .75, -.45, .3], V2:[0, .95, -.7, .6], V3:[0, 1.0, -.6, .55] } })),
     meas: ['Rate 80', 'ST ↓ V1–V3', 'Tall R in V1–V2'],
-    feat: ['Horizontal ST depression in V1–V3 with upright T waves and tall R waves.', 'It is the mirror image of ST elevation on the back of the heart.', 'Record V7–V9: 0.5 mm of ST elevation confirms posterior STEMI.'],
+    feat: ['Horizontal ST depression in V1–V3 with upright T waves and tall R waves.', 'It is the mirror image of ST elevation on the back of the heart.', 'Easy to miss — on a standard 12-lead the ST depression is the only clue.'],
     where: 'Circumflex artery, or the posterior branches of the right coronary.',
     focus: { kind:'mi', occ:'LCX-dist', terr:['posterior'], view:'back', label:'Distal circumflex' } },
   { id:'peri', g:'other', name:'Pericarditis', hint:'Widespread ST up, PR down', rate:95,
     build: () => sinus(.63, .16, narrow({ qt: .34, st: Object.assign(proj(55, .18), { V1: 0, V2: .12, V3: .15, V4: .16, V5: .15, V6: .12 }),
       pr: Object.assign(proj(235, .07), { V2: -.05, V3: -.05, V4: -.05, V5: -.05, V6: -.05 }), prInt: .16 })),
     meas: ['Rate 95', 'ST ↑ most leads', 'PR ↓', 'aVR: ST ↓, PR ↑'],
-    feat: ['Widespread concave ST elevation that does not fit one coronary territory.', 'PR depression, with ST depression and PR elevation in aVR.', 'No reciprocal depression other than aVR and V1.', 'Sharp pleuritic pain, eased by sitting forward. If unsure, treat as STEMI.'],
+    feat: ['Widespread concave ST elevation that does not fit one coronary territory.', 'PR depression, with ST depression and PR elevation in aVR.', 'No reciprocal depression other than aVR and V1.', 'Sharp pleuritic pain, eased by sitting forward.'],
     where: 'The pericardium — the sac around the whole heart — not a blocked artery.',
     focus: { kind:'peri', label:'Inflamed pericardium — not a blocked artery', view:'front' } },
   { id:'hyperk', g:'other', name:'Hyperkalaemia', hint:'Peaked T waves, wide QRS', rate:70,
@@ -1665,6 +1710,94 @@ const EX = [
     where: 'No single site — high potassium slows conduction in every cardiac cell.',
     focus: { kind:'none', label:'Whole heart — a metabolic problem' } }
 ];
+
+/* ===== what to do: pointers written for this app from public guidance — not JRCALC, no doses ===== */
+const SRC = { rcuk:'Resuscitation Council UK 2025', ng185:'NICE NG185', cg95:'NICE CG95', ng196:'NICE NG196', esc:'ESC ACS guidelines 2023', rcem:'RCEM Learning' };
+const STEMI_DO = [
+  'Time-critical: pre-alert and take them straight to the PPCI centre on your local STEMI pathway. Note when symptoms started — primary PCI is the standard within 12 hours.',
+  'Aspirin as soon as possible unless contraindicated, early pain relief, and oxygen only if SpO₂ is below target (94–98%, or 88–92% if at risk of CO₂ retention).',
+  'Defib pads on and continuous monitoring — the risk of VF is highest early on.'];
+const DO = {
+  nsr: { s:['cg95'], d:['Nothing to treat in the rhythm itself — treat the patient.',
+    'A normal ECG does not rule out ACS. With suspected cardiac chest pain, follow your ACS pathway and repeat the ECG if symptoms change.'] },
+  stach: { s:['rcuk'], d:['Treat the cause, not the rate — RCUK advises against slowing sinus tachycardia with drugs or cardioversion.',
+    'Score NEWS2. A fast heart rate can be an early sign of sepsis or blood loss.',
+    'Regular and over about 150 at rest: make sure it really is sinus — think SVT or flutter.'] },
+  sbrady: { s:['rcuk'], d:['Check for life-threatening features: shock, syncope, myocardial ischaemia, severe heart failure.',
+    'None: monitor, record a 12-lead and look for the cause.',
+    'Present: follow the RCUK bradycardia algorithm — atropine first, then further drugs or external pacing if it fails — and pre-alert.'] },
+  af: { s:['rcuk', 'ng196'], d:['Check for life-threatening features: shock, syncope with low blood pressure, myocardial ischaemia, severe heart failure. Any present: time-critical, pre-alert — the treatment is electrical cardioversion in hospital.',
+    'Note when it started. Under 48 hours, hospital can offer rhythm control such as cardioversion; over 48 hours or unknown, rate control comes first.',
+    'Known AF at a normal rate is not an emergency in itself. Fast AF is often driven by something else — sepsis, dehydration, PE, alcohol — so treat the cause.'] },
+  flutter: { s:['rcuk', 'ng196'], d:['Check for life-threatening features. Any present: time-critical, pre-alert — the treatment is electrical cardioversion in hospital.',
+    'Stable: still needs hospital for rate or rhythm control. Flutter carries a stroke risk like AF.',
+    'Vagal manoeuvres won’t stop flutter, but they may slow the rate for a few seconds and reveal the flutter waves.'] },
+  svt: { s:['rcuk'], d:['Check for life-threatening features. Any present: time-critical, pre-alert — the treatment is synchronised cardioversion.',
+    'Stable: vagal manoeuvres first, such as the modified Valsalva. If they fail, adenosine is next — in hospital, or per your scope.',
+    'Record a 12-lead during the tachycardia and again once it stops — both help the cardiologist.'] },
+  pvc: { s:[], d:['Usually nothing to treat — look at the patient, not the beats.',
+    'Needs hospital assessment if they are frequent or in runs, or come with chest pain, syncope or breathlessness.',
+    'Common triggers: ischaemia, low potassium or magnesium, stimulants and heart failure.'] },
+  vt: { s:['rcuk'], d:['Check for a pulse. No pulse: cardiac arrest — CPR and defibrillation on the ALS algorithm.',
+    'Pulse with life-threatening features: time-critical, pre-alert, pads on — the treatment is synchronised cardioversion.',
+    'Pulse and stable: still time-critical — pads on, continuous monitoring, pre-alert.'] },
+  vf: { s:['rcuk'], d:['Cardiac arrest: start CPR, attach the defibrillator and shock as soon as possible — ALS algorithm, shockable side.',
+    'Minimise pauses in compressions, and look for reversible causes — the 4 Hs and 4 Ts.'] },
+  avb1: { s:[], d:['Nothing to treat in the block itself.',
+    'Look for a cause — rate-slowing drugs, inferior MI — and treat the presenting problem.'] },
+  mob1: { s:['rcuk'], d:['No life-threatening features: usually no treatment — monitor.',
+    'With chest pain, look hard for an inferior STEMI — Wenckebach can come with one.',
+    'Life-threatening features: follow the RCUK bradycardia algorithm and pre-alert.'] },
+  mob2: { s:['rcuk'], d:['RCUK lists Mobitz II as a risk of sudden asystole, even when the patient looks well.',
+    'Convey with defib pads on and continuous monitoring. It needs expert help and usually a pacemaker.',
+    'Life-threatening features: follow the RCUK bradycardia algorithm and pre-alert.'] },
+  chb: { s:['rcuk'], d:['High risk of asystole: pads on, continuous monitoring, pre-alert.',
+    'Broad escape complexes, as here: RCUK 2025 advises against atropine — it doesn’t work and can worsen the block. Pacing is the treatment.',
+    'Narrow escape complexes, often with an inferior MI, are more stable and may respond to atropine.'] },
+  lbbb: { s:['esc'], d:['On its own, nothing to treat.',
+    'With ongoing ischaemic chest pain, manage it like a STEMI — bundle branch block hides ST elevation. Call the PPCI centre on your local pathway and send the ECG.',
+    'Sgarbossa criteria help, and so does an old ECG to compare with.'] },
+  rbbb: { s:['esc'], d:['On its own, nothing to treat.',
+    'With ongoing ischaemic chest pain, ESC guidance treats any bundle branch block like a STEMI — call the PPCI centre on your local pathway.',
+    'New RBBB with breathlessness or collapse: think PE.'] },
+  paced: { s:['esc', 'rcuk'], d:['Check every spike is followed by a QRS and the rate is what you’d expect. Failure to capture, or a slow rate with symptoms, needs hospital.',
+    'With ongoing ischaemic chest pain, manage it like a STEMI and call the PPCI centre — Sgarbossa criteria help.',
+    'If you need to defibrillate, keep the pads more than 8 cm from the box or use another pad position. Ask for their device card.'] },
+  inf: { s:['ng185', 'cg95', 'esc'], d: STEMI_DO.concat(['Record V4R. Elevation there means right ventricular involvement — the patient depends on preload, so be cautious with GTN.',
+    'Watch for bradycardia and heart block — common with inferior MI.']) },
+  ant: { s:['ng185', 'cg95'], d: STEMI_DO.concat(['The largest area of muscle at risk — watch for heart failure, shock and VF.']) },
+  sept: { s:['ng185', 'cg95'], d: STEMI_DO.concat(['Repeat the 12-lead en route — the elevation can spread into V3–V4 as the infarct evolves.']) },
+  lat: { s:['ng185', 'cg95'], d: STEMI_DO.concat(['Lateral elevation can be small. If you are unsure, send the ECG to the PPCI centre and discuss.']) },
+  post: { s:['esc', 'ng185', 'cg95'], d:['Record V7–V9: move V4–V6 round to the left of the back, level with V6 — posterior axillary line (V7), tip of the shoulder blade (V8) and beside the spine (V9).',
+    '0.5 mm of ST elevation there (1 mm in men under 40) confirms a posterior STEMI — then it’s the STEMI pathway: pre-alert and straight to the PPCI centre.',
+    'Can’t record V7–V9 and the pain is ongoing? Discuss with the PPCI centre anyway — ST depression in V1–V3 can be a posterior occlusion.',
+    'Aspirin as soon as possible unless contraindicated, early pain relief, oxygen only if SpO₂ is below target, and pads on.'] },
+  peri: { s:['rcem'], d:['If you can’t confidently tell it from a STEMI, treat it as one and discuss with the PPCI centre.',
+    'Low blood pressure, distended neck veins or muffled heart sounds suggest tamponade — time-critical, pre-alert.',
+    'Otherwise it still needs hospital assessment — every suspected case needs an echo. Fever over 38°C, a raised troponin, immunosuppression or anticoagulants all add risk.'] },
+  hyperk: { s:['rcuk'], d:['ECG changes from high potassium are an emergency: pre-alert, pads on, continuous monitoring. It can deteriorate to VF or asystole.',
+    'In hospital: IV calcium to protect the heart, insulin-glucose and salbutamol to move potassium into the cells, then binders or dialysis to remove it.',
+    'In cardiac arrest it is a reversible cause (one of the 4 Hs) — tell the team what you suspect.'] },
+  lms: { s:['esc', 'cg95'], d:['Very high risk — this pattern needs prompt triage for immediate reperfusion. Pre-alert and call the PPCI centre on your local pathway; send the ECG.',
+    'Aspirin as soon as possible unless contraindicated, early pain relief, and oxygen only if SpO₂ is below target.',
+    'Defib pads on and continuous monitoring.'] },
+  nste: { s:['cg95', 'esc'], d:['Treat as possible ACS: aspirin unless contraindicated, pain relief, oxygen only if SpO₂ is below target, and repeat ECGs — changes that come and go matter.',
+    'Current chest pain, or pain in the last 12 hours with an abnormal ECG, needs emergency conveyance.',
+    'Ongoing pain despite treatment, or an unstable patient: discuss with the PPCI centre — some NSTEMIs need immediate angiography.'] }
+};
+/* custom-mode results share the matching example's pointers and notes */
+function doKeyFor(title) {
+  if (/^No ST changes/.test(title)) return null;
+  if (/^Left main/.test(title)) return 'lms';
+  if (/^Widespread/.test(title)) return 'peri';
+  if (/^Inferior and anterior/.test(title)) return 'ant';
+  if (/^Infer/.test(title)) return 'inf';
+  if (/^Septal/.test(title)) return 'sept';
+  if (/^(Extensive anterior|Anteroseptal|Anterolateral|Anterior)/.test(title)) return 'ant';
+  if (/^(Posterolateral|High lateral|Lateral)/.test(title)) return 'lat';
+  if (/^Posterior/.test(title)) return 'post';
+  return 'nste';
+}
 
 /* ===== custom-mode territory call ===== */
 const cstate = {}; LEADS.forEach(L => { cstate[L] = 0; });
@@ -1694,8 +1827,7 @@ function classify() {
   if (E.has('aVR') && wideDep && !inferior && !(sept && ant) && !lowLat)
     return R('Left main or multivessel ischaemia', 'hot', 'Left main stem, proximal LAD, or severe three-vessel disease.', [
       'ST elevation in aVR (often V1 too) with widespread ST depression in six or more leads.',
-      'Not a classic STEMI pattern, but very high risk — most of the left ventricle is short of blood.',
-      'Discuss with the PPCI centre or cardiology per your local pathway.'],
+      'Not a classic STEMI pattern, but very high risk — most of the left ventricle is short of blood.'],
       { kind:'mi', occ:'LMS', terr:['septal', 'anterior', 'apex', 'highLateral', 'lateral', 'posterior'], view:'front', label:'Left main stem' });
 
   const groupsUp = [inferior, lateral, sept || ant].filter(Boolean).length;
@@ -1703,7 +1835,7 @@ function classify() {
     return R('Widespread ST elevation', 'warn', 'Does not fit one artery.', [
       'Elevation across more than one territory, with no reciprocal depression other than aVR and V1, points towards pericarditis.',
       'Look for concave ST segments, PR depression and pleuritic pain that eases sitting forward.',
-      'A wraparound LAD or multivessel occlusion can look similar — if in doubt, treat as STEMI and seek advice.'],
+      'A wraparound LAD or multivessel occlusion can look similar.'],
       { kind:'peri', label:'Pericardium — or more than one artery', view:'front' });
 
   if (inferior) {
@@ -1722,7 +1854,6 @@ function classify() {
     notes.push(recip(['I', 'aVL'], 'inferior'));
     if (!lateral && !ant) notes.push('Elevation in III greater than II, with depression in I, favours the right coronary artery.');
     if (rv) notes.push('ST elevation in V1 alongside an inferior STEMI is a clue to right ventricular infarction.');
-    notes.push('Record right-sided leads (V4R). Right ventricular involvement makes the patient preload-dependent — be cautious with GTN.');
     if (post) notes.push('ST depression in V1–V3 suggests posterior extension — record V7–V9.');
     return R(title, 'hot', artery, notes, { kind:'mi', occ, terr, view, label });
   }
@@ -1743,7 +1874,6 @@ function classify() {
     const infDep = ls(D, ['II', 'III', 'aVF']);
     if (!anyAnt) notes.push(recip(['II', 'III', 'aVF'], 'lateral'));
     else notes.push(infDep.length ? 'Reciprocal depression in ' + andList(infDep) + ' supports the diagnosis.' : 'Reciprocal depression in the inferior leads may appear, but is not required.');
-    if (anyAnt) notes.push('The largest area of muscle at risk — time-critical.');
     if (title === 'High lateral STEMI') notes.push('The reciprocal depression in III and aVF is often more obvious than the elevation.');
     notes.push(thr);
     return R(title, 'hot', artery, notes, { kind:'mi', occ, terr, view, label });
@@ -1753,7 +1883,7 @@ function classify() {
     return R('Posterior MI', 'hot', 'Circumflex artery, or the posterior branches of the right coronary.', [
       'ST depression in V1–V3 is the mirror image of ST elevation on the back of the heart.',
       'Look for tall R waves and upright T waves in V1–V2.',
-      'Record V7–V9: 0.5 mm of ST elevation (1 mm in men under 40) confirms posterior STEMI.'],
+      'Confirm with posterior leads V7–V9.'],
       { kind:'mi', occ:'LCX-dist', terr:['posterior'], view:'back', label:'Distal circumflex' });
 
   if (E.size) {
@@ -1767,7 +1897,7 @@ function classify() {
     return R('Check the inferior leads', 'warn', 'Possibly the right coronary artery.', ['ST depression in aVL can be the earliest sign of an inferior STEMI — look closely at II, III and aVF.', 'Repeat the ECG in a few minutes; early changes evolve.'], { kind:'none', label:'Watch the inferior leads' });
   if (dL.every(l => l === 'II' || l === 'III' || l === 'aVF'))
     return R('Check the high lateral leads', 'warn', 'Possibly a diagonal or circumflex branch.', ['Inferior ST depression can be reciprocal to a subtle high lateral STEMI — look hard at I and aVL.', 'Otherwise it suggests ischaemia rather than infarction.'], { kind:'none', label:'Watch I and aVL' });
-  const notes = ['Horizontal or downsloping ST depression suggests ischaemia — NSTE-ACS, or demand from tachycardia, anaemia or hypotension.', 'ST depression does not localise an artery.', 'Repeat the ECG — dynamic changes matter.'];
+  const notes = ['Horizontal or downsloping ST depression suggests ischaemia — NSTE-ACS, or demand from tachycardia, anaemia or hypotension.', 'ST depression does not localise an artery.'];
   if (wideDep) notes.push('Widespread depression: check aVR — elevation there raises the possibility of left main disease.');
   return R('ST depression — ischaemia', 'warn', 'Not localised.', notes, { kind:'none', label:'ST depression does not localise' });
 }
@@ -1919,6 +2049,82 @@ function caption(f) {
   else { cap.textContent = f.label || 'Coronary arteries'; leg.innerHTML = swatch('var(--sk-art)', 'Coronary arteries', 'line'); }
 }
 
+/* ===== what to do + my notes (notes stay in this browser on this phone only) ===== */
+const NOTE_KEY = 'crewToolkit.ecgNotes';
+const NOTE_NAMES = { lms: 'Left main or multivessel ischaemia', nste: 'Suspected ACS without ST elevation' };
+EX.forEach(e => { NOTE_NAMES[e.id] = e.name; });
+let notes = {};
+try { const raw = JSON.parse(localStorage.getItem(NOTE_KEY) || '{}'); if (raw && typeof raw === 'object') notes = raw; } catch (e) { notes = {}; }
+const saveNotes = () => { try { localStorage.setItem(NOTE_KEY, JSON.stringify(notes)); return true; } catch (e) { return false; } };
+const noteEl = $('ecg-note'), noteState = $('ecg-note-state');
+const NOTE_IDLE = 'Saved on this phone only — never on the website.';
+let noteId = null, noteTimer = 0;
+function sizeNote() { noteEl.style.height = 'auto'; noteEl.style.height = Math.min(420, Math.max(84, noteEl.scrollHeight + 2)) + 'px'; }
+function flushNote() {
+  clearTimeout(noteTimer);
+  if (!noteId) return;
+  const v = noteEl.value.replace(/\s+$/, '');
+  if ((notes[noteId] || '') === v) return;
+  if (v) notes[noteId] = v; else delete notes[noteId];
+  noteState.textContent = saveNotes() ? 'Saved on this phone.' : 'Couldn’t save — is Safari in Private mode?';
+}
+noteEl.addEventListener('input', () => { sizeNote(); clearTimeout(noteTimer); noteTimer = setTimeout(flushNote, 500); });
+noteEl.addEventListener('blur', flushNote);
+document.addEventListener('visibilitychange', () => { if (document.hidden) flushNote(); });
+window.addEventListener('pagehide', flushNote);
+function showDo(key) {
+  const d = key ? DO[key] : null;
+  $('ecg-do').hidden = !d;
+  if (d) {
+    $('ecg-do-list').innerHTML = d.d.map(t => '<li>' + esc(t) + '</li>').join('');
+    $('ecg-do-src').textContent = d.s.length ? 'Based on ' + d.s.map(k => SRC[k]).join(' · ') : '';
+  }
+  flushNote();
+  noteId = key;
+  $('ecg-mine').hidden = !key;
+  if (key) { noteEl.value = notes[key] || ''; $('ecg-note-for').textContent = NOTE_NAMES[key]; noteState.textContent = NOTE_IDLE; requestAnimationFrame(sizeNote); }
+}
+/* backup and restore, as plain text that also reads well in the Notes app */
+function notesText() {
+  const ids = Object.keys(NOTE_NAMES).filter(k => notes[k]);
+  if (!ids.length) return '';
+  return 'Crew Toolkit — my ECG notes (' + new Date().toLocaleDateString('en-GB') + ')\n\n' +
+    ids.map(k => '## ' + NOTE_NAMES[k] + '\n' + notes[k].replace(/^## /gm, '\\## ')).join('\n\n') + '\n';
+}
+function restoreNotes(txt) {
+  const byName = {}; Object.keys(NOTE_NAMES).forEach(k => { byName[NOTE_NAMES[k].toLowerCase()] = k; });
+  let n = 0;
+  String(txt).replace(/\r\n?/g, '\n').split(/^## /m).slice(1).forEach(part => {
+    const i = part.indexOf('\n'), name = (i < 0 ? part : part.slice(0, i)).trim().toLowerCase();
+    const body = (i < 0 ? '' : part.slice(i + 1)).replace(/^\\## /gm, '## ').replace(/\s+$/, '').replace(/^\n+/, '');
+    const k = byName[name];
+    if (k && body) { notes[k] = body; n++; }
+  });
+  if (n) saveNotes();
+  return n;
+}
+const bk = $('ecg-bk'), bkText = $('ecg-bk-text'), bkMsg = $('ecg-bk-msg');
+$('ecg-bk-open').addEventListener('click', () => {
+  flushNote();
+  bk.hidden = !bk.hidden; bkMsg.textContent = '';
+  $('ecg-bk-open').setAttribute('aria-expanded', String(!bk.hidden));
+});
+$('ecg-bk-copy').addEventListener('click', () => {
+  flushNote();
+  const t = notesText();
+  if (!t) { bkMsg.textContent = 'You haven’t written any notes yet.'; return; }
+  const fallback = () => { bkText.value = t; bkText.focus(); bkText.select(); bkMsg.textContent = 'Couldn’t copy automatically — your notes are in the box above. Select all and copy them.'; };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(() => { bkMsg.textContent = 'Copied ' + (t.match(/^## /gm) || []).length + ' notes. Paste them somewhere safe, such as the Notes app.'; }, fallback);
+  else fallback();
+});
+$('ecg-bk-restore').addEventListener('click', () => {
+  const n = restoreNotes(bkText.value);
+  if (!n) { bkMsg.textContent = 'No notes found. Paste the whole copied text, including the lines that start with ##.'; return; }
+  bkMsg.textContent = 'Restored ' + n + (n === 1 ? ' note.' : ' notes.');
+  bkText.value = '';
+  if (noteId) { noteEl.value = notes[noteId] || ''; sizeNote(); }
+});
+
 /* ===== modes ===== */
 function showExample(id) {
   const ex = EX.find(e => e.id === id) || EX[0]; exId = ex.id;
@@ -1927,6 +2133,7 @@ function showExample(id) {
   if (open) drawAll();
   const tone = ex.g === 'isch' || ex.g === 'arrest' ? 'hot' : ex.g === 'block' ? 'warn' : 'cool';
   info('Example · ' + G[ex.g], ex.name, ex.meas.map(m => [m, m.indexOf('ST ↑') === 0 ? 'up' : m.indexOf('ST ↓') === 0 ? 'down' : '']), ex.feat, 'Where', ex.where, tone);
+  showDo(ex.id);
   Heart.set(ex.focus, ex.rate);
   caption(ex.focus);
 }
@@ -1945,6 +2152,7 @@ function showCustom() {
   if (open) drawAll();
   const r = classify();
   info('Your ECG', r.title, r.chips, r.notes, 'Likely artery', r.artery, r.tone);
+  showDo(doKeyFor(r.title));
   Heart.set(r.focus, 75);
   caption(r.focus);
 }
@@ -1984,7 +2192,8 @@ document.body.appendChild(back); document.body.appendChild(sheet);
   list.innerHTML = h;
 })();
 function openSheet() {
-  list.querySelectorAll('.ex-i').forEach(b => b.setAttribute('aria-current', String(b.dataset.ex === exId)));
+  flushNote();
+  list.querySelectorAll('.ex-i').forEach(b => { b.setAttribute('aria-current', String(b.dataset.ex === exId)); b.classList.toggle('has-note', !!notes[b.dataset.ex]); });
   sheet.hidden = false; back.hidden = false; document.body.classList.add('lock');
   const curBtn = list.querySelector('[aria-current="true"]');
   const body = sheet.querySelector('.ecg-sheet-body');

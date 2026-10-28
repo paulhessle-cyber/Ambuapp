@@ -11,6 +11,8 @@ A scheduled check runs on the 1st of every month. It works through this list and
 - Hospital codes come from Paul. The check never changes them.
 - If a source is unclear or only partly readable, nothing is changed. It goes in the pull request under "Needs your judgement".
 - Only the parts affected by a change are edited. index.html stays a single self-contained file.
+- The ECG "What to do" pointers (the `DO` list in index.html) are short summaries in our own words, each with its sources named. Keep them that way: no doses, nothing copied from JRCALC.
+- "My notes" on the ECG screen are stored only on the user's phone (browser storage). They are never in this repo and the check never touches them.
 
 ## Screen by screen
 
@@ -25,7 +27,12 @@ A scheduled check runs on the 1st of every month. It works through this list and
 | Under 2s | Routine immunisation schedule, 8 weeks to 3 years 4 months | UKHSA — [The complete routine immunisation schedule](https://www.gov.uk/government/publications/the-complete-routine-immunisation-schedule) | From 1 September 2026 | 28 Oct 2026 |
 | Maps | Hospital map links (list below) | Trust websites | — | — |
 | ECG | STEMI thresholds (Normal ranges card) | Fourth Universal Definition of Myocardial Infarction | 2018 | 28 Oct 2026 — see open items |
-| ECG | Arrest, bradycardia and tachycardia pointers in the examples | Resuscitation Council UK — [ALS guidelines](https://www.resus.org.uk/library/2025-resuscitation-guidelines/adult-advanced-life-support-guidelines) | No version quoted | — |
+| ECG | "What to do" pointers — arrhythmias, heart block, pacing, defibrillation with implanted devices | Resuscitation Council UK — [Adult ALS guidelines](https://www.resus.org.uk/library/2025-resuscitation-guidelines/adult-advanced-life-support-guidelines) and its tachyarrhythmia and bradyarrhythmia algorithms | 2025 guidelines; tachyarrhythmia algorithm V3, March 2026 | 28 Oct 2026 |
+| ECG | "What to do" pointers — hyperkalaemia | Resuscitation Council UK — [Special circumstances](https://www.resus.org.uk/library/2025-resuscitation-guidelines/special-circumstances-guidelines) | 2025 | 28 Oct 2026 |
+| ECG | "What to do" pointers — STEMI, NSTEMI and chest pain | NICE [NG185](https://www.nice.org.uk/guidance/NG185/chapter/Recommendations) (acute coronary syndromes) and [CG95](https://www.nice.org.uk/guidance/CG95/chapter/1-Guidance) (chest pain) | As published | 28 Oct 2026 |
+| ECG | "What to do" pointers — bundle branch block, paced rhythm, posterior MI, left main pattern | [ESC guidelines for acute coronary syndromes](https://academic.oup.com/eurheartj/article/44/38/3720/7243210) | 2023 | 28 Oct 2026 |
+| ECG | "What to do" pointers — AF and flutter | NICE [NG196](https://www.nice.org.uk/guidance/ng196) | Last updated June 2021 | 28 Oct 2026 |
+| ECG | "What to do" pointers — pericarditis | [RCEM Learning — pericarditis](https://www.rcemlearning.co.uk/reference/pericarditis/) | — | 28 Oct 2026 |
 
 ## Guidance cards
 
