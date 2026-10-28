@@ -605,7 +605,7 @@ html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
       <input type="search" id="pd-find" placeholder="Search — solids, teeth, walking, MMRV…" autocomplete="off">
     </div>
     <div id="pd-list"></div>
-    <p class="note">Milestones are a normal range, not a deadline — most have months of spread either side and premature babies are assessed on corrected age. The immunisation schedule is the UK routine schedule current from 1 January 2026; what a child was actually offered depends on their date of birth, so the red book beats this list.</p>
+    <p class="note">Milestones are a normal range, not a deadline — most have months of spread either side and premature babies are assessed on corrected age. The immunisation schedule matches the UKHSA routine schedule from 1 September 2026; what a child was actually offered depends on their date of birth, so the red book beats this list.</p>
   </section>
 
   <!-- ============ MAPS ============ -->
@@ -1630,6 +1630,13 @@ const EX = [
     feat: ['ST elevation in V1–V4 (anteroseptal) with tall, broad T waves.', 'R waves shrinking in V1–V3.', 'Reciprocal depression may appear in the inferior leads.', 'The largest area of muscle at risk — time-critical.'],
     where: 'Left anterior descending artery (LAD).',
     focus: { kind:'mi', occ:'LAD-prox', terr:['septal', 'anterior', 'apex'], view:'front', label:'Proximal LAD' } },
+  { id:'sept', g:'isch', name:'Septal STEMI', hint:'V1–V2 up only', rate:80,
+    build: () => sinus(.75, .16, narrow({ qt: .37, st: { V1: .15, V2: .28, V3: .06 },
+      amp: { V1:[0, .04, -.95, .3], V2:[0, .12, -1.35, .75] } })),
+    meas: ['Rate 80', 'ST ↑ V1–V2', 'V3–V6 normal'],
+    feat: ['ST elevation confined to V1 and V2 — the septal leads.', 'The small r wave in V1–V2 shrinks or disappears as Q waves form.', 'Often the first sign of a proximal LAD occlusion. Repeat the ECG and watch for spread into V3–V4.', 'V1–V2 elevation has mimics: LBBB, LVH, Brugada pattern and the normal V2 elevation of many young men — check the threshold for age and sex.'],
+    where: 'The septal branches of the left anterior descending artery (LAD) — usually a blockage in the proximal LAD.',
+    focus: { kind:'mi', occ:'LAD-prox', terr:['septal'], view:'front', label:'Proximal LAD — septal branches' } },
   { id:'lat', g:'isch', name:'Lateral STEMI', hint:'I, aVL, V5–V6 up', rate:80,
     build: () => sinus(.75, .16, narrow({ qt: .37, st: Object.assign(proj(-20, .22), { V4: .05, V5: .16, V6: .18, V1: -.05, V2: -.05 }),
       amp: { I:[null, null, null, .35], aVL:[null, null, null, .3], V5:[null, null, null, .5], V6:[null, null, null, .45], III:[null, null, null, -.1] } })),
