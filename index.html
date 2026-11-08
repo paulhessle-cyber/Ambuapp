@@ -142,6 +142,25 @@ input::placeholder{color:var(--ink-dim);font-weight:500;font-size:16px}
 .chip[data-s="2"]{background:var(--s2);color:#2e1904;border-color:transparent}
 .chip[data-s="3"]{background:var(--s3);color:#fff;border-color:transparent}
 
+/* ---------- tap to count ---------- */
+.row .lab-row{flex:1 1 100%;display:flex;align-items:center;gap:10px}
+.row .lab-row .lab{flex:1 1 0;min-width:0}
+.tap{flex:0 1 auto;max-width:62%;min-height:44px;display:inline-flex;align-items:center;gap:6px;
+  border:0;border-radius:12px;padding:8px 11px;font:inherit;font-weight:700;font-size:13.5px;line-height:1.2;text-align:left;cursor:pointer;
+  background:linear-gradient(180deg,var(--key-1),var(--key-2));color:var(--key-ink);
+  box-shadow:0 3px 0 var(--shade), inset 0 1px 0 var(--shine);
+  touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;
+  transition:transform var(--tap) ease, box-shadow var(--tap) ease}
+.tap:active{transform:translateY(2px);box-shadow:0 1px 0 var(--shade), inset 0 1px 0 var(--shine)}
+.tap.on{background:linear-gradient(180deg,var(--blue-1),var(--blue-2));color:#fff;box-shadow:0 3px 0 #12297a, inset 0 1px 0 rgba(255,255,255,.3)}
+.tap.on:active{box-shadow:0 1px 0 #12297a, inset 0 1px 0 rgba(255,255,255,.3)}
+.tap-ic{flex:0 0 18px;width:18px;height:18px}
+.tap-stat{margin-right:8px}
+.tap-again{border:0;background:none;margin:0;padding:2px 0;font:inherit;font-weight:700;color:#2f5fd6;text-decoration:underline;cursor:pointer}
+html[data-theme="dark"] .tap-again{color:#8fb0ff}
+.tap-again[hidden]{display:none}
+@media (max-width:374px){.row .lab-row{flex-wrap:wrap}.row .lab-row .lab{flex:1 1 100%}.tap{max-width:none}}
+
 /* ---------- total ---------- */
 .total{position:sticky;bottom:0;margin-top:14px;border-radius:var(--radius);overflow:hidden;
   box-shadow:0 -8px 24px var(--shade);border:1px solid var(--line)}
@@ -432,7 +451,10 @@ html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
 
     <div class="card">
       <div class="row">
-        <span class="lab">Respiration rate <span class="hint">breaths per minute</span></span>
+        <div class="lab-row">
+          <span class="lab">Respiration rate <span class="hint"><span class="tap-stat" id="st-rr">breaths per minute</span><button type="button" class="tap-again" id="ag-rr" hidden>Restart</button></span></span>
+          <button type="button" class="tap" id="tap-rr"><svg class="tap-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v8.5"/><path d="M12 11.5l-2.4 1.8M12 11.5l2.4 1.8"/><path d="M8.7 7.4C6.1 8 4 12.3 4 16.7c0 2 1.3 3 2.9 2.8 1.9-.3 2.8-1.7 2.8-3.6V9.4c0-1.3-.4-2.2-1-2z"/><path d="M15.3 7.4C17.9 8 20 12.3 20 16.7c0 2-1.3 3-2.9 2.8-1.9-.3-2.8-1.7-2.8-3.6V9.4c0-1.3.4-2.2 1-2z"/></svg><span>Press to record breath</span></button>
+        </div>
         <input type="number" id="rr" inputmode="numeric" min="0" max="80" step="1" placeholder="—">
         <span class="chip" id="c-rr">–</span>
       </div>
@@ -477,7 +499,10 @@ html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
 
     <div class="card">
       <div class="row">
-        <span class="lab">Pulse <span class="hint">beats per minute</span></span>
+        <div class="lab-row">
+          <span class="lab">Pulse <span class="hint"><span class="tap-stat" id="st-hr">beats per minute</span><button type="button" class="tap-again" id="ag-hr" hidden>Restart</button></span></span>
+          <button type="button" class="tap" id="tap-hr"><svg class="tap-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7.5-4.6-7.5-10.4A4.1 4.1 0 0 1 12 7.2a4.1 4.1 0 0 1 7.5 2.4C19.5 15.4 12 20 12 20z"/></svg><span>Press to record beat</span></button>
+        </div>
         <input type="number" id="hr" inputmode="numeric" min="10" max="260" step="1" placeholder="—">
         <span class="chip" id="c-hr">–</span>
       </div>
@@ -522,6 +547,7 @@ html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
       <button id="copy">Copy for handover</button>
     </div>
     <p class="note">Aggregate score, risk band and clinical response follow the RCP NEWS2 standard. Escalation and pre-alert thresholds vary — follow JRCALC and your local trust policy.</p>
+    <p class="note">Record buttons: tap once for each breath or beat. The rate fills in from the third tap and is the average of all your taps, so the longer you tap, the more accurate it is. A pause ends the count, and typing a number yourself overrides it.</p>
   </section>
 
   <!-- ============ OVERDOSE ============ -->
@@ -886,6 +912,67 @@ ${new Date().toLocaleString('en-GB')}`;
 });
 
 calc();
+
+/* ---------- tap to count: breaths and pulse ----------
+   Rate = taps counted ÷ time between the first and last tap, so it is the average
+   of every tap and settles the longer you tap. A pause ends the count. */
+function tapCounter(c){
+  const btn = document.getElementById(c.btn), input = document.getElementById(c.input);
+  const stat = document.getElementById(c.stat), again = document.getElementById(c.again);
+  const ic = btn.querySelector('.tap-ic');
+  const idle = stat.textContent;
+  let taps = [], before = '', endTimer = 0, clock = 0;
+
+  const mmss = ms => { const s = Math.floor(ms / 1000); return Math.floor(s / 60) + ':' + p2(s % 60); };
+  // a pause of 3 average gaps (within limits) ends the count
+  const gapLimit = () => taps.length > 1
+    ? Math.min(c.maxGap, Math.max(c.minGap, 3 * (taps[taps.length - 1] - taps[0]) / (taps.length - 1)))
+    : c.maxGap;
+  function live(){
+    const n = taps.length;
+    const txt = n === 1 ? '1\u00a0' + c.one + ' — keep tapping' : n + '\u00a0' + c.many + ' · ' + mmss(performance.now() - taps[0]);
+    if (stat.textContent !== txt) stat.textContent = txt;
+  }
+  function stop(timedOut){
+    clearTimeout(endTimer); clearInterval(clock);
+    btn.classList.remove('on'); again.hidden = true;
+    const n = taps.length;
+    stat.textContent = !timedOut ? idle
+      : n >= c.minTaps ? 'Counted ' + n + '\u00a0' + c.many + ' over ' + Math.round((taps[n - 1] - taps[0]) / 1000) + '\u00a0s'
+      : 'Not enough taps — tap at least ' + c.minTaps + '\u00a0' + c.many;
+    taps = [];
+  }
+  function tap(){
+    const t = performance.now();
+    if (taps.length && t - taps[taps.length - 1] < c.debounce) return;   // ignore an accidental double tap
+    if (!taps.length){ before = input.value; btn.classList.add('on'); again.hidden = false; clock = setInterval(live, 250); }
+    taps.push(t);
+    const n = taps.length;
+    if (n >= c.minTaps){
+      input.value = Math.round((n - 1) * 60000 / (t - taps[0]));
+      input.dispatchEvent(new Event('input', { bubbles: true }));       // rescore NEWS2
+    }
+    live();
+    clearTimeout(endTimer); endTimer = setTimeout(() => stop(true), gapLimit());
+    if (ic.animate) ic.animate([{ transform: 'scale(1.4)' }, { transform: 'scale(1)' }], { duration: 220, easing: 'ease-out' });
+  }
+  // count on touch-down for accurate timing; the click that follows a touch is ignored, keyboard clicks count
+  btn.addEventListener('pointerdown', e => { if (e.isPrimary !== false && (e.pointerType !== 'mouse' || e.button === 0)) tap(); });
+  btn.addEventListener('click', e => { if (e.detail === 0) tap(); });
+  btn.addEventListener('touchstart', () => {}, { passive: true });   // lets iOS show the pressed state
+  again.addEventListener('click', () => {
+    if (input.value !== before){ input.value = before; input.dispatchEvent(new Event('input', { bubbles: true })); }
+    stop(false);
+  });
+  // typing a value yourself ends the count
+  input.addEventListener('input', e => { if (e.isTrusted && (taps.length || stat.textContent !== idle)) stop(false); });
+  return { reset: () => stop(false) };
+}
+const tapCounters = [
+  tapCounter({ btn:'tap-rr', input:'rr', stat:'st-rr', again:'ag-rr', one:'breath', many:'breaths', minTaps:3, debounce:600, minGap:10000, maxGap:30000 }),
+  tapCounter({ btn:'tap-hr', input:'hr', stat:'st-hr', again:'ag-hr', one:'beat', many:'beats', minTaps:3, debounce:200, minGap:2500, maxGap:6000 })
+];
+document.getElementById('reset').addEventListener('click', () => tapCounters.forEach(t => t.reset()));
 
 /* ---------- overdose calculators ---------- */
 const KG_PER_ST = 6.35029318, KG_PER_LB = 0.45359237;
