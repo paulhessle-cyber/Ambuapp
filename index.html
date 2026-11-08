@@ -389,6 +389,87 @@ html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
 .ex-i small{display:block;font-size:12.5px;color:var(--ink-dim);margin-top:1px;line-height:1.35}
 .ex-i[aria-current="true"]{border-color:#3f6fe8;background:rgba(63,111,232,.15)}
 .ex-i .dot{flex:0 0 10px;height:10px;border-radius:50%}
+/* ---------- abdominal ---------- */
+.key.abdo{--k1:#c8743f;--k2:#8a4520;--kEdge:#5a2a12}
+html[data-theme="dark"]{--ab-bg:#0f131a;--ab-ink:#8d96a3}
+html[data-theme="light"]{--ab-bg:#dde3ea;--ab-ink:#5c6672}
+.ab-modes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.ab-mode{border:0;border-radius:14px;padding:12px 8px;font:inherit;font-weight:800;font-size:16px;line-height:1.2;cursor:pointer;
+  background:linear-gradient(180deg,var(--key-1),var(--key-2));color:var(--key-ink);
+  box-shadow:0 5px 0 var(--shade), inset 0 1px 0 var(--shine);transition:transform var(--tap) ease, box-shadow var(--tap) ease}
+.ab-mode[aria-pressed="true"]{background:linear-gradient(180deg,#3f6fe8,#1b3fae);color:#fff;transform:translateY(3px);box-shadow:0 2px 0 #12297a, inset 0 1px 0 rgba(255,255,255,.3)}
+.ab-mode#ab-m-pain[aria-pressed="true"]{background:linear-gradient(180deg,#e0463b,#a3231b);box-shadow:0 2px 0 #6f1310, inset 0 1px 0 rgba(255,255,255,.3)}
+.ab-mode:active{transform:translateY(5px);box-shadow:0 0 0 var(--shade)}
+.ab-hint{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--ink-dim);margin:-2px 2px 10px;line-height:1.35;min-height:36px}
+.ab-hint[hidden]{display:none}
+.ab-hint span{flex:1}
+.ab-small{flex:0 0 auto;border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:8px 11px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer}
+.ab-stage{max-width:440px;margin:0 auto;border-radius:16px;overflow:hidden;background:var(--ab-bg);border:1px solid var(--line)}
+.ab-svg{display:block;width:100%;height:auto;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;touch-action:manipulation}
+.ab-cell{fill:transparent;cursor:pointer;outline:none;transition:fill .15s ease}
+.ab-cell.sel{fill:rgba(228,52,40,.55)}
+.ab-cell.flash{fill:rgba(63,111,232,.55)}
+.ab-cell.dim{fill:rgba(9,12,18,.42)}
+.ab-cell.focus{fill:transparent}
+.ab-cell:focus-visible{stroke:#6ea8ff;stroke-width:5}
+.ab-fig .ab-cell{cursor:default}
+.ab-lab{fill:#fff;font-weight:700;font-size:12.5px;paint-order:stroke;stroke:rgba(66,32,18,.5);stroke-width:2.4px;stroke-linejoin:round;pointer-events:none}
+.ab-ori{fill:var(--ab-ink);font-size:10px;font-weight:800;letter-spacing:.14em;pointer-events:none}
+.ab-dia{fill:rgba(255,255,255,.66);font-size:9px;font-weight:800;letter-spacing:.16em;pointer-events:none}
+
+.ab-kicker{font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:6px}
+.ab-sub{font-size:13px;color:var(--ink-dim);margin:-2px 0 8px}
+.ab-res{margin-top:12px}
+.ab-sel{font-weight:800;font-size:17px;line-height:1.3;margin-bottom:2px}
+.ab-h{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);margin:16px 0 8px;font-weight:800}
+.ab-h.dnm{color:#e0463b}
+html[data-theme="dark"] .ab-h.dnm{color:#ff7d6e}
+.ab-causes{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ab-cause{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--bg-2)}
+.ab-cause.dnm{border-left-color:#e0463b}
+.ab-ch{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.ab-ch b{font-size:15.5px}
+.ab-who{font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--ink-dim)}
+.ab-cause p{margin:5px 0 0;font-size:14px;line-height:1.45}
+.ab-tl{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.ab-tlink{border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:999px;padding:4px 9px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.ab-tests{display:grid;gap:8px}
+.ab-test{border:1px solid var(--line);border-radius:12px;background:var(--bg-2);overflow:hidden}
+.ab-test summary{list-style:none;cursor:pointer;padding:11px 36px 11px 12px;position:relative;display:block}
+.ab-test summary::-webkit-details-marker{display:none}
+.ab-test summary::after{content:"";position:absolute;right:14px;top:50%;width:8px;height:8px;margin-top:-6px;border-right:2px solid var(--ink-dim);border-bottom:2px solid var(--ink-dim);transform:rotate(45deg);transition:transform .15s ease}
+.ab-test[open] summary::after{transform:rotate(-135deg);margin-top:-2px}
+.ab-tn{display:block;font-weight:800;font-size:15px}
+.ab-tf{display:block;font-size:12.5px;color:var(--ink-dim);margin-top:1px;line-height:1.35}
+.ab-tb{padding:0 12px 12px;font-size:14px;line-height:1.5}
+.ab-tb ol{margin:0 0 8px;padding-left:20px}
+.ab-tb li{margin:3px 0}
+.ab-tb p{margin:6px 0 0}
+.ab-tnote{color:var(--ink-dim);font-size:13px}
+.ab-test.ping{animation:abping .9s ease}
+@keyframes abping{0%,60%{box-shadow:0 0 0 3px #6ea8ff}100%{box-shadow:0 0 0 0 transparent}}
+.ab-go{margin-top:10px;border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:7px 12px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer}
+.ab-list{margin:0;padding-left:18px;font-size:15px;line-height:1.5}
+.ab-list li{margin:2px 0}
+.ab-out{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:14px;line-height:1.45}
+.ab-out b{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:2px}
+.ab-out ul{margin:0;padding-left:18px}
+.ab-fig{margin-bottom:12px}
+.ab-jump{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.ab-jump button{border:1px solid var(--field-line);background:var(--field);color:var(--ink);border-radius:10px;padding:9px 4px;font:inherit;font-size:12.5px;font-weight:700;line-height:1.2;cursor:pointer}
+.ab-jump button[aria-current="true"]{background:#3f6fe8;border-color:#3f6fe8;color:#fff}
+.ab-empty{color:var(--ink-dim);font-size:14px;line-height:1.45}
+.ab-mores{display:grid;gap:6px}
+.ab-more{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:12px;background:var(--bg-2)}
+.ab-more.dnm{border-left-color:#e0463b}
+.ab-more summary{list-style:none;cursor:pointer;padding:10px 34px 10px 12px;position:relative;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.ab-more summary::-webkit-details-marker{display:none}
+.ab-more summary::after{content:"";position:absolute;right:14px;top:50%;width:7px;height:7px;margin-top:-5px;border-right:2px solid var(--ink-dim);border-bottom:2px solid var(--ink-dim);transform:rotate(45deg)}
+.ab-more[open] summary::after{transform:rotate(-135deg);margin-top:-1px}
+.ab-more summary b{font-size:14.5px}
+.ab-more p{margin:0 12px;font-size:14px;line-height:1.45}
+.ab-more .ab-tl{margin:8px 12px 12px}
+.topbar .back{flex:0 0 auto;white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -438,6 +519,11 @@ html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M5 13h3l1.5-4 2 7 1.5-5 1 2h5"/></svg>
         ECG
       </button>
+      <button class="key abdo" data-go="abdo">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 2.5c0 1.3-1 2.1-2.7 2.5-1.2.3-2 1-2 2.4v4.8c0 1.5.8 2.8 1.6 4 1 1.5 1.2 3.4 1 5.3h11.2c-.2-1.9 0-3.8 1-5.3.8-1.2 1.6-2.5 1.6-4V7.4c0-1.4-.8-2.1-2-2.4-1.7-.4-2.7-1.2-2.7-2.5"/><path d="M10.1 9.2v12.1M13.9 9.2v12.1M3.9 12.6h16.2M5.6 16.6h12.8" stroke-width="1.3" opacity=".9"/><circle cx="12" cy="14.6" r=".9" fill="currentColor" stroke="none"/></svg>
+        Abdominal
+      </button>
+      <button class="key spare" data-go="spare"><svg class="ic" viewBox="0 0 24 24" fill="currentColor"><path d="M9.6 2h4.8l1.1 5.1 4.6-2.4 2.4 4.1-4.2 3.2 4.2 3.2-2.4 4.1-4.6-2.4L14.4 22H9.6l-1.1-5.1-4.6 2.4L1.5 15.2l4.2-3.2-4.2-3.2 2.4-4.1 4.6 2.4z"/></svg>Spare</button>
     </div>
     <p class="note">Decision-support aid only. Scores and guidance do not replace clinical judgement or your service's own protocols.</p>
   </section>
@@ -759,6 +845,53 @@ html[data-theme="dark"] .ecg-sheet-head button{color:#8fb0ff}
       <div class="ecg-sheet-head"><h2 id="ex-title">Examples</h2><button id="ex-close">Done</button></div>
       <div class="ecg-sheet-body" id="ex-list"></div>
     </div>
+  </section>
+
+  <!-- ============ ABDOMINAL ============ -->
+  <section id="abdo" class="screen">
+    <div class="topbar">
+      <button class="back" data-go="home">‹ Back</button>
+      <div><h1>Abdominal</h1><p class="sub">The nine regions</p></div>
+    </div>
+
+    <div class="ab-modes" role="group" aria-label="Abdominal mode">
+      <button class="ab-mode" id="ab-m-info" aria-pressed="true">Information</button>
+      <button class="ab-mode" id="ab-m-pain" aria-pressed="false">Indicate pain location</button>
+    </div>
+    <div class="ab-hint" id="ab-hint-info"><span>Tap a region to see what’s there and how to examine it.</span></div>
+    <div class="ab-hint" id="ab-hint-pain" hidden><span>Tap every region where they feel pain.</span><button type="button" class="ab-small" id="ab-all">All over</button><button type="button" class="ab-small" id="ab-clear">Clear</button></div>
+
+    <div class="ab-stage" id="ab-stage"></div>
+    <div id="ab-results"></div>
+
+    <p class="note">Teaching aid. Examination signs make a cause more or less likely, but most are often absent — a negative sign doesn’t rule anything out. Pain location is one clue alongside the history, observations and how unwell they look. Follow JRCALC and your local pathways.</p>
+  </section>
+
+  <section id="abdo-reg" class="screen">
+    <div class="topbar">
+      <button class="back" data-go="abdo">‹ Back</button>
+      <div><h1 id="ar-title">Region</h1><p class="sub" id="ar-sub"></p></div>
+    </div>
+    <div class="ab-stage ab-fig" id="ar-fig"></div>
+    <div class="card">
+      <div class="ab-kicker">What’s here</div>
+      <ul class="ab-list" id="ar-organs"></ul>
+      <div class="ab-out" id="ar-out"></div>
+    </div>
+    <div class="card">
+      <div class="ab-kicker">Tests for this region</div>
+      <p class="ab-sub">Tap a test to see how to do it.</p>
+      <div class="ab-tests" id="ar-tests"></div>
+    </div>
+    <div class="card">
+      <div class="ab-kicker">Causes of pain here</div>
+      <div id="ar-causes"></div>
+    </div>
+    <div class="card">
+      <div class="ab-kicker">Other regions</div>
+      <div class="ab-jump" id="ar-jump"></div>
+    </div>
+    <p class="note">Teaching aid. Examination signs make a cause more or less likely, but most are often absent — a negative sign doesn’t rule anything out. Follow JRCALC and your local pathways.</p>
   </section>
 
   <!-- ============ SPARE ============ -->
@@ -2857,6 +2990,473 @@ if (window.ResizeObserver) { let w0 = 0; new ResizeObserver(() => { const w = pr
 new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 syncMode();
 showExample('nsr');
+})();
+
+/* ---------- abdominal: nine regions ---------- */
+(() => {
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+
+/* ===== regions (patient's right is on the left of the picture) ===== */
+const ORDER = ['rh', 'ep', 'lh', 'rl', 'um', 'll', 'ri', 'hy', 'li'];
+const REG = {
+  rh: { name:'Right hypochondriac region', short:'Right hypochondriac', lab:['Right', 'hypochondriac'], alt:'Right upper quadrant, under the right ribs',
+    box:[0, 126, 120, 228], at:[67, 172],
+    organs:['Liver (right lobe)', 'Gallbladder', 'Right kidney (upper part)', 'First part of the duodenum', 'Hepatic flexure of the colon', 'Right adrenal gland'],
+    outside:['Right lung base — pneumonia or PE', 'Heart — an inferior MI can be felt here', 'Lower ribs and chest wall', 'Shingles'],
+    tests:['murphy', 'ecg', 'chest', 'renal', 'carnett', 'inspect'] },
+  ep: { name:'Epigastric region', short:'Epigastric', lab:['Epigastric'], alt:'Epigastrium — upper middle, below the breastbone',
+    box:[120, 126, 220, 228], at:[170, 180],
+    organs:['Stomach', 'Liver (left lobe)', 'Pancreas (head and body)', 'Duodenum', 'Lower oesophagus', 'Aorta and its upper branches'],
+    outside:['Heart — an MI often feels like indigestion', 'Lung bases'],
+    tests:['ecg', 'aaa', 'glucose', 'guarding', 'peritonism', 'bruising', 'carnett'] },
+  lh: { name:'Left hypochondriac region', short:'Left hypochondriac', lab:['Left', 'hypochondriac'], alt:'Left upper quadrant, under the left ribs',
+    box:[220, 126, 340, 228], at:[273, 172],
+    organs:['Spleen', 'Stomach (upper part)', 'Tail of the pancreas', 'Left kidney (upper part)', 'Splenic flexure of the colon', 'Left adrenal gland'],
+    outside:['Left lung base — pneumonia or PE', 'Heart', 'Lower ribs — a broken left lower rib can mean a splenic injury', 'Shingles'],
+    tests:['kehr', 'chest', 'ecg', 'renal', 'carnett', 'inspect'] },
+  rl: { name:'Right lumbar region', short:'Right lumbar', lab:['Right', 'lumbar'], alt:'Right flank',
+    box:[0, 228, 120, 318], at:[69, 268],
+    organs:['Ascending colon', 'Right kidney', 'Right ureter (upper part)', 'Small intestine'],
+    outside:['Back muscles and spine', 'Shingles'],
+    tests:['renal', 'dipstick', 'psoas', 'aaa', 'bruising'] },
+  um: { name:'Umbilical region', short:'Umbilical', lab:['Umbilical'], alt:'Periumbilical — around the umbilicus',
+    box:[120, 228, 220, 318], at:[170, 262],
+    organs:['Small intestine (jejunum and ileum)', 'Transverse colon', 'Lower duodenum', 'Aorta and inferior vena cava', 'Mesentery and its blood vessels'],
+    outside:['Early appendicitis — felt here before it moves to the right iliac region', 'Medical causes — DKA, sickle cell crisis'],
+    tests:['aaa', 'hernia', 'guarding', 'peritonism', 'glucose', 'bruising', 'inspect'] },
+  ll: { name:'Left lumbar region', short:'Left lumbar', lab:['Left', 'lumbar'], alt:'Left flank',
+    box:[220, 228, 340, 318], at:[271, 268],
+    organs:['Descending colon', 'Left kidney', 'Left ureter (upper part)', 'Small intestine'],
+    outside:['Back muscles and spine', 'Shingles'],
+    tests:['renal', 'dipstick', 'aaa', 'bruising'] },
+  ri: { name:'Right iliac region', short:'Right iliac', lab:['Right', 'iliac'], alt:'Right iliac fossa (RIF)',
+    box:[0, 318, 120, 452], at:[74, 354],
+    organs:['Appendix', 'Caecum', 'End of the small intestine (terminal ileum)', 'Right ovary and fallopian tube', 'Right ureter (lower part)', 'Right groin — inguinal and femoral canals'],
+    outside:['Testis — torsion can be felt in the lower abdomen', 'Right hip'],
+    tests:['mcburney', 'rovsing', 'psoas', 'obturator', 'cough', 'heeldrop', 'pregnancy', 'testes', 'hernia'] },
+  hy: { name:'Hypogastric region', short:'Hypogastric', lab:['Hypogastric'], alt:'Suprapubic — above the pubic bone',
+    box:[120, 318, 220, 452], at:[170, 366],
+    organs:['Bladder', 'Uterus', 'Sigmoid colon and rectum', 'Prostate', 'Loops of small intestine'],
+    outside:['Testes — torsion', 'Lower back'],
+    tests:['bladder', 'dipstick', 'pregnancy', 'obturator', 'testes', 'peritonism'] },
+  li: { name:'Left iliac region', short:'Left iliac', lab:['Left', 'iliac'], alt:'Left iliac fossa (LIF)',
+    box:[220, 318, 340, 452], at:[266, 354],
+    organs:['Sigmoid colon', 'Descending colon (lower part)', 'Left ovary and fallopian tube', 'Left ureter (lower part)', 'Left groin — inguinal and femoral canals'],
+    outside:['Testis — torsion can be felt in the lower abdomen', 'Left hip'],
+    tests:['peritonism', 'cough', 'pregnancy', 'testes', 'hernia', 'dipstick'] }
+};
+
+/* ===== examination tests — own words; signs support a diagnosis, absence rules nothing out ===== */
+const TESTS = {
+  murphy: { name:'Murphy’s sign', for:'Acute cholecystitis (inflamed gallbladder)',
+    how:['Patient lying flat with the abdomen relaxed.', 'Place your fingers just under the right ribs, in line with the middle of the collarbone — over the gallbladder.', 'Ask them to breathe in deeply.'],
+    pos:'They stop breathing in suddenly with pain as the gallbladder moves down onto your fingers. Doing the same on the left shouldn’t hurt.',
+    note:'Less reliable in older people — in one study it was positive in only about half of older patients with cholecystitis. A negative sign doesn’t rule it out.' },
+  mcburney: { name:'McBurney’s point', for:'Appendicitis',
+    how:['Find the bony point at the front of the right hip (anterior superior iliac spine).', 'Imagine a line from it to the umbilicus: McBurney’s point is a third of the way along from the hip.', 'Press gently there with your fingertips, watching their face.'],
+    pos:'Tenderness is greatest at McBurney’s point.',
+    note:'The appendix can lie in different places, so the most tender spot may be elsewhere.' },
+  rovsing: { name:'Rovsing’s sign', for:'Appendicitis',
+    how:['Patient lying flat.', 'Press deeply and steadily in the left iliac region — the mirror image of McBurney’s point.'],
+    pos:'Pain is felt in the right iliac region, not where you are pressing.',
+    note:'Helpful when present but often absent — a negative sign doesn’t rule out appendicitis.' },
+  psoas: { name:'Psoas sign', for:'Appendicitis lying behind the caecum (retrocaecal)',
+    how:['Patient lying on their left side: gently move the straight right leg backwards at the hip.', 'Or lying flat: ask them to lift the straight right leg while you press down gently on the thigh.'],
+    pos:'Pain in the right iliac region — the psoas muscle is rubbing on an inflamed appendix lying against it.',
+    note:'Often negative when the appendix lies elsewhere.' },
+  obturator: { name:'Obturator sign', for:'Appendicitis lying low in the pelvis',
+    how:['Patient lying flat.', 'Bend the right hip and knee to 90°, supporting the knee and ankle.', 'Rotate the hip inwards by gently moving the ankle outwards.'],
+    pos:'Pain in the right iliac or suprapubic region — an inflamed appendix lying on the obturator muscle.',
+    note:'Often negative when the appendix lies elsewhere.' },
+  peritonism: { name:'Percussion and rebound', for:'Peritonitis (inflamed lining of the abdomen)',
+    how:['Percussion: tap lightly over each region, starting away from the pain.', 'Rebound (Blumberg’s sign): press slowly and deeply, then let go quickly.'],
+    pos:'Sharp pain on light tapping, or as you let go — the lining of the abdomen (peritoneum) is inflamed.',
+    note:'Rebound is uncomfortable. Percussion tenderness or the cough test usually tell you the same thing more kindly.' },
+  cough: { name:'Cough test', for:'Peritoneal irritation — for example appendicitis',
+    how:['Ask them to cough.', 'Watch their face and where they put their hand.'],
+    pos:'A sharp pain in one place that they point to or hold — the inflamed area.',
+    note:'Also known as Dunphy’s sign.' },
+  heeldrop: { name:'Heel drop test', for:'Peritoneal irritation',
+    how:['Only if they can safely stand.', 'Ask them to rise up onto their toes, then drop down hard onto their heels.'],
+    pos:'Pain in the abdomen as the heels land — often at the inflamed spot.',
+    note:'Also called Markle’s sign. Asking how the bumps felt on the journey tells you something similar. Don’t do it if they’re dizzy, unwell or shocked.' },
+  guarding: { name:'Guarding and rigidity', for:'Peritonitis',
+    how:['Warm hands. Patient lying flat with knees slightly bent to relax the abdomen.', 'Start away from the pain and feel each region gently, watching their face.'],
+    pos:'The muscles tense as you press (guarding). Rigidity is a constant, board-like hardness across the abdomen — generalised peritonitis, for example from a perforation.',
+    note:'Voluntary guarding eases with distraction; rigidity doesn’t.' },
+  renal: { name:'Renal angle tenderness', for:'Kidney infection or a kidney stone',
+    how:['Sit them forward.', 'Find the renal angle on each side: between the lowest rib and the spine.', 'Press firmly with your thumb, or lay one hand flat over it and tap the back of that hand with your other fist. Compare both sides.'],
+    pos:'Pain on one side — an inflamed (pyelonephritis) or blocked kidney.',
+    note:'Also called Murphy’s punch sign.' },
+  kehr: { name:'Kehr’s sign', for:'Blood under the diaphragm — a ruptured spleen or ectopic pregnancy',
+    how:['Ask about pain at the tip of the shoulder, with no shoulder injury.', 'It may start or get worse when they lie flat.'],
+    pos:'Shoulder tip pain — blood irritating the diaphragm is felt in the shoulder. Classically the left shoulder with a spleen injury.',
+    note:'A warning sign of internal bleeding: time-critical after trauma or in anyone who could be pregnant.' },
+  bruising: { name:'Cullen’s and Grey Turner’s signs', for:'Bleeding inside or behind the abdomen',
+    how:['Look at the skin around the umbilicus (Cullen’s sign).', 'Look at both flanks (Grey Turner’s sign).'],
+    pos:'Blue-purple bruising — from severe pancreatitis, a ruptured ectopic pregnancy or a leaking aneurysm.',
+    note:'Late signs, often taking a day or two to appear. Their absence doesn’t rule anything out.' },
+  carnett: { name:'Carnett’s sign', for:'Pain from the abdominal wall rather than inside the abdomen',
+    how:['Find the most tender spot and keep a finger on it.', 'Ask them to tense their stomach muscles by lifting their head and shoulders off the bed.'],
+    pl:'Means', pos:'Pain the same or worse: likely the abdominal wall (muscle, nerve or hernia). Pain eases: more likely inside the abdomen, because the tensed muscles protect the organs.' },
+  aaa: { name:'Aorta check', for:'Abdominal aortic aneurysm',
+    how:['Patient lying flat with knees slightly bent.', 'Place both hands either side of the midline just above the umbilicus, fingertips pointing towards each other.', 'Press gently and feel for a pulsing mass.'],
+    pos:'A pulsing mass that pushes your hands apart (expansile), not just upwards — an aneurysm.',
+    note:'Often can’t be felt, especially in larger patients — not feeling one doesn’t rule out an aneurysm. Be gentle.' },
+  hernia: { name:'Hernia check', for:'Strangulated or obstructed hernia',
+    how:['Look and feel at both groins, the umbilicus and any scars.', 'Ask them to cough and watch for a bulge.', 'Ask whether a known hernia has become painful or won’t go back.'],
+    pos:'A tense, tender lump that won’t go back — especially with vomiting or a swollen abdomen.',
+    note:'Femoral hernias sit just below the groin crease, are more common in women and often strangulate. Don’t force a tender hernia back.' },
+  testes: { name:'Testicular check', for:'Testicular torsion',
+    how:['In any boy or man with lower abdominal pain, ask directly about pain or swelling in the testes — teenagers often won’t mention it.', 'With consent, and a chaperone where appropriate, look for a swollen testis sitting higher than the other.'],
+    pos:'A sudden, painful, swollen, high-riding testis, often with vomiting.',
+    note:'Time-critical: the chance of saving the testis falls after about 6 hours from the start of the pain.' },
+  bladder: { name:'Bladder check', for:'Urinary retention',
+    how:['Feel above the pubic bone for a smooth, rounded swelling rising out of the pelvis.', 'Tap (percuss) downwards from the umbilicus.'],
+    pos:'A tender swelling that sounds dull when tapped, in someone who can’t pass urine — a full bladder.' },
+  pregnancy: { name:'Pregnancy check', for:'Ectopic pregnancy and other pregnancy problems',
+    how:['Ask anyone who could be pregnant — privately and sensitively — about their last period, contraception and any vaginal bleeding.', 'A pregnancy test is the key test: in hospital, or on scene if you carry them.'],
+    pl:'If positive', pos:'Abdominal pain with a missed period or a positive test is an ectopic pregnancy until proven otherwise.',
+    note:'NICE: atypical presentations of ectopic pregnancy are common — think of a pregnancy test even when symptoms are vague.' },
+  ecg: { name:'12-lead ECG', for:'A heart attack felt as upper abdominal pain',
+    how:['Record a 12-lead for upper abdominal pain, especially in older people, diabetics and anyone with cardiac risk factors.', 'Look closely at II, III and aVF for an inferior MI.'],
+    pl:'Look for', pos:'ST elevation or new ischaemic changes — follow your ACS pathway. AF matters too: it can cause mesenteric ischaemia.', link:'ecg' },
+  glucose: { name:'Blood glucose and ketones', for:'Diabetic ketoacidosis (DKA)',
+    how:['Check capillary glucose — and ketones if you carry a meter — in anyone with abdominal pain and vomiting who has, or might have, diabetes.'],
+    pl:'Means', pos:'Ketones of 3 mmol/L or more with a high glucose or known diabetes suggest DKA.',
+    note:'SGLT2 inhibitors (the “-gliflozins”, such as dapagliflozin) can cause DKA with a near-normal glucose — check ketones.' },
+  dipstick: { name:'Urine dipstick', for:'Urinary infection, kidney stones, pre-eclampsia and DKA',
+    how:['Test a fresh, clean-catch sample.'],
+    pl:'What it shows', pos:'Nitrites and leucocytes: infection. Blood: a kidney stone (or infection). Protein in pregnancy: pre-eclampsia. Ketones and glucose: DKA.',
+    note:'Unreliable for diagnosing urinary infection in people aged 65 and over — don’t rely on it in that age group.' },
+  chest: { name:'Chest check', for:'Pneumonia or PE felt as upper abdominal pain',
+    how:['Check respiratory rate, SpO₂ and temperature.', 'Listen to both lung bases.'],
+    pl:'What it means', pos:'Crackles, reduced air entry or a fever suggest pneumonia. Breathless with a fast heart rate and low SpO₂ but a clear chest: think PE.' },
+  obs: { name:'Observations (NEWS2)', for:'Sepsis, bleeding and how unwell they are',
+    how:['A full set of observations: RR, SpO₂, BP, pulse, consciousness and temperature.', 'Score NEWS2. In pregnancy, check the blood pressure carefully.'],
+    pl:'Worry if', pos:'A high NEWS2, a low BP or a fast pulse with abdominal pain — think sepsis or bleeding.', link:'news2' },
+  inspect: { name:'Look before you touch', for:'Clues to the cause',
+    how:['With privacy, expose the abdomen and look.', 'Watch how they lie: very still suggests peritonitis; restless and writhing suggests colic.'],
+    pl:'Look for', pos:'Swelling (obstruction), scars (adhesions), lumps (hernias), bruising, a one-sided band of rash (shingles), yellow skin or eyes (jaundice).' }
+};
+
+/* ===== causes: w = regions where pain typically is (2) or can be (1);
+   dnm = don't miss; diffuse = can cause pain all over ===== */
+const C = [
+  { id:'appx', name:'Appendicitis', w:{ um:2, ri:2, hy:1, rl:1 },
+    txt:'Pain often starts around the umbilicus and settles in the right iliac region over hours. Off food, nausea, low-grade fever; worse on moving, coughing or going over bumps.',
+    t:['mcburney', 'rovsing', 'psoas', 'obturator', 'cough', 'heeldrop', 'peritonism'] },
+  { id:'biliary', name:'Gallstones — biliary colic or cholecystitis', w:{ rh:2, ep:2, rl:1 },
+    txt:'Right upper or central upper pain, often after fatty food, sometimes felt at the right shoulder blade. Constant pain with fever and tenderness suggests cholecystitis.',
+    t:['murphy', 'obs'] },
+  { id:'pud', name:'Gastritis, reflux or a peptic ulcer', w:{ ep:2, rh:1, lh:1 },
+    txt:'Burning upper pain related to meals; NSAIDs, alcohol or smoking. Black stools or vomiting blood mean a bleed. Rule out a heart attack before calling it indigestion.',
+    t:['ecg', 'carnett'] },
+  { id:'uti', name:'Urinary infection (cystitis)', w:{ hy:2, ri:1, li:1 },
+    txt:'Suprapubic pain with burning, frequency or urgency. Older people may just be confused, off their legs or falling.',
+    t:['dipstick', 'renal'] },
+  { id:'colic', name:'Kidney stone (renal colic)', w:{ rl:2, ll:2, ri:1, li:1, hy:1 },
+    txt:'Severe colicky loin pain spreading to the groin; can’t keep still. Blood on the dipstick in most. Older, with no history of stones? Think aneurysm first.',
+    t:['renal', 'dipstick', 'aaa'] },
+  { id:'pyelo', name:'Kidney infection (pyelonephritis)', w:{ rl:2, ll:2, rh:1, lh:1 },
+    txt:'Loin pain with fever, rigors, vomiting and often urinary symptoms. Can progress to sepsis — score NEWS2.',
+    t:['renal', 'dipstick', 'obs'] },
+  { id:'gastro', name:'Gastroenteritis', w:{ um:2 }, diffuse:true,
+    txt:'Crampy pain with vomiting and diarrhoea, often with others unwell too. Pain that becomes constant or settles in one spot suggests something else.',
+    t:['peritonism', 'obs'] },
+  { id:'constip', name:'Constipation', w:{ li:2, hy:1, ll:1, um:1 }, diffuse:true,
+    txt:'Common, especially in older people and with opioids. Colicky lower pain and hard stools. Don’t settle for it if they’re vomiting or the abdomen is swollen.',
+    t:['inspect'] },
+  { id:'divert', name:'Diverticulitis', who:'Usually over 50', w:{ li:2, hy:1, ll:1 },
+    txt:'Left lower pain and tenderness with fever, sometimes a change in bowel habit. Can perforate or form an abscess.',
+    t:['peritonism', 'guarding', 'obs'] },
+  { id:'panc', name:'Acute pancreatitis', w:{ ep:2, um:1, lh:1, rh:1 },
+    txt:'Severe constant upper pain boring through to the back, with vomiting; may ease sitting forward. Usually gallstones or alcohol. Can become very unwell quickly.',
+    t:['bruising', 'peritonism', 'obs'] },
+  { id:'pid', name:'Pelvic inflammatory disease', who:'Women', w:{ hy:2, ri:2, li:2 },
+    txt:'Lower pain, usually on both sides, with fever, unusual vaginal discharge or pain during sex. Pregnancy must be ruled out.',
+    t:['pregnancy', 'dipstick', 'obs'] },
+  { id:'retention', name:'Urinary retention', w:{ hy:2 },
+    txt:'Painful swelling above the pubic bone and unable to pass urine — often older men with prostate problems, after an anaesthetic, or with constipation or some medicines.',
+    t:['bladder'] },
+  { id:'mesad', name:'Mesenteric adenitis', who:'Children', w:{ ri:2, um:1 },
+    txt:'Swollen lymph glands in the abdomen after a cold or sore throat. Mimics appendicitis and can’t be told apart reliably on scene.',
+    t:['mcburney', 'rovsing'] },
+  { id:'pneum', name:'Lower lobe pneumonia', w:{ rh:1, lh:1 },
+    txt:'Upper abdominal pain with cough, fever, fast breathing or low SpO₂ — the lung bases sit just above the diaphragm. Especially in children.',
+    t:['chest', 'obs'] },
+  { id:'hep', name:'Hepatitis or a congested liver', w:{ rh:2, ep:1 },
+    txt:'Dull ache under the right ribs with jaundice, heavy drinking or heart failure.',
+    t:['inspect'] },
+  { id:'ibd', name:'Crohn’s or colitis flare', who:'Known IBD', w:{ ri:1, li:1, hy:1, um:1 },
+    txt:'Pain with bloody or frequent diarrhoea, fever or weight loss in someone with inflammatory bowel disease.',
+    t:['obs', 'peritonism'] },
+  { id:'shingles', name:'Shingles', w:{ rh:1, lh:1, rl:1, ll:1 },
+    txt:'Burning pain in a band on one side; the rash can appear days after the pain.',
+    t:['inspect'] },
+
+  { id:'aaa', dnm:true, name:'Leaking abdominal aortic aneurysm', who:'Usually over 60', w:{ um:2, ll:2, rl:1, ep:1, hy:1 }, diffuse:true,
+    txt:'New abdominal, back or loin pain, collapse or fainting in someone older — especially smokers, high blood pressure or a known aneurysm. Often mistaken for renal colic. Time-critical.',
+    t:['aaa', 'obs', 'bruising'] },
+  { id:'ectopic', dnm:true, name:'Ectopic pregnancy', who:'Could be pregnant', w:{ ri:2, li:2, hy:2, um:1 }, any:['ri', 'li', 'hy'],
+    txt:'Anyone who could be pregnant, even if they don’t think so. Often one-sided lower pain, a missed period or bleeding; atypical presentations are common. Shoulder tip pain, dizziness or collapse suggest rupture.',
+    t:['pregnancy', 'kehr', 'obs'] },
+  { id:'acs', dnm:true, name:'Heart attack (ACS)', w:{ ep:2, rh:1, lh:1 }, any:['ep', 'rh', 'lh'],
+    txt:'Upper abdominal pain or “indigestion” can be an MI, especially inferior — more likely in older people, diabetics and women. Sweaty, grey or nauseated? Record a 12-lead.',
+    t:['ecg'] },
+  { id:'perf', dnm:true, name:'Perforation and peritonitis', w:{ ep:2, um:1 }, diffuse:true,
+    txt:'Sudden severe pain that spreads across the abdomen. Lies very still and any movement hurts; rigid, board-like abdomen. A perforated ulcer starts in the epigastrium.',
+    t:['guarding', 'peritonism', 'cough'] },
+  { id:'obstr', dnm:true, name:'Bowel obstruction', w:{ um:2, ep:1, hy:1, ri:1, li:1 }, diffuse:true,
+    txt:'Colicky pain, vomiting, a swollen abdomen, and not opening their bowels or passing wind. Ask about previous operations and check for hernias.',
+    t:['inspect', 'hernia'] },
+  { id:'ischaem', dnm:true, name:'Mesenteric ischaemia', who:'Older; AF or vascular disease', w:{ um:2, ep:1 }, diffuse:true,
+    txt:'Severe pain out of proportion to a soft, unremarkable abdomen. Think of it with AF, heart or vascular disease. Bloody diarrhoea and peritonitis come late.',
+    t:['ecg', 'peritonism'] },
+  { id:'hernia', dnm:true, name:'Strangulated hernia', w:{ ri:2, li:2, um:1, hy:1 },
+    txt:'A tender lump in the groin, at the umbilicus or in an old scar that won’t go back, often with vomiting. Femoral hernias are easily missed.',
+    t:['hernia', 'inspect'] },
+  { id:'torsion', dnm:true, name:'Testicular torsion', who:'Boys and young men', w:{ ri:1, li:1, hy:1 }, any:['ri', 'li', 'hy'],
+    txt:'Sudden testicular pain, often with lower abdominal pain and vomiting. Teenagers may only mention their tummy. About 6 hours to save the testis.',
+    t:['testes'] },
+  { id:'ovary', dnm:true, name:'Ovarian torsion or ruptured cyst', who:'Women and girls', w:{ ri:2, li:2, hy:1 },
+    txt:'Sudden one-sided lower pain, often with vomiting, sometimes after exercise or sex. Torsion cuts off the ovary’s blood supply — time-critical.',
+    t:['pregnancy', 'peritonism'] },
+  { id:'preecl', dnm:true, name:'Pre-eclampsia or HELLP', who:'Pregnant over 20 weeks, or recently given birth', w:{ ep:2, rh:2 },
+    txt:'Pain under the ribs or in the epigastrium with headache, visual disturbance, vomiting, sudden swelling or high blood pressure — in the second half of pregnancy or the weeks after birth.',
+    t:['obs', 'dipstick'] },
+  { id:'cholang', dnm:true, name:'Cholangitis', w:{ rh:2, ep:1 },
+    txt:'Fever, jaundice and right upper pain together (Charcot’s triad): infection behind a blocked bile duct. Can become septic quickly.',
+    t:['murphy', 'inspect', 'obs'] },
+  { id:'spleen', dnm:true, name:'Splenic injury', who:'After trauma', w:{ lh:2, ep:1, ll:1 },
+    txt:'Left upper pain after a blow to the left lower ribs — even minor trauma with glandular fever. Left shoulder tip pain and shock mean bleeding.',
+    t:['kehr', 'peritonism', 'obs'] },
+  { id:'dka', dnm:true, name:'Diabetic ketoacidosis (DKA)', w:{ ep:1, um:1 }, diffuse:true,
+    txt:'Abdominal pain with vomiting, thirst, deep rapid breathing and ketotic breath — may be the first sign of type 1 diabetes.',
+    t:['glucose', 'dipstick', 'obs'] },
+  { id:'pe', dnm:true, name:'Pulmonary embolism', w:{ rh:1, lh:1 },
+    txt:'Pleuritic pain under the ribs with breathlessness, a fast heart rate or low SpO₂. Look for risk factors such as recent surgery, immobility or a DVT.',
+    t:['chest', 'obs'] }
+];
+C.forEach((c, i) => { c.i = i; });
+
+/* fit = share of the selected regions this cause explains (main 2, possible 1);
+   with pain in 5 or more regions, causes of widespread pain count everywhere.
+   Pregnancy, testes and the heart are always worth a thought when their area hurts. */
+function rank(S) {
+  const wide = S.length >= 5;
+  return C.map(c => {
+    let sum = 0, hit = false;
+    S.forEach(r => { const w = c.w[r] || (wide && c.diffuse ? 1 : 0); if (c.w[r]) hit = true; sum += w; });
+    const fit = sum / (2 * S.length);
+    const ask = c.any && S.some(r => c.any.includes(r)) ? .25 : 0;
+    return { c, fit, score: fit + ask, ok: hit || (wide && c.diffuse) };
+  }).filter(x => x.ok);
+}
+const byScore = (a, b) => b.score - a.score || a.c.i - b.c.i;
+function split(S) {
+  const all = rank(S).filter(x => x.score >= .5).sort(byScore);
+  const likely = all.filter(x => !x.c.dnm), dnm = all.filter(x => x.c.dnm);
+  return { likely: likely.slice(0, 4), dnm: dnm.slice(0, 5), more: likely.slice(4).concat(dnm.slice(5)).sort(byScore) };
+}
+
+/* ===== drawing ===== */
+const W = 340, H = 452;
+const mx = d => d.replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (m, x, y) => (W - x) + ' ' + y);
+// left half of the outline, neck to the bottom centre; the right half is its mirror image
+const HALF = [[[132, -4]], [[128, 10], [110, 22], [80, 28]], [[50, 34], [20, 38], [0, 46]], [[-16, 52], [-24, 76], [-18, 96]],
+  [[14, 130]], [[16, 160], [14, 200], [18, 228]], [[22, 252], [31, 276], [31, 298]], [[31, 322], [23, 344], [24, 364]],
+  [[30, 392], [72, 412], [106, 428]], [[132, 440], [154, 451], [170, 452]]];
+const TORSO = (() => {
+  const p = a => a.join(' '), m = a => [W - a[0], a[1]];
+  let d = 'M' + p(HALF[0][0]);
+  const ends = [HALF[0][0]];
+  for (let i = 1; i < HALF.length; i++) {
+    const s = HALF[i];
+    d += (s.length === 1 ? ' L' : ' C') + s.map(p).join(' ');
+    ends.push(s[s.length - 1]);
+  }
+  for (let i = HALF.length - 1; i >= 1; i--) {
+    const s = HALF[i], start = ends[i - 1];
+    d += s.length === 1 ? ' L' + p(m(start)) : ' C' + [m(s[1]), m(s[0]), m(start)].map(p).join(' ');
+  }
+  return d + ' Z';
+})();
+const PEC = 'M166 126 C140 140 98 140 62 132 C42 128 28 120 18 110';
+const COSTAL = 'M170 150 C150 172 110 206 66 236 C50 246 36 252 24 254';
+const GROIN = 'M40 352 C60 378 92 404 126 428';
+
+function svg(p, opt) {
+  opt = opt || {};
+  const live = !opt.focus;
+  let vb = '0 0 ' + W + ' ' + H;
+  if (opt.focus) {
+    const b = REG[opt.focus].box, w = 210, h = 168;
+    const x = Math.max(0, Math.min(W - w, (b[0] + b[2]) / 2 - w / 2));
+    const y = Math.max(0, Math.min(H - h, (b[1] + Math.min(b[3], 420)) / 2 - h / 2));
+    vb = x + ' ' + y + ' ' + w + ' ' + h;
+  }
+  const cells = ORDER.map(r => {
+    const b = REG[r].box, cls = 'ab-cell' + (opt.focus ? (r === opt.focus ? ' focus' : ' dim') : '');
+    return '<path class="' + cls + '" data-r="' + r + '" d="M' + b[0] + ' ' + b[1] + 'H' + b[2] + 'V' + b[3] + 'H' + b[0] + 'Z" clip-path="url(#' + p + '-clip)"' +
+      (live ? ' role="button" tabindex="0" aria-label="' + REG[r].name + '"' : '') + '/>';
+  }).join('');
+  const labels = ORDER.filter(r => !opt.focus || r === opt.focus).map(r => {
+    const R = REG[r], n = R.lab.length, y0 = R.at[1] - (n - 1) * 7.5;
+    return '<text class="ab-lab" x="' + R.at[0] + '" y="' + y0 + '" text-anchor="middle" dominant-baseline="middle">' +
+      R.lab.map((t, i) => '<tspan x="' + R.at[0] + '" dy="' + (i ? 15 : 0) + '">' + t + '</tspan>').join('') + '</text>';
+  }).join('');
+  const both = d => d + ' ' + mx(d);
+  return '<svg class="ab-svg" viewBox="' + vb + '" xmlns="http://www.w3.org/2000/svg"' + (live ? ' role="group" aria-label="Abdomen divided into nine regions. The patient’s right is on the left of the picture."' : ' aria-hidden="true"') + '>' +
+    '<defs>' +
+      '<radialGradient id="' + p + '-skin" cx="50%" cy="40%" r="62%"><stop offset="0" stop-color="#d6a98f"/><stop offset=".62" stop-color="#c39177"/><stop offset="1" stop-color="#9c6a52"/></radialGradient>' +
+      '<clipPath id="' + p + '-clip"><path d="' + TORSO + '"/></clipPath>' +
+      '<filter id="' + p + '-soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="8"/></filter>' +
+      '<filter id="' + p + '-soft2" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3.5"/></filter>' +
+    '</defs>' +
+    '<path d="' + TORSO + '" fill="url(#' + p + '-skin)"/>' +
+    '<g clip-path="url(#' + p + '-clip)" fill="none" stroke-linecap="round">' +
+      '<path d="' + TORSO + '" stroke="#5a3122" stroke-opacity=".5" stroke-width="34" filter="url(#' + p + '-soft)"/>' +
+      '<path d="' + both(PEC) + '" stroke="#6a3a28" stroke-opacity=".35" stroke-width="7" filter="url(#' + p + '-soft2)" transform="translate(0 5)"/>' +
+      '<path d="' + both(PEC) + '" stroke="#7a4734" stroke-opacity=".35" stroke-width="1.6"/>' +
+      '<path d="' + both(COSTAL) + '" stroke="#7a4734" stroke-opacity=".22" stroke-width="1.6"/>' +
+      '<path d="M170 34 L170 150 M170 316 L170 430" stroke="#7a4734" stroke-opacity=".14" stroke-width="1.6"/>' +
+      '<path d="' + both(GROIN) + '" stroke="#6a3a28" stroke-opacity=".32" stroke-width="2"/>' +
+    '</g>' +
+    '<g fill="#8f5642"><circle cx="72" cy="104" r="7.5" opacity=".45"/><circle cx="268" cy="104" r="7.5" opacity=".45"/><circle cx="72" cy="104" r="3.4"/><circle cx="268" cy="104" r="3.4"/></g>' +
+    '<ellipse cx="170" cy="299" rx="4.6" ry="6.4" fill="#6f3f2e"/><ellipse cx="170" cy="301" rx="2.6" ry="3.6" fill="#4f2a1d"/><path d="M164.6 296 Q170 289.5 175.4 296" fill="none" stroke="#e8c0a8" stroke-opacity=".55" stroke-width="1.3"/>' +
+    cells +
+    '<g stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".95" pointer-events="none">' +
+      '<path d="M120 126V430M220 126V430M4 228H336M4 318H336"/>' +
+    '</g>' +
+    (!opt.focus || REG[opt.focus].box[1] < 200 ?
+      '<path d="M30 300 C26 212 70 128 170 112 C270 128 314 212 310 300" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2" stroke-dasharray="7 6" pointer-events="none"/>' +
+      '<text class="ab-dia" x="170" y="102" text-anchor="middle">DIAPHRAGM</text>' : '') +
+    labels +
+    '<text class="ab-ori" x="8" y="444">RIGHT</text><text class="ab-ori" x="332" y="444" text-anchor="end">LEFT</text>' +
+  '</svg>';
+}
+
+/* ===== shared bits ===== */
+function testHTML(id) {
+  const t = TESTS[id];
+  return '<details class="ab-test" data-test="' + id + '"><summary><span class="ab-tn">' + esc(t.name) + '</span><span class="ab-tf">' + esc(t.for) + '</span></summary>' +
+    '<div class="ab-tb"><ol>' + t.how.map(h => '<li>' + esc(h) + '</li>').join('') + '</ol>' +
+    '<p><b>' + esc(t.pl || 'Positive') + ':</b> ' + esc(t.pos) + '</p>' +
+    (t.note ? '<p class="ab-tnote">' + esc(t.note) + '</p>' : '') +
+    (t.link ? '<button type="button" class="ab-go" data-go="' + t.link + '">Open ' + (t.link === 'ecg' ? 'ECG' : 'NEWS2') + ' ›</button>' : '') +
+    '</div></details>';
+}
+const chips = c => '<div class="ab-tl">' + c.t.map(t => '<button type="button" class="ab-tlink" data-t="' + t + '">' + esc(TESTS[t].name) + '</button>').join('') + '</div>';
+const who = c => c.who ? '<span class="ab-who">' + esc(c.who) + '</span>' : '';
+function causeHTML(x) {
+  const c = x.c;
+  return '<li class="ab-cause' + (c.dnm ? ' dnm' : '') + '"><div class="ab-ch"><b>' + esc(c.name) + '</b>' + who(c) + '</div><p>' + esc(c.txt) + '</p>' + chips(c) + '</li>';
+}
+function moreHTML(x) {
+  const c = x.c;
+  return '<details class="ab-more' + (c.dnm ? ' dnm' : '') + '"><summary><b>' + esc(c.name) + '</b>' + who(c) + '</summary><p>' + esc(c.txt) + '</p>' + chips(c) + '</details>';
+}
+function causesHTML(s, likelyTitle) {
+  return (s.likely.length ? '<h3 class="ab-h">' + likelyTitle + '</h3><ul class="ab-causes">' + s.likely.map(causeHTML).join('') + '</ul>' : '') +
+    (s.dnm.length ? '<h3 class="ab-h dnm">Don’t miss</h3><ul class="ab-causes">' + s.dnm.map(causeHTML).join('') + '</ul>' : '') +
+    (s.more.length ? '<h3 class="ab-h">Also possible</h3><div class="ab-mores">' + s.more.map(moreHTML).join('') + '</div>' : '');
+}
+// a test chip opens that test's "how to" (adding it to the list if needed) and scrolls to it
+function wireTestLinks(box, list) {
+  box.addEventListener('click', e => {
+    const b = e.target.closest('.ab-tlink'); if (!b) return;
+    const tl = list();
+    let d = tl.querySelector('.ab-test[data-test="' + b.dataset.t + '"]');
+    if (!d) { tl.insertAdjacentHTML('beforeend', testHTML(b.dataset.t)); d = tl.lastElementChild; }
+    d.open = true;
+    d.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    d.classList.remove('ping'); void d.offsetWidth; d.classList.add('ping');
+  });
+}
+
+/* ===== main screen ===== */
+const stage = $('ab-stage'), results = $('ab-results');
+stage.innerHTML = svg('ab');
+let mode = 'info';
+const picked = new Set();
+
+function paintSel() {
+  stage.querySelectorAll('.ab-cell').forEach(el => {
+    const on = mode === 'pain' && picked.has(el.dataset.r);
+    el.classList.toggle('sel', on);
+    if (mode === 'pain') el.setAttribute('aria-pressed', String(on)); else el.removeAttribute('aria-pressed');
+  });
+}
+function renderResults() {
+  if (mode !== 'pain') { results.innerHTML = ''; return; }
+  const S = ORDER.filter(r => picked.has(r));
+  if (!S.length) {
+    results.innerHTML = '<div class="card ab-res"><p class="ab-empty">Tap the regions where they feel pain. Possible causes, and how to do the tests that help tell them apart, will appear here.</p></div>';
+    return;
+  }
+  const s = split(S);
+  const tests = [];
+  s.likely.concat(s.dnm).sort(byScore).forEach(x => x.c.t.forEach(t => { if (!tests.includes(t)) tests.push(t); }));
+  ['obs', 'inspect'].forEach(t => { if (!tests.includes(t)) tests.push(t); });
+  results.innerHTML = '<div class="card ab-res">' +
+    '<div class="ab-kicker">Pain in</div>' +
+    '<div class="ab-sel">' + (S.length === 9 ? 'All nine regions' : S.map(r => REG[r].short).join(' · ')) + '</div>' +
+    causesHTML(s, 'Most likely') +
+    '<h3 class="ab-h">How to do the tests</h3><div class="ab-tests">' + tests.map(testHTML).join('') + '</div></div>';
+}
+wireTestLinks(results, () => results.querySelector('.ab-tests'));
+
+function setMode(m) {
+  mode = m;
+  $('ab-m-info').setAttribute('aria-pressed', String(m === 'info'));
+  $('ab-m-pain').setAttribute('aria-pressed', String(m === 'pain'));
+  $('ab-hint-info').hidden = m !== 'info';
+  $('ab-hint-pain').hidden = m !== 'pain';
+  paintSel(); renderResults();
+}
+$('ab-m-info').addEventListener('click', () => setMode('info'));
+$('ab-m-pain').addEventListener('click', () => setMode('pain'));
+$('ab-clear').addEventListener('click', () => { picked.clear(); paintSel(); renderResults(); });
+$('ab-all').addEventListener('click', () => { ORDER.forEach(r => picked.add(r)); paintSel(); renderResults(); });
+
+function activate(r) {
+  if (mode === 'pain') {
+    if (picked.has(r)) picked.delete(r); else picked.add(r);
+    paintSel(); renderResults();
+  } else {
+    const el = stage.querySelector('.ab-cell[data-r="' + r + '"]');
+    el.classList.add('flash');
+    setTimeout(() => { el.classList.remove('flash'); openRegion(r); }, 160);
+  }
+}
+stage.addEventListener('click', e => { const c = e.target.closest('.ab-cell'); if (c) activate(c.dataset.r); });
+stage.addEventListener('keydown', e => {
+  const c = e.target.closest('.ab-cell');
+  if (c && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); activate(c.dataset.r); }
+});
+
+/* ===== region screen ===== */
+function openRegion(r) {
+  const R = REG[r];
+  $('ar-title').textContent = R.name;
+  $('ar-sub').textContent = R.alt;
+  $('ar-fig').innerHTML = svg('az', { focus: r });
+  $('ar-organs').innerHTML = R.organs.map(o => '<li>' + esc(o) + '</li>').join('');
+  $('ar-out').innerHTML = '<b>Pain here can also come from</b><ul>' + R.outside.map(o => '<li>' + esc(o) + '</li>').join('') + '</ul>';
+  $('ar-tests').innerHTML = R.tests.map(t => testHTML(t)).join('');
+  $('ar-causes').innerHTML = causesHTML(split([r]), 'Common causes');
+  $('ar-jump').innerHTML = ORDER.map(k => '<button type="button" data-r="' + k + '" aria-current="' + (k === r) + '">' + esc(REG[k].short) + '</button>').join('');
+  if (document.getElementById('abdo-reg').classList.contains('on')) window.scrollTo(0, 0);
+  else go('abdo-reg');
+}
+$('ar-jump').addEventListener('click', e => { const b = e.target.closest('button[data-r]'); if (b) openRegion(b.dataset.r); });
+// the causes on the region screen link to the tests on the same screen
+wireTestLinks($('ar-causes'), () => $('ar-tests'));
+
+setMode('info');
+window.__abdo = { REG, TESTS, C, split };   // for testing
 })();
 </script>
 </body>

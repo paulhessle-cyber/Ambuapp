@@ -13,6 +13,7 @@ A scheduled check runs on the 1st of every month. It works through this list and
 - Only the parts affected by a change are edited. index.html stays a single self-contained file.
 - The ECG "What to do" pointers (the `DO` list in index.html) are short summaries in our own words, each with its sources named. Keep them that way: no doses, nothing copied from JRCALC.
 - "My notes" on the ECG screen are stored only on the user's phone (browser storage). They are never in this repo and the check never touches them.
+- The Abdominal screen's causes and tests (the `REG`, `TESTS` and `C` lists in index.html) are written in our own words. The order of causes comes from how well each one fits the regions selected — a teaching aid, not a diagnosis. Keep the wording plain and the cautions about negative signs.
 
 ## Screen by screen
 
@@ -33,6 +34,9 @@ A scheduled check runs on the 1st of every month. It works through this list and
 | ECG | "What to do" pointers — bundle branch block, paced rhythm, posterior MI, left main pattern | [ESC guidelines for acute coronary syndromes](https://academic.oup.com/eurheartj/article/44/38/3720/7243210) | 2023 | 28 Oct 2026 |
 | ECG | "What to do" pointers — AF and flutter | NICE [NG196](https://www.nice.org.uk/guidance/ng196) | Last updated June 2021 | 28 Oct 2026 |
 | ECG | "What to do" pointers — pericarditis | [RCEM Learning — pericarditis](https://www.rcemlearning.co.uk/reference/pericarditis/) | — | 28 Oct 2026 |
+| Abdominal | The nine regions, what lies in each, and pain that can come from outside the abdomen | Standard anatomy | — | 8 Nov 2026 |
+| Abdominal | How to do the examination tests (Murphy's, McBurney's, Rovsing's, psoas, obturator, percussion and rebound, cough, heel drop, guarding, renal angle, Kehr's, Cullen's and Grey Turner's, Carnett's, aorta, hernia, testes, bladder) | Standard clinical examination technique. Murphy's sign in older people: [Murphy's sign, acute cholecystitis and elderly people](https://pubmed.ncbi.nlm.nih.gov/8632396/) | — | 8 Nov 2026 |
+| Abdominal | Causes for each region, and the "Don't miss" list | Ectopic pregnancy: NICE [NG126](https://www.nice.org.uk/guidance/ng126/chapter/symptoms-and-signs-of-ectopic-pregnancy-and-initial-assessment). Ruptured AAA: NICE NG156. Testicular torsion: NCEPOD [Twist and Shout](https://www.hqip.org.uk/report/ncepod-twist-and-shout/). Pre-eclampsia: NICE NG133. DKA: JBDS. Urine dipsticks in people aged 65 and over: UKHSA UTI diagnostic tools | As published | 8 Nov 2026 |
 
 ## Guidance cards
 
